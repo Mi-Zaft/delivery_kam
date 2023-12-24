@@ -22,12 +22,21 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delivery_kam_gradient_background" translatesAutoresizingMaskIntoConstraints="NO" id="wJ8-e3-2WB">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="JOj-M0-opj">
+                                <rect key="frame" x="76" y="361.66666666666669" width="241" height="128.66666666666669"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="JOj-M0-opj" secondAttribute="height" multiplier="15:8" id="E3j-Zy-wcd"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="wJ8-e3-2WB" secondAttribute="bottom" id="22U-yU-TvQ"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="JOj-M0-opj" secondAttribute="trailing" constant="60" id="ePx-Zc-jbM"/>
                             <constraint firstItem="wJ8-e3-2WB" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="fMl-HH-9Qm"/>
                             <constraint firstItem="wJ8-e3-2WB" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="jRb-N7-UAS"/>
+                            <constraint firstItem="JOj-M0-opj" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="60" id="lt4-8a-4it"/>
+                            <constraint firstItem="JOj-M0-opj" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="m6A-gw-dgd"/>
                             <constraint firstAttribute="trailing" secondItem="wJ8-e3-2WB" secondAttribute="trailing" id="x12-PJ-vLU"/>
                         </constraints>
                     </view>
@@ -39,5 +48,6 @@
     </scenes>
     <resources>
         <image name="delivery_kam_gradient_background" width="391" height="840"/>
+        <image name="logo" width="208" height="165"/>
     </resources>
 </document>
