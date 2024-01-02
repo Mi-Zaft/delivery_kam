@@ -1,5 +1,8 @@
+import 'package:delivery_kam/features/auth/register/bloc/delivery_auth_register_bloc.dart';
 import 'package:delivery_kam/features/auth/register/widgets/delivery_auth_register_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryAuthRegisterScreen extends StatefulWidget {
   const DeliveryAuthRegisterScreen({Key? key}) : super(key: key);
@@ -11,6 +14,7 @@ class DeliveryAuthRegisterScreen extends StatefulWidget {
 
 class _DeliveryAuthRegisterScreenState
     extends State<DeliveryAuthRegisterScreen> {
+  final _deliveryAuthRegisterBloc = DeliveryAuthRegisterBloc();
   final double columnHorizontalPadding =
       24.0; // Отступы по бокам столбца кнопок
   final TextEditingController _nameTextFieldController =
@@ -20,13 +24,11 @@ class _DeliveryAuthRegisterScreenState
   final double buttonHeight = 15; // Высота кнопок
   final bottomText =
       "Вы получите на свой телефон сообщение с кодом, чтобы его подтвердить. За отправку сообщения может взиматься дополнительная плата.";
-  bool numberIsError = false;
 
-  void toggleTextVisibility() {
-    setState(() {
-      numberIsError = !numberIsError;
-    });
-  }
+  var phoneMaskFormatter = MaskTextInputFormatter(
+      mask: '+7 (###) ###-##-##',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
 
   @override
   void dispose() {
@@ -38,82 +40,99 @@ class _DeliveryAuthRegisterScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: columnHorizontalPadding),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(children: [
-                DeliveryAuthRegisterTextfield(
-                  labelText: "Введите имя",
-                  controller: _nameTextFieldController,
-                  keyboardType: TextInputType.name,
-                  textCapitalization: TextCapitalization.words,
-                ),
-                const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
-                DeliveryAuthRegisterTextfield(
-                    labelText: 'Введите свой номер телефона',
-                    controller: _phoneTextFieldController,
-                    keyboardType: TextInputType.phone,
-                    textCapitalization: TextCapitalization.none,
-                    prefixText: '+7'),
-                const Padding(padding: EdgeInsets.only(top: 7)),
-                Visibility(
-                    visible: numberIsError,
-                    child: const Text(
-                      "Данный номер телефона уже зарегистрирован, попробуйте ввести другой или восстановить пароль от существующего аккаунта",
-                      style: TextStyle(
+      body: BlocListener<DeliveryAuthRegisterBloc, DeliveryAuthRegisterState>(
+          bloc: _deliveryAuthRegisterBloc,
+          listener: (context, state) {
+            if (state is DeliveryAuthRegisterSuccess) {
+              Navigator.of(context).pushNamed('/register-confirm');
+            }
+          },
+          child: Center(
+            child: Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: columnHorizontalPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(children: [
+                    DeliveryAuthRegisterTextfield(
+                      labelText: "Введите имя",
+                      controller: _nameTextFieldController,
+                      keyboardType: TextInputType.name,
+                      textCapitalization: TextCapitalization.words,
+                    ),
+                    const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
+                    DeliveryAuthRegisterTextfield(
+                      labelText: 'Введите свой номер телефона',
+                      controller: _phoneTextFieldController,
+                      keyboardType: TextInputType.phone,
+                      textCapitalization: TextCapitalization.none,
+                      inputFormatters: [phoneMaskFormatter],
+                    ),
+                    const Padding(padding: EdgeInsets.only(top: 7)),
+                    BlocBuilder<DeliveryAuthRegisterBloc,
+                            DeliveryAuthRegisterState>(
+                        bloc: _deliveryAuthRegisterBloc,
+                        builder: (context, state) {
+                          if (state is DeliveryAuthRegisterFail) {
+                            return Text(state.errorText,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: "GT-Eesti-Pro-Display",
+                                    fontWeight: FontWeight.w300,
+                                    color: Color.fromRGBO(255, 44, 44, 1),
+                                    height: 0.9));
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        }),
+                  ]),
+                  Column(children: [
+                    Text(
+                      bottomText,
+                      style: const TextStyle(
+                          color: Color.fromRGBO(122, 122, 122, 1),
+                          fontFamily: "GT-Eesti-Pro-Display",
                           fontSize: 12,
-                          fontFamily: "GT-Eesti-Pro-Display",
-                          fontWeight: FontWeight.w300,
-                          color: Color.fromRGBO(255, 44, 44, 1),
-                          height: 0.9),
-                    ))
-              ]),
-              Column(children: [
-                Text(
-                  bottomText,
-                  style: const TextStyle(
-                      color: Color.fromRGBO(122, 122, 122, 1),
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: buttonHeight),
-                        backgroundColor:
-                            const Color.fromRGBO(195, 195, 195, 1)),
-                    onPressed: () {
-                      String value1 = _nameTextFieldController.text;
-                      String value2 = _phoneTextFieldController.text;
-                      toggleTextVisibility();
-
-                      // Делайте что-то с полученными значениями
-                      print('Значение из TextField 1: $value1');
-                      print('Значение из TextField 2: $value2');
-                      Navigator.of(context).pushNamed('/register-confirm');
-                    },
-                    child: const Text(
-                      'Создать аккаунт',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "GT-Eesti-Pro-Display",
-                          fontSize: 18,
                           fontWeight: FontWeight.w400),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 40)
-              ])
-            ],
-          ),
-        ),
-      ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding:
+                                EdgeInsets.symmetric(vertical: buttonHeight),
+                            backgroundColor:
+                                const Color.fromRGBO(195, 195, 195, 1)),
+                        onPressed: () {
+                          String name = _nameTextFieldController.text;
+                          String phone = _phoneTextFieldController.text;
+
+                          // Делайте что-то с полученными значениями
+                          print('Значение из TextField 1: $name');
+                          print(
+                              'Значение из TextField 2: ${phoneMaskFormatter.getUnmaskedText()}');
+                          _deliveryAuthRegisterBloc.add(LoadingRegisterRequest(
+                              name, phoneMaskFormatter.getUnmaskedText()));
+                          // Navigator.of(context).pushNamed('/register-confirm');
+                        },
+                        child: const Text(
+                          'Создать аккаунт',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: "GT-Eesti-Pro-Display",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40)
+                  ])
+                ],
+              ),
+            ),
+          )),
       appBar: AppBar(
         title: const Text("Регистрация",
             style: TextStyle(
