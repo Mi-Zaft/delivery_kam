@@ -31,7 +31,7 @@ class _DeliveryAuthChooseScreenState extends State<DeliveryAuthChooseScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset("assets/images/auth/logo.png"),
+                Image.asset("assets/images/auth/logoText.png"),
                 const DeliveryAuthChooseButtons()
               ],
             )));

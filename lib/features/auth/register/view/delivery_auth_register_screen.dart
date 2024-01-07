@@ -44,7 +44,11 @@ class _DeliveryAuthRegisterScreenState
           bloc: _deliveryAuthRegisterBloc,
           listener: (context, state) {
             if (state is DeliveryAuthRegisterSuccess) {
-              Navigator.of(context).pushNamed('/register-confirm');
+              Navigator.pushNamed(context, '/register-confirm', arguments: {
+                'phoneNumber': phoneMaskFormatter.getMaskedText(),
+                'userName': _nameTextFieldController.value.text,
+                'unMaskedPhoneNumber': phoneMaskFormatter.getUnmaskedText()
+              });
             }
           },
           child: Center(
@@ -107,15 +111,8 @@ class _DeliveryAuthRegisterScreenState
                                 const Color.fromRGBO(195, 195, 195, 1)),
                         onPressed: () {
                           String name = _nameTextFieldController.text;
-                          String phone = _phoneTextFieldController.text;
-
-                          // Делайте что-то с полученными значениями
-                          print('Значение из TextField 1: $name');
-                          print(
-                              'Значение из TextField 2: ${phoneMaskFormatter.getUnmaskedText()}');
                           _deliveryAuthRegisterBloc.add(LoadingRegisterRequest(
                               name, phoneMaskFormatter.getUnmaskedText()));
-                          // Navigator.of(context).pushNamed('/register-confirm');
                         },
                         child: const Text(
                           'Создать аккаунт',

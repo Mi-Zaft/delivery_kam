@@ -56,7 +56,7 @@ class _DeliveryAuthRegisterTextfieldState
         controller: widget.controller,
         onChanged: (value) {
           setState(() {
-            // Ваша логика обновления состояния
+            // Логика обновления состояния
           });
         },
       ),
