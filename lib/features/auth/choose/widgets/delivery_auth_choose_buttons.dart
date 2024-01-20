@@ -51,7 +51,9 @@ class _DeliveryAuthChooseButtonsState extends State<DeliveryAuthChooseButtons> {
           SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/login");
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   elevation: 0,

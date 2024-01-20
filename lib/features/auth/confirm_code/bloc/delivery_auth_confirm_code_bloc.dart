@@ -17,6 +17,7 @@ class DeliveryAuthConfirmCodeBloc
           .postData('/api/v1/registration/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
+          print(response.data);
           emit(DeliveryAuthConfirmCodeSuccess());
         }
       } else {
