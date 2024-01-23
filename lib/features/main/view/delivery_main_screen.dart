@@ -11,9 +11,23 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(
+        body: Stack(children: [
+      ListView(
+        children: [
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+          ListTile(title: Text('qweq')),
+        ],
+      ),
+      SizedBox.expand(
         child: DraggableScrollableSheet(
-          maxChildSize: 1,
+          initialChildSize: .4,
+          minChildSize: .1,
+          maxChildSize: .6,
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
               color: Colors.blue[100],
@@ -28,6 +42,24 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           },
         ),
       ),
-    );
+    ])
+        // body: SizedBox.expand(
+        //   child: DraggableScrollableSheet(
+        //     maxChildSize: 1,
+        //     builder: (BuildContext context, ScrollController scrollController) {
+        //       return Container(
+        //         color: Colors.blue[100],
+        //         child: ListView.builder(
+        //           controller: scrollController,
+        //           itemCount: 5,
+        //           itemBuilder: (BuildContext context, int index) {
+        //             return ListTile(title: Text('Item $index'));
+        //           },
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
+        );
   }
 }

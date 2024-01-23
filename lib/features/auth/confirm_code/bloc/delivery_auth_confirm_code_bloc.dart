@@ -1,24 +1,44 @@
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 part 'delivery_auth_confirm_code_event.dart';
 part 'delivery_auth_confirm_code_state.dart';
 
 class DeliveryAuthConfirmCodeBloc
     extends Bloc<DeliveryAuthConfirmCodeEvent, DeliveryAuthConfirmCodeState> {
+  final storage = const FlutterSecureStorage();
   DeliveryAuthConfirmCodeBloc() : super(DeliveryAuthConfirmCodeInitial()) {
     on<LoadingConfirmCodeRequest>((event, emit) async {
       Map<String, dynamic> dataToSend = {
         'code': event.code,
         'phone': '+7${event.phone}',
       };
+      print(event.code);
+      print(event.phone);
       Response response = await ApiService()
           .postData('/api/v1/registration/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
-          print(response.data);
-          emit(DeliveryAuthConfirmCodeSuccess());
+          print('Тип переменной: ${response.data.runtimeType}');
+          if (response.data.containsKey('access_token')) {
+            print(response.data['access_token']);
+            await storage.write(
+                key: 'jwt_token', value: response.data['access_token']);
+            Response paymentResponse =
+                await ApiService().fetchData('/api/v1/payment');
+            if (paymentResponse.statusCode == 200) {
+              print(paymentResponse);
+              final data = paymentResponse.data as Map<String, dynamic>;
+              print(data);
+            } else {
+              print('Что-то не так');
+            }
+            emit(DeliveryAuthConfirmCodeSuccess());
+          } else {
+            emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));
+          }
         }
       } else {
         print('ERROR');
