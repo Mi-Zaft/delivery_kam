@@ -45,11 +45,8 @@ class ApiService {
   //   _dio.options.headers['Authorization'] = 'Bearer $token';
   // }
 
-  Future<String> getToken() async {
+  Future<String?> getToken() async {
     final token = await storage.read(key: 'jwt_token');
-    if (token == null) {
-      throw Exception('Token not found');
-    }
     // Check if token is expired
     return token;
   }
