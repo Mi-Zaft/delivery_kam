@@ -1,11 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryMainTextfieldAddress extends StatefulWidget {
   final String labelText;
   final TextEditingController controller;
   final TextInputType keyboardType;
   final String? prefixText;
-  final Align? prefixIcon;
+  final Image? prefixIcon;
+  final TextStyle? prefixStyle;
+  final List<MaskTextInputFormatter>? maskInputFormatters;
 
   const DeliveryMainTextfieldAddress(
       {Key? key,
@@ -13,6 +18,8 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
       required this.controller,
       required this.keyboardType,
       this.prefixText,
+      this.prefixStyle,
+      this.maskInputFormatters,
       this.prefixIcon})
       : super(key: key);
 
@@ -31,24 +38,45 @@ class _DeliveryMainTextfieldAddressState
                 const BoxDecoration(border: Border(bottom: BorderSide())),
             child: Row(
               children: [
-                Text(widget.prefixText ?? '',
-                    style: const TextStyle(
-                        fontSize: 20, color: Color.fromRGBO(122, 122, 122, 1))),
+                if (widget.prefixText != null)
+                  RichText(
+                    text: TextSpan(
+                      text: widget.prefixText,
+                      style: widget.prefixStyle?.copyWith(
+                        height: 2,
+                      ),
+                    ),
+                  ),
+                if (widget.prefixIcon != null)
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: widget.prefixIcon,
+                  ),
                 const SizedBox(width: 5.0),
                 Expanded(
                   child: TextField(
+                    cursorColor: Colors.black,
+                    inputFormatters: widget.maskInputFormatters,
                     style: const TextStyle(
                       fontSize: 18,
                       fontFamily: "GT-Eesti-Pro-Display",
                       fontWeight: FontWeight.w300,
                     ),
+                    textAlignVertical: const TextAlignVertical(y: 0),
                     keyboardType: widget.keyboardType,
                     decoration: InputDecoration(
-                      labelText: widget.controller.text.isEmpty
-                          ? widget.labelText
-                          : null,
+                      prefixIconConstraints: const BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                          maxWidth: 30,
+                          maxHeight: 30),
+                      isDense: true,
+                      labelText: widget.labelText,
+                      alignLabelWithHint: true,
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      contentPadding: const EdgeInsets.only(bottom: 0),
+                      contentPadding: EdgeInsets.only(
+                          bottom: 10, left: widget.prefixIcon != null ? 10 : 0),
                       labelStyle: const TextStyle(
                         color: Color.fromRGBO(122, 122, 122, 1),
                         fontFamily: "GT-Eesti-Pro-Display",
