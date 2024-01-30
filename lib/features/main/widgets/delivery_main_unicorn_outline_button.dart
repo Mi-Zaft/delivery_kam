@@ -5,14 +5,16 @@ class UnicornOutlineButton extends StatelessWidget {
   final Widget _child;
   final VoidCallback _callback;
   final double _radius;
+  final double? height;
 
-  UnicornOutlineButton({
-    required double strokeWidth,
-    required double radius,
-    required Gradient gradient,
-    required Widget child,
-    required VoidCallback onPressed,
-  })  : this._painter = _GradientPainter(
+  UnicornOutlineButton(
+      {required double strokeWidth,
+      required double radius,
+      required Gradient gradient,
+      required Widget child,
+      required VoidCallback onPressed,
+      this.height})
+      : this._painter = _GradientPainter(
             strokeWidth: strokeWidth, radius: radius, gradient: gradient),
         this._child = child,
         this._callback = onPressed,
@@ -29,7 +31,9 @@ class UnicornOutlineButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(_radius),
           onTap: _callback,
           child: Container(
-            constraints: BoxConstraints(minWidth: 88, minHeight: 48),
+            height: height,
+            // width: MediaQuery.of(context).size.width * 0.4,
+            constraints: const BoxConstraints(minWidth: 88, minHeight: 48),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +65,8 @@ class _GradientPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // create outer rectangle equals size
-    Rect outerRect = Offset.zero & size;
+    // Rect outerRect = Offset.zero & size;
+    Rect outerRect = Offset.zero & Size(size.width, size.height);
     var outerRRect =
         RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
 

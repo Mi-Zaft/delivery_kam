@@ -57,34 +57,36 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         padding:
             const EdgeInsets.only(bottom: 25.0, top: 10, left: 16, right: 16),
         child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                // Navigator.of(context).pushNamed("/register");
-                print('Укажите адрес');
-                print(_isFragileCargo);
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () {
+              // Navigator.of(context).pushNamed("/register");
+              print('Укажите адрес');
+              print(_isFragileCargo);
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
               ),
-              child: const Text("Укажите адрес",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w400)),
-            )),
+            ),
+            child: const Text(
+              "Укажите адрес",
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontFamily: "GT-Eesti-Pro-Display",
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+        ),
       ),
       body: Stack(children: [
         const DeliveryMainMapScreen(),
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
-              // Вы можете обработать изменения положения здесь
               if (notification.extent == maxChildSize) {
                 print('DraggableScrollableSheet в положении "вытянуто"');
               } else if (notification.extent == minChildSize) {
@@ -100,350 +102,462 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
               maxChildSize: maxChildSize,
               builder:
                   (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  controller: scrollController,
-                  child: Container(
-                    decoration: const BoxDecoration(
+                return Container(
+                  decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25)),
+                        topLeft: Radius.circular(25),
+                        topRight: Radius.circular(25),
+                      ),
                       color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: columnHorizontalPadding),
-                      child: Column(
-                        children: [
-                          const Padding(padding: EdgeInsets.only(top: 20)),
-                          DeliveryMainTextfieldAddress(
-                              labelText: 'Откуда забрать',
-                              prefixStyle: const TextStyle(
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          spreadRadius: 5,
+                          blurRadius: 5,
+                        )
+                      ]),
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    controller: scrollController,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
+                        ),
+                        color: Colors.white,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: columnHorizontalPadding),
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            DeliveryMainTextfieldAddress(
+                                labelText: 'Откуда забрать',
+                                prefixStyle: const TextStyle(
                                   fontSize: 20,
-                                  color: Color.fromRGBO(122, 122, 122, 1)),
-                              controller: addressFromTextFieldController,
-                              keyboardType: TextInputType.streetAddress,
-                              prefixText: "A"),
-                          const Padding(padding: EdgeInsets.only(bottom: 10)),
-                          DeliveryMainTextfieldAddress(
-                            labelText: 'Куда доставить',
-                            prefixStyle: const TextStyle(
+                                  color: Color.fromRGBO(122, 122, 122, 1),
+                                ),
+                                controller: addressFromTextFieldController,
+                                keyboardType: TextInputType.streetAddress,
+                                prefixText: "A"),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                            ),
+                            DeliveryMainTextfieldAddress(
+                              labelText: 'Куда доставить',
+                              prefixStyle: const TextStyle(
                                 fontSize: 20,
-                                color: Color.fromRGBO(122, 122, 122, 1)),
-                            controller: addressToTextFieldController,
-                            keyboardType: TextInputType.streetAddress,
-                            prefixText: "Б",
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 25)),
-                          Row(
-                            children: [
-                              Expanded(
+                                color: Color.fromRGBO(122, 122, 122, 1),
+                              ),
+                              controller: addressToTextFieldController,
+                              keyboardType: TextInputType.streetAddress,
+                              prefixText: "Б",
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 25),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
                                   child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(175, 223, 233, 1),
-                                    Color.fromRGBO(32, 191, 208, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        const Text('Пеший курьер'),
-                                        const Padding(
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(175, 223, 233, 1),
+                                        Color.fromRGBO(32, 191, 208, 1)
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          const Text('Пеший курьер'),
+                                          const Padding(
                                             padding:
-                                                EdgeInsets.only(bottom: 10)),
-                                        Image.asset(
-                                            "assets/images/main/iconcourier.png"),
-                                      ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                              const Padding(
-                                  padding: EdgeInsets.only(right: 23)),
-                              Expanded(
-                                  child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(195, 195, 195, 1),
-                                    Color.fromRGBO(195, 195, 195, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
+                                                EdgeInsets.only(bottom: 10),
+                                          ),
+                                          Image.asset(
+                                              "assets/images/main/iconcourier.png"),
+                                        ],
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
                                 ),
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        const Text('Курьер на авто'),
-                                        const Padding(
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                ),
+                                Expanded(
+                                  child: UnicornOutlineButton(
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(195, 195, 195, 1),
+                                        Color.fromRGBO(195, 195, 195, 1)
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          const Text('Курьер на авто'),
+                                          const Padding(
                                             padding:
-                                                EdgeInsets.only(bottom: 10)),
-                                        Image.asset(
-                                            "assets/images/main/iconcar.png"),
-                                      ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 25)),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Время доставки',
-                              style: TextStyle(
-                                color: Color.fromRGBO(93, 105, 114, 1),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: "GT-Eesti-Pro-Display",
+                                                EdgeInsets.only(bottom: 10),
+                                          ),
+                                          Image.asset(
+                                              "assets/images/main/iconcar.png"),
+                                        ],
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 25),
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Время доставки',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(93, 105, 114, 1),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: "GT-Eesti-Pro-Display",
+                                ),
                               ),
                             ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(bottom: 10)),
-                          Row(
-                            children: [
-                              Expanded(
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
                                   child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(175, 223, 233, 1),
-                                    Color.fromRGBO(32, 191, 208, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                child: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Обычная',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontFamily: "GT-Eesti-Pro-Display",
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(175, 223, 233, 1),
+                                        Color.fromRGBO(32, 191, 208, 1)
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'Обычная',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black,
+                                              fontFamily:
+                                                  "GT-Eesti-Pro-Display",
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '2-5 часов',
-                                          style: TextStyle(
+                                          Text(
+                                            '2-5 часов',
+                                            style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w300,
                                               fontFamily:
                                                   "GT-Eesti-Pro-Display",
                                               color: Color.fromRGBO(
-                                                  93, 105, 114, 1)),
-                                        ),
-                                      ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                              const Padding(
-                                  padding: EdgeInsets.only(right: 23)),
-                              Expanded(
-                                  child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(195, 195, 195, 1),
-                                    Color.fromRGBO(195, 195, 195, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                child: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Экспресс',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontFamily: "GT-Eesti-Pro-Display",
+                                                  93, 105, 114, 1),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          'Самая быстрая',
-                                          style: TextStyle(
+                                        ],
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                ),
+                                Expanded(
+                                  child: UnicornOutlineButton(
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(195, 195, 195, 1),
+                                        Color.fromRGBO(195, 195, 195, 1)
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            'Экспресс',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black,
+                                              fontFamily:
+                                                  "GT-Eesti-Pro-Display",
+                                            ),
+                                          ),
+                                          Text(
+                                            'Самая быстрая',
+                                            style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w300,
                                               fontFamily:
                                                   "GT-Eesti-Pro-Display",
                                               color: Color.fromRGBO(
-                                                  93, 105, 114, 1)),
-                                        ),
-                                      ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 20),
-                          ),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Как доставить',
-                              style: TextStyle(
-                                color: Color.fromRGBO(93, 105, 114, 1),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: "GT-Eesti-Pro-Display",
-                              ),
-                            ),
-                          ),
-                          const Padding(padding: EdgeInsets.only(bottom: 10)),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(175, 223, 233, 1),
-                                    Color.fromRGBO(32, 191, 208, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                child: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'Выйти к машине',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontFamily: "GT-Eesti-Pro-Display",
+                                                  93, 105, 114, 1),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          'При отправке и получении',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w300,
-                                              fontFamily:
-                                                  "GT-Eesti-Pro-Display",
-                                              color: Color.fromRGBO(
-                                                  93, 105, 114, 1)),
-                                        ),
-                                      ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                              const Padding(
-                                  padding: EdgeInsets.only(right: 23)),
-                              Expanded(
-                                  child: UnicornOutlineButton(
-                                strokeWidth: 4,
-                                radius: 16,
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color.fromRGBO(195, 195, 195, 1),
-                                    Color.fromRGBO(195, 195, 195, 1)
-                                  ],
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomCenter,
+                                        ],
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
                                 ),
-                                child: const Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          'От двери до двери',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                            fontFamily: "GT-Eesti-Pro-Display",
-                                          ),
-                                        ),
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Как доставить',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(93, 105, 114, 1),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: "GT-Eesti-Pro-Display",
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: UnicornOutlineButton(
+                                    height:
+                                        MediaQuery.of(context).size.width <= 350
+                                            ? 90
+                                            : 60,
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(175, 223, 233, 1),
+                                        Color.fromRGBO(32, 191, 208, 1)
                                       ],
-                                    )),
-                                onPressed: () {},
-                              )),
-                            ],
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 20)),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Введите номер телефона отправителя',
-                              style: TextStyle(
-                                color: Color.fromRGBO(93, 105, 114, 1),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: "GT-Eesti-Pro-Display",
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            // padding:
+                                            // const EdgeInsets.symmetric(
+                                            //     horizontal: 5),
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width <=
+                                                    350
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                            child: const Text(
+                                              'Выйти к машине',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.black,
+                                                fontFamily:
+                                                    "GT-Eesti-Pro-Display",
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width <=
+                                                    300
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                            child: const Text(
+                                              'При отправке и получении',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w300,
+                                                fontFamily:
+                                                    "GT-Eesti-Pro-Display",
+                                                color: Color.fromRGBO(
+                                                    93, 105, 114, 1),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                ),
+                                Expanded(
+                                  child: UnicornOutlineButton(
+                                    strokeWidth: 4,
+                                    radius: 16,
+                                    height:
+                                        MediaQuery.of(context).size.width <= 350
+                                            ? 90
+                                            : 60,
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color.fromRGBO(195, 195, 195, 1),
+                                        Color.fromRGBO(195, 195, 195, 1)
+                                      ],
+                                      begin: Alignment.topRight,
+                                      end: Alignment.bottomCenter,
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      width: MediaQuery.of(context)
+                                                  .size
+                                                  .width <=
+                                              300
+                                          ? MediaQuery.of(context).size.width *
+                                              0.3
+                                          : MediaQuery.of(context).size.width *
+                                              0.4,
+                                      child: const Text(
+                                        'От двери до двери',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black,
+                                          fontFamily: "GT-Eesti-Pro-Display",
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Введите номер телефона отправителя',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(93, 105, 114, 1),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: "GT-Eesti-Pro-Display",
+                                ),
                               ),
                             ),
-                          ),
-                          DeliveryMainTextfieldAddress(
-                            labelText: '',
-                            controller: senderNumberTextFieldController,
-                            maskInputFormatters: [phoneMaskFormatter],
-                            prefixStyle: const TextStyle(
-                              fontFamily: "GT-Eesti-Pro-Display",
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black,
-                            ),
-                            keyboardType: TextInputType.phone,
-                            prefixText: "+7",
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 20)),
-                          DeliveryMainTextfieldAddress(
-                              labelText: 'Введите имя отправителя',
-                              controller: senderNameTextFieldController,
-                              keyboardType: TextInputType.name),
-                          const Padding(padding: EdgeInsets.only(top: 20)),
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Введите номер телефона получателя',
-                              style: TextStyle(
-                                color: Color.fromRGBO(93, 105, 114, 1),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: "GT-Eesti-Pro-Display",
-                              ),
-                            ),
-                          ),
-                          DeliveryMainTextfieldAddress(
-                            labelText: '',
-                            controller: recipientNumberTextFieldController,
-                            maskInputFormatters: [phoneMaskFormatter],
-                            prefixStyle: const TextStyle(
+                            DeliveryMainTextfieldAddress(
+                              labelText: '',
+                              controller: senderNumberTextFieldController,
+                              maskInputFormatters: [phoneMaskFormatter],
+                              prefixStyle: const TextStyle(
                                 fontFamily: "GT-Eesti-Pro-Display",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                            keyboardType: TextInputType.phone,
-                            prefixText: "+7",
-                          ),
-                          const Padding(padding: EdgeInsets.only(top: 20)),
-                          DeliveryMainTextfieldAddress(
-                              labelText: 'Введите имя получателя',
-                              controller: recipientNameTextFieldController,
-                              keyboardType: TextInputType.name),
-                          const Padding(padding: EdgeInsets.only(top: 25)),
-                          const Align(
+                                color: Colors.black,
+                              ),
+                              keyboardType: TextInputType.phone,
+                              prefixText: "+7",
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            DeliveryMainTextfieldAddress(
+                                labelText: 'Введите имя отправителя',
+                                controller: senderNameTextFieldController,
+                                keyboardType: TextInputType.name),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Введите номер телефона получателя',
+                                style: TextStyle(
+                                  color: Color.fromRGBO(93, 105, 114, 1),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: "GT-Eesti-Pro-Display",
+                                ),
+                              ),
+                            ),
+                            DeliveryMainTextfieldAddress(
+                              labelText: '',
+                              controller: recipientNumberTextFieldController,
+                              maskInputFormatters: [phoneMaskFormatter],
+                              prefixStyle: const TextStyle(
+                                  fontFamily: "GT-Eesti-Pro-Display",
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black),
+                              keyboardType: TextInputType.phone,
+                              prefixText: "+7",
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            DeliveryMainTextfieldAddress(
+                                labelText: 'Введите имя получателя',
+                                controller: recipientNameTextFieldController,
+                                keyboardType: TextInputType.name),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 25),
+                            ),
+                            const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Детали отправки',
@@ -451,8 +565,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     fontFamily: "GT-Eesti-Pro-Display",
                                     fontSize: 18,
                                     fontWeight: FontWeight.w300),
-                              )),
-                          DeliveryMainTextfieldAddress(
+                              ),
+                            ),
+                            DeliveryMainTextfieldAddress(
                               labelText: 'Предмет доставки',
                               controller: subjectTextFieldController,
                               prefixStyle: const TextStyle(
@@ -463,8 +578,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               keyboardType: TextInputType.phone,
                               prefixIcon: Image.asset(
                                 "assets/images/main/iconbox.png",
-                              )),
-                          DeliveryMainTextfieldAddress(
+                              ),
+                            ),
+                            DeliveryMainTextfieldAddress(
                               labelText: 'Комментарий курьеру',
                               controller: envelopeTextFieldController,
                               prefixStyle: const TextStyle(
@@ -475,8 +591,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               keyboardType: TextInputType.phone,
                               prefixIcon: Image.asset(
                                 "assets/images/main/iconEnvelope.png",
-                              )),
-                          DeliveryMainTextfieldAddress(
+                              ),
+                            ),
+                            DeliveryMainTextfieldAddress(
                               labelText: 'Сообщение получателю',
                               controller: chatTextFieldController,
                               prefixStyle: const TextStyle(
@@ -487,9 +604,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               keyboardType: TextInputType.phone,
                               prefixIcon: Image.asset(
                                 "assets/images/main/iconChat.png",
-                              )),
-                          const Padding(padding: EdgeInsets.only(top: 25)),
-                          const Align(
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 25),
+                            ),
+                            const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Дополнительно',
@@ -497,55 +617,59 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     fontFamily: "GT-Eesti-Pro-Display",
                                     fontSize: 18,
                                     fontWeight: FontWeight.w300),
-                              )),
-                          // Row(
-                          //   children: [
-                          //     Checkbox(
-                          //       value: false,
-                          //       onChanged: (bool? value) {
-                          //         setState(() {});
-                          //       },
-                          //     ),
-                          //     const Text(
-                          //         'Доставка без оформления квитанции')
-                          //   ],
-                          // ),
-                          DeliveryMainCustomCheckboxListTile(
-                              isChecked: _isFragileCargo,
-                              label: 'Хрупкий груз',
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  _isFragileCargo = newValue!;
-                                });
-                              }),
-                          DeliveryMainCustomCheckboxListTile(
-                              isChecked: _isThermalBag,
-                              label: 'Наличие термосумки',
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  _isThermalBag = newValue!;
-                                });
-                              }),
-                          DeliveryMainCustomCheckboxListTile(
-                              isChecked: _isRegistrationInTransportCompany,
-                              label:
-                                  'Оформление отправления \nв транспортной компании',
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  _isRegistrationInTransportCompany = newValue!;
-                                });
-                              }),
-                          DeliveryMainCustomCheckboxListTile(
-                              isChecked: _isCorrespondenceInRussianPostOffice,
-                              label:
-                                  'Отправка/получение корреспонденции\nв отделениях Почты России',
-                              onChanged: (bool? newValue) {
-                                setState(() {
-                                  _isCorrespondenceInRussianPostOffice =
-                                      newValue!;
-                                });
-                              }),
-                        ],
+                              ),
+                            ),
+                            // Row(
+                            //   children: [
+                            //     Checkbox(
+                            //       value: false,
+                            //       onChanged: (bool? value) {
+                            //         setState(() {});
+                            //       },
+                            //     ),
+                            //     const Text(
+                            //         'Доставка без оформления квитанции')
+                            //   ],
+                            // ),
+                            DeliveryMainCustomCheckboxListTile(
+                                isChecked: _isFragileCargo,
+                                label: 'Хрупкий груз',
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isFragileCargo = newValue!;
+                                  });
+                                }),
+                            DeliveryMainCustomCheckboxListTile(
+                                isChecked: _isThermalBag,
+                                label: 'Наличие термосумки',
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isThermalBag = newValue!;
+                                  });
+                                }),
+                            DeliveryMainCustomCheckboxListTile(
+                                isChecked: _isRegistrationInTransportCompany,
+                                label:
+                                    'Оформление отправления в транспортной компании',
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isRegistrationInTransportCompany =
+                                        newValue!;
+                                  });
+                                }),
+
+                            DeliveryMainCustomCheckboxListTile(
+                                isChecked: _isCorrespondenceInRussianPostOffice,
+                                label:
+                                    'Отправка/получение корреспонденции в отделениях Почты России',
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isCorrespondenceInRussianPostOffice =
+                                        newValue!;
+                                  });
+                                }),
+                          ],
+                        ),
                       ),
                     ),
                   ),

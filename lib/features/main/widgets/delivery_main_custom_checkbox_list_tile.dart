@@ -38,13 +38,17 @@ class _DeliveryMainCustomCheckboxListTileState
                         horizontal: 8.0,
                         vertical: 9.0,
                       ),
-                      child: Text(
-                        widget.label!,
-                        style: const TextStyle(
-                          color: Color.fromRGBO(122, 122, 122, 1),
-                          fontFamily: "GT-Eesti-Pro-Display",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          widget.label!,
+                          maxLines: 3,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(122, 122, 122, 1),
+                            fontFamily: "GT-Eesti-Pro-Display",
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                          ),
                         ),
                       ),
                     ),
