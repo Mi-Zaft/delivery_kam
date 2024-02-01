@@ -48,6 +48,7 @@ class ApiService {
   Future<String?> getToken() async {
     final token = await storage.read(key: 'jwt_token');
     // Check if token is expired
+    print(token);
     return token;
   }
 

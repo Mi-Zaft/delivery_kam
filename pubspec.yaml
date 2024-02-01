@@ -72,6 +72,13 @@ flutter:
     - assets/images/auth/logoText.png
     - assets/images/main/iconcourier.png
     - assets/images/main/iconcar.png
+    - assets/images/main/iconavatar.png
+    - assets/images/main/wallet.png
+    - assets/images/main/becomeCourier.png
+    - assets/images/main/chat.png
+    - assets/images/main/exit.png
+    - assets/images/payment/iconMoney.png
+    - assets/images/payment/iconCard.png
   # icons:
     - assets/images/main/iconbox.png
     - assets/images/main/iconDiamond.png

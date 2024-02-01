@@ -12,10 +12,16 @@ class CheckAuthScreen extends StatelessWidget {
         future: ApiService().getToken(), // Получение токена
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return const DeliveryMainScreen();
-          } else {
-            return const DeliveryAuthChooseScreen();
+            if (snapshot.hasError || snapshot.data == null) {
+              print('Open auth screen');
+              return const DeliveryAuthChooseScreen();
+            } else {
+              print('Open main screen');
+              return const DeliveryMainScreen();
+            }
           }
+          print('Open auth screen');
+          return const DeliveryAuthChooseScreen();
         });
   }
 }

@@ -44,14 +44,117 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
 
+  void openDrawer() {
+    _scaffoldKey.currentState!.openDrawer();
+  }
+
   var phoneMaskFormatter = MaskTextInputFormatter(
       mask: '(###) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const Padding(padding: EdgeInsets.only(top: 24)),
+            Row(
+              children: [
+                const Padding(padding: EdgeInsets.only(left: 24)),
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: CircleAvatar(
+                    child: Image.asset(
+                      'assets/images/main/iconavatar.png',
+                      width: 60,
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.only(right: 24)),
+                Container(
+                  width: 150,
+                  child: const Text(
+                    'Дарья',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontWeight: FontWeight.w400,
+                      fontSize: 24,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            const Padding(padding: EdgeInsets.only(top: 40)),
+            GestureDetector(
+              child: ListTile(
+                onTap: () => {Navigator.of(context).pushNamed('/payment-list')},
+                leading: Image.asset(
+                  'assets/images/main/wallet.png',
+                ),
+                title: const Text(
+                  'Способы оплаты',
+                  style: TextStyle(
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+            GestureDetector(
+              child: ListTile(
+                onTap: () => {},
+                leading: Image.asset(
+                  'assets/images/main/becomeCourier.png',
+                ),
+                title: const Text(
+                  'Стать курьером',
+                  style: TextStyle(
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+            GestureDetector(
+              child: ListTile(
+                onTap: () => {},
+                leading: Image.asset(
+                  'assets/images/main/chat.png',
+                ),
+                title: const Text(
+                  'Служба поддержки',
+                  style: TextStyle(
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+            GestureDetector(
+              child: ListTile(
+                onTap: () => {},
+                leading: Image.asset(
+                  'assets/images/main/exit.png',
+                ),
+                title: const Text(
+                  'Выйти из аккаунта',
+                  style: TextStyle(
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontWeight: FontWeight.w300,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: Container(
         color: Colors.white,
         padding:
@@ -83,7 +186,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         ),
       ),
       body: Stack(children: [
-        const DeliveryMainMapScreen(),
+        DeliveryMainMapScreen(openDrawer: openDrawer),
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
@@ -374,7 +477,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       end: Alignment.bottomCenter,
                                     ),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: const EdgeInsets.all(5),
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
