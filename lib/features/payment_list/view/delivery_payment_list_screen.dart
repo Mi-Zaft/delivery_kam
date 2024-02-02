@@ -1,3 +1,5 @@
+import 'package:delivery_kam/features/payment_list/widgets/delivery_payment_add_card_list_tile.dart';
+import 'package:delivery_kam/features/payment_list/widgets/delivery_payment_list_radio_tile.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryPaymentListScreen extends StatefulWidget {
@@ -9,7 +11,7 @@ class DeliveryPaymentListScreen extends StatefulWidget {
 }
 
 class _DeliveryPaymentListScreenState extends State<DeliveryPaymentListScreen> {
-  String _character = 'cash';
+  String _paymentMethod = 'cash';
 
   @override
   Widget build(BuildContext context) {
@@ -21,62 +23,19 @@ class _DeliveryPaymentListScreenState extends State<DeliveryPaymentListScreen> {
         decoration: const BoxDecoration(color: Colors.white),
         child: Column(
           children: [
-            RadioListTile(
-              groupValue: _character,
-              controlAffinity: ListTileControlAffinity.trailing,
-              onChanged: (String? value) {
-                setState(() {
-                  _character = 'cash';
-                });
-              },
-              value: 'cash',
-              title: Row(
-                children: [
-                  Image.asset('assets/images/payment/iconMoney.png'),
-                  const Padding(padding: EdgeInsets.only(right: 15)),
-                  const Text(
-                    'Наличные',
-                    style: TextStyle(
-                        fontFamily: "GT-Eesti-Pro-Display",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 20),
-                  )
-                ],
-              ),
+            const Padding(padding: EdgeInsets.only(top: 35)),
+            DeliveryPaymentListRadioTile(
+              onTap: () => {_paymentMethod = 'cash'},
+              leadingImage: Image.asset('assets/images/payment/iconMoney.png'),
+              title: 'Наличные',
+              active: _paymentMethod == 'cash',
             ),
-            RadioListTile(
-              groupValue: _character,
-              controlAffinity: ListTileControlAffinity.trailing,
-              onChanged: (String? value) {
-                setState(() {
-                  _character = 'card';
-                });
-              },
-              value: 'card',
-              title: Row(
-                children: [
-                  Image.asset('assets/images/payment/iconCard.png'),
-                  const Padding(padding: EdgeInsets.only(right: 15)),
-                  const Text(
-                    'Карта ···· 4605',
-                    style: TextStyle(
-                        fontFamily: "GT-Eesti-Pro-Display",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 20),
-                  ),
-                ],
-              ),
-            )
-            // ListTile(
-            //   title: const Text(
-            //     'Наличные',
-            //     style: TextStyle(
-            //         fontFamily: "GT-Eesti-Pro-Display",
-            //         fontWeight: FontWeight.w300,
-            //         fontSize: 20),
-            //   ),
-            //   leading: Image.asset('assets/images/payment/iconMoney.png'),
-            // )
+            DeliveryPaymentListRadioTile(
+              onTap: () => {_paymentMethod = 'card'},
+              leadingImage: Image.asset('assets/images/payment/iconCard.png'),
+              title: 'Карта ···· 4605',
+            ),
+            const DeliveryPaymentAddCardListTile()
           ],
         ),
       ),

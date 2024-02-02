@@ -79,6 +79,7 @@ flutter:
     - assets/images/main/exit.png
     - assets/images/payment/iconMoney.png
     - assets/images/payment/iconCard.png
+    - assets/images/payment/iconPlus.png
   # icons:
     - assets/images/main/iconbox.png
     - assets/images/main/iconDiamond.png
