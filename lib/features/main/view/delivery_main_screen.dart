@@ -1,6 +1,7 @@
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -77,9 +78,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.only(right: 24)),
-                Container(
+                const SizedBox(
                   width: 150,
-                  child: const Text(
+                  child: Text(
                     'Дарья',
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -165,7 +166,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
             onPressed: () {
               // Navigator.of(context).pushNamed("/register");
               print('Укажите адрес');
-              print(_isFragileCargo);
+
+              print(addressFromTextFieldController.text);
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -603,7 +605,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                               labelText: '',
                               controller: senderNumberTextFieldController,
                               maskInputFormatters: [phoneMaskFormatter],
@@ -619,7 +621,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             const Padding(
                               padding: EdgeInsets.only(top: 20),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                                 labelText: 'Введите имя отправителя',
                                 controller: senderNameTextFieldController,
                                 keyboardType: TextInputType.name),
@@ -638,7 +640,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                               labelText: '',
                               controller: recipientNumberTextFieldController,
                               maskInputFormatters: [phoneMaskFormatter],
@@ -653,7 +655,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             const Padding(
                               padding: EdgeInsets.only(top: 20),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                                 labelText: 'Введите имя получателя',
                                 controller: recipientNameTextFieldController,
                                 keyboardType: TextInputType.name),
@@ -670,7 +672,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     fontWeight: FontWeight.w300),
                               ),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                               labelText: 'Предмет доставки',
                               controller: subjectTextFieldController,
                               prefixStyle: const TextStyle(
@@ -683,7 +685,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 "assets/images/main/iconbox.png",
                               ),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                               labelText: 'Комментарий курьеру',
                               controller: envelopeTextFieldController,
                               prefixStyle: const TextStyle(
@@ -696,7 +698,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 "assets/images/main/iconEnvelope.png",
                               ),
                             ),
-                            DeliveryMainTextfieldAddress(
+                            DeliveryMainTextfieldCustom(
                               labelText: 'Сообщение получателю',
                               controller: chatTextFieldController,
                               prefixStyle: const TextStyle(

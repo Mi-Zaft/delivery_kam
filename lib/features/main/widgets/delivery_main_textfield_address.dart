@@ -24,16 +24,18 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DeliveryMainTextfieldAddressState createState() =>
-      _DeliveryMainTextfieldAddressState();
+  DeliveryMainTextfieldAddressState createState() =>
+      DeliveryMainTextfieldAddressState();
 }
 
-class _DeliveryMainTextfieldAddressState
+class DeliveryMainTextfieldAddressState
     extends State<DeliveryMainTextfieldAddress> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
+    return Column(
+      children: [
+        Center(
+          child: Container(
             decoration:
                 const BoxDecoration(border: Border(bottom: BorderSide())),
             child: Row(
@@ -54,7 +56,7 @@ class _DeliveryMainTextfieldAddressState
                     child: widget.prefixIcon,
                   ),
                 const SizedBox(width: 5.0),
-                Expanded(
+                Flexible(
                   child: TextField(
                     cursorColor: Colors.black,
                     inputFormatters: widget.maskInputFormatters,
@@ -96,8 +98,12 @@ class _DeliveryMainTextfieldAddressState
                       });
                     },
                   ),
-                )
+                ),
               ],
-            )));
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -8,6 +8,7 @@ class DeliveryPaymentAddCardListTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: InkWell(
+        onTap: () => {Navigator.of(context).pushNamed('/payment-add')},
         child: Column(
           children: [
             const Padding(padding: EdgeInsets.only(top: 12)),

@@ -11,7 +11,7 @@ class DeliveryPaymentListScreen extends StatefulWidget {
 }
 
 class _DeliveryPaymentListScreenState extends State<DeliveryPaymentListScreen> {
-  String _paymentMethod = 'cash';
+  String _paymentMethod = '4605';
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +25,31 @@ class _DeliveryPaymentListScreenState extends State<DeliveryPaymentListScreen> {
           children: [
             const Padding(padding: EdgeInsets.only(top: 35)),
             DeliveryPaymentListRadioTile(
-              onTap: () => {_paymentMethod = 'cash'},
+              onTap: () => {
+                updateSelectedTile('cash'),
+              },
               leadingImage: Image.asset('assets/images/payment/iconMoney.png'),
               title: 'Наличные',
               active: _paymentMethod == 'cash',
             ),
             DeliveryPaymentListRadioTile(
-              onTap: () => {_paymentMethod = 'card'},
+              onTap: () => {
+                updateSelectedTile('4605'),
+              },
               leadingImage: Image.asset('assets/images/payment/iconCard.png'),
               title: 'Карта ···· 4605',
+              active: _paymentMethod == '4605',
             ),
             const DeliveryPaymentAddCardListTile()
           ],
         ),
       ),
     );
+  }
+
+  void updateSelectedTile(String newValue) {
+    setState(() {
+      _paymentMethod = newValue;
+    });
   }
 }

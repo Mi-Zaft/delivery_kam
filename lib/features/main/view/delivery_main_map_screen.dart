@@ -56,7 +56,7 @@ class _MapScreenState extends State<DeliveryMainMapScreen> {
           ],
         ),
         Column(children: [
-          const Padding(padding: EdgeInsets.only(bottom: 33)),
+          const Padding(padding: EdgeInsets.only(bottom: 40)),
           Row(
             children: [
               const Padding(padding: EdgeInsets.only(left: 16)),
