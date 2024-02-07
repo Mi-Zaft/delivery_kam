@@ -10,6 +10,8 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
   final TextStyle? prefixStyle;
   final List<MaskTextInputFormatter>? maskInputFormatters;
 
+  final double columnHorizontalPadding = 24.0; // Отступы по бокам
+
   const DeliveryMainTextfieldCustom(
       {Key? key,
       required this.labelText,
@@ -23,62 +25,68 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        decoration: const BoxDecoration(border: Border(bottom: BorderSide())),
-        child: Row(
-          children: [
-            if (prefixText != null)
-              RichText(
-                text: TextSpan(
-                  text: prefixText,
-                  style: prefixStyle?.copyWith(
-                    height: 2,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: columnHorizontalPadding),
+      child: Center(
+        child: Container(
+          decoration: const BoxDecoration(border: Border(bottom: BorderSide())),
+          child: Row(
+            children: [
+              if (prefixText != null)
+                RichText(
+                  text: TextSpan(
+                    text: prefixText,
+                    style: prefixStyle?.copyWith(
+                      height: 2,
+                    ),
                   ),
                 ),
-              ),
-            if (prefixIcon != null)
-              SizedBox(
-                width: 30,
-                height: 30,
-                child: prefixIcon,
-              ),
-            const SizedBox(width: 5.0),
-            Expanded(
-              child: TextField(
-                cursorColor: Colors.black,
-                inputFormatters: maskInputFormatters,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontFamily: "GT-Eesti-Pro-Display",
-                  fontWeight: FontWeight.w300,
+              if (prefixIcon != null)
+                SizedBox(
+                  width: 30,
+                  height: 30,
+                  child: prefixIcon,
                 ),
-                textAlignVertical: const TextAlignVertical(y: 0),
-                keyboardType: keyboardType,
-                decoration: InputDecoration(
-                  prefixIconConstraints: const BoxConstraints(
-                      minWidth: 20, minHeight: 20, maxWidth: 30, maxHeight: 30),
-                  isDense: true,
-                  labelText: labelText,
-                  alignLabelWithHint: true,
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  contentPadding: EdgeInsets.only(
-                      bottom: 10, left: prefixIcon != null ? 10 : 0),
-                  labelStyle: const TextStyle(
-                    color: Color.fromRGBO(122, 122, 122, 1),
-                    fontFamily: "GT-Eesti-Pro-Display",
+              const SizedBox(width: 5.0),
+              Expanded(
+                child: TextField(
+                  cursorColor: Colors.black,
+                  inputFormatters: maskInputFormatters,
+                  style: const TextStyle(
                     fontSize: 18,
+                    fontFamily: "GT-Eesti-Pro-Display",
                     fontWeight: FontWeight.w300,
                   ),
-                  focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0)),
+                  textAlignVertical: const TextAlignVertical(y: 0),
+                  keyboardType: keyboardType,
+                  decoration: InputDecoration(
+                    prefixIconConstraints: const BoxConstraints(
+                        minWidth: 20,
+                        minHeight: 20,
+                        maxWidth: 30,
+                        maxHeight: 30),
+                    isDense: true,
+                    labelText: labelText,
+                    alignLabelWithHint: true,
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    contentPadding: EdgeInsets.only(
+                        bottom: 10, left: prefixIcon != null ? 10 : 0),
+                    labelStyle: const TextStyle(
+                      color: Color.fromRGBO(122, 122, 122, 1),
+                      fontFamily: "GT-Eesti-Pro-Display",
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Color.fromRGBO(0, 0, 0, 0)),
+                    ),
+                    border: InputBorder.none,
                   ),
-                  border: InputBorder.none,
+                  controller: controller,
                 ),
-                controller: controller,
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

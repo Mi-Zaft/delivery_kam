@@ -2,6 +2,7 @@ import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'delivery_auth_confirm_code_event.dart';
 part 'delivery_auth_confirm_code_state.dart';
@@ -24,17 +25,9 @@ class DeliveryAuthConfirmCodeBloc
           print('Тип переменной: ${response.data.runtimeType}');
           if (response.data.containsKey('access_token')) {
             print(response.data['access_token']);
-            await storage.write(
-                key: 'jwt_token', value: response.data['access_token']);
-            Response paymentResponse =
-                await ApiService().fetchData('/api/v1/payment');
-            if (paymentResponse.statusCode == 200) {
-              print(paymentResponse);
-              final data = paymentResponse.data as Map<String, dynamic>;
-              print(data);
-            } else {
-              print('Что-то не так');
-            }
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            await prefs.setString('jwt_token', response.data['access_token']);
             emit(DeliveryAuthConfirmCodeSuccess());
           } else {
             emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));

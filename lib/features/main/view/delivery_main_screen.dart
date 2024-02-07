@@ -1,4 +1,6 @@
+import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_hint.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
@@ -14,6 +16,15 @@ class DeliveryMainScreen extends StatefulWidget {
 }
 
 class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
+  final _deliveryMainBloc = DeliveryMainBloc();
+  final _activeGradientColor = [
+    const Color.fromRGBO(175, 223, 233, 1),
+    const Color.fromRGBO(32, 191, 208, 1)
+  ];
+  final _inactiveGradientColor = [
+    const Color.fromRGBO(195, 195, 195, 1),
+    const Color.fromRGBO(195, 195, 195, 1)
+  ];
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
   final TextEditingController addressFromTextFieldController =
       TextEditingController();
@@ -40,10 +51,16 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   final double maxChildSize = 0.9;
   final double minChildSize = .425;
 
+  bool _isAuto = false;
+  bool _isExpress = false;
+  bool _isToDoor = false;
   bool _isFragileCargo = false;
   bool _isThermalBag = false;
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
+
+  List addressToHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
+  List addressFromHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -232,50 +249,77 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                         ),
                         color: Colors.white,
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: columnHorizontalPadding),
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          DeliveryMainTextfieldAddress(
+                            onChange: () {
+                              if (addressFromTextFieldController.text.length >=
+                                  3) {
+                                _deliveryMainBloc.add(
+                                  LoadingMainAddressHintRequest(
+                                    addressFromTextFieldController.text,
+                                  ),
+                                );
+                              }
+                            },
+                            labelText: 'Откуда забрать',
+                            prefixStyle: const TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(122, 122, 122, 1),
                             ),
-                            DeliveryMainTextfieldAddress(
-                                labelText: 'Откуда забрать',
-                                prefixStyle: const TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromRGBO(122, 122, 122, 1),
-                                ),
-                                controller: addressFromTextFieldController,
-                                keyboardType: TextInputType.streetAddress,
-                                prefixText: "A"),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
+                            controller: addressFromTextFieldController,
+                            keyboardType: TextInputType.streetAddress,
+                            prefixText: "A",
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          for (var i in addressFromHint)
+                            DeliveryMainAddressHint(
+                              address: i,
                             ),
-                            DeliveryMainTextfieldAddress(
-                              labelText: 'Куда доставить',
-                              prefixStyle: const TextStyle(
-                                fontSize: 20,
-                                color: Color.fromRGBO(122, 122, 122, 1),
-                              ),
-                              controller: addressToTextFieldController,
-                              keyboardType: TextInputType.streetAddress,
-                              prefixText: "Б",
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                          ),
+                          DeliveryMainTextfieldAddress(
+                            onChange: () {
+                              print(addressToTextFieldController.text);
+                            },
+                            labelText: 'Куда доставить',
+                            prefixStyle: const TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(122, 122, 122, 1),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
+                            controller: addressToTextFieldController,
+                            keyboardType: TextInputType.streetAddress,
+                            prefixText: "Б",
+                          ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          for (var i in addressToHint)
+                            DeliveryMainAddressHint(
+                              address: i,
                             ),
-                            Row(
+                          const Padding(
+                            padding: EdgeInsets.only(top: 25),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: Row(
                               children: [
                                 Expanded(
                                   child: UnicornOutlineButton(
                                     strokeWidth: 4,
                                     radius: 16,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(175, 223, 233, 1),
-                                        Color.fromRGBO(32, 191, 208, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: _isAuto
+                                          ? _inactiveGradientColor
+                                          : _activeGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -293,7 +337,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ],
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isAuto = false;
+                                      });
+                                    },
                                   ),
                                 ),
                                 const Padding(
@@ -303,11 +351,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   child: UnicornOutlineButton(
                                     strokeWidth: 4,
                                     radius: 16,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(195, 195, 195, 1),
-                                        Color.fromRGBO(195, 195, 195, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: !_isAuto
+                                          ? _inactiveGradientColor
+                                          : _activeGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -325,15 +372,23 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ],
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isAuto = true;
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            const Align(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 25),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Время доставки',
@@ -345,20 +400,23 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            Row(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: Row(
                               children: [
                                 Expanded(
                                   child: UnicornOutlineButton(
                                     strokeWidth: 4,
                                     radius: 16,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(175, 223, 233, 1),
-                                        Color.fromRGBO(32, 191, 208, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: !_isExpress
+                                          ? _activeGradientColor
+                                          : _inactiveGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -390,7 +448,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ],
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isExpress = false;
+                                      });
+                                    },
                                   ),
                                 ),
                                 const Padding(
@@ -400,11 +462,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   child: UnicornOutlineButton(
                                     strokeWidth: 4,
                                     radius: 16,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(195, 195, 195, 1),
-                                        Color.fromRGBO(195, 195, 195, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: _isExpress
+                                          ? _activeGradientColor
+                                          : _inactiveGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -436,15 +497,23 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ],
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isExpress = true;
+                                      });
+                                    },
                                   ),
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            const Align(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Как доставить',
@@ -456,10 +525,14 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            Row(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Expanded(
@@ -470,11 +543,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                             : 60,
                                     strokeWidth: 4,
                                     radius: 16,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(175, 223, 233, 1),
-                                        Color.fromRGBO(32, 191, 208, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: !_isToDoor
+                                          ? _activeGradientColor
+                                          : _inactiveGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -541,7 +613,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ],
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isToDoor = false;
+                                      });
+                                    },
                                   ),
                                 ),
                                 const Padding(
@@ -555,11 +631,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         MediaQuery.of(context).size.width <= 350
                                             ? 90
                                             : 60,
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromRGBO(195, 195, 195, 1),
-                                        Color.fromRGBO(195, 195, 195, 1)
-                                      ],
+                                    gradient: LinearGradient(
+                                      colors: _isToDoor
+                                          ? _activeGradientColor
+                                          : _inactiveGradientColor,
                                       begin: Alignment.topRight,
                                       end: Alignment.bottomCenter,
                                     ),
@@ -585,15 +660,23 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      setState(() {
+                                        _isToDoor = true;
+                                      });
+                                    },
                                   ),
                                 )
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            const Align(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Введите номер телефона отправителя',
@@ -605,30 +688,34 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: '',
-                              controller: senderNumberTextFieldController,
-                              maskInputFormatters: [phoneMaskFormatter],
-                              prefixStyle: const TextStyle(
-                                fontFamily: "GT-Eesti-Pro-Display",
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black,
-                              ),
-                              keyboardType: TextInputType.phone,
-                              prefixText: "+7",
+                          ),
+                          DeliveryMainTextfieldCustom(
+                            labelText: '',
+                            controller: senderNumberTextFieldController,
+                            maskInputFormatters: [phoneMaskFormatter],
+                            prefixStyle: const TextStyle(
+                              fontFamily: "GT-Eesti-Pro-Display",
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black,
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                                labelText: 'Введите имя отправителя',
-                                controller: senderNameTextFieldController,
-                                keyboardType: TextInputType.name),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            const Align(
+                            keyboardType: TextInputType.phone,
+                            prefixText: "+7",
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          DeliveryMainTextfieldCustom(
+                              labelText: 'Введите имя отправителя',
+                              controller: senderNameTextFieldController,
+                              keyboardType: TextInputType.name),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Введите номер телефона получателя',
@@ -640,29 +727,33 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: '',
-                              controller: recipientNumberTextFieldController,
-                              maskInputFormatters: [phoneMaskFormatter],
-                              prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.phone,
-                              prefixText: "+7",
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                                labelText: 'Введите имя получателя',
-                                controller: recipientNameTextFieldController,
-                                keyboardType: TextInputType.name),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            const Align(
+                          ),
+                          DeliveryMainTextfieldCustom(
+                            labelText: '',
+                            controller: recipientNumberTextFieldController,
+                            maskInputFormatters: [phoneMaskFormatter],
+                            prefixStyle: const TextStyle(
+                                fontFamily: "GT-Eesti-Pro-Display",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            keyboardType: TextInputType.phone,
+                            prefixText: "+7",
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 20),
+                          ),
+                          DeliveryMainTextfieldCustom(
+                              labelText: 'Введите имя получателя',
+                              controller: recipientNameTextFieldController,
+                              keyboardType: TextInputType.name),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 25),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Детали отправки',
@@ -672,49 +763,53 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     fontWeight: FontWeight.w300),
                               ),
                             ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Предмет доставки',
-                              controller: subjectTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.phone,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconbox.png",
-                              ),
+                          ),
+                          DeliveryMainTextfieldCustom(
+                            labelText: 'Предмет доставки',
+                            controller: subjectTextFieldController,
+                            prefixStyle: const TextStyle(
+                                fontFamily: "GT-Eesti-Pro-Display",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            keyboardType: TextInputType.phone,
+                            prefixIcon: Image.asset(
+                              "assets/images/main/iconbox.png",
                             ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Комментарий курьеру',
-                              controller: envelopeTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.phone,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconEnvelope.png",
-                              ),
+                          ),
+                          DeliveryMainTextfieldCustom(
+                            labelText: 'Комментарий курьеру',
+                            controller: envelopeTextFieldController,
+                            prefixStyle: const TextStyle(
+                                fontFamily: "GT-Eesti-Pro-Display",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            keyboardType: TextInputType.phone,
+                            prefixIcon: Image.asset(
+                              "assets/images/main/iconEnvelope.png",
                             ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Сообщение получателю',
-                              controller: chatTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.phone,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconChat.png",
-                              ),
+                          ),
+                          DeliveryMainTextfieldCustom(
+                            labelText: 'Сообщение получателю',
+                            controller: chatTextFieldController,
+                            prefixStyle: const TextStyle(
+                                fontFamily: "GT-Eesti-Pro-Display",
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black),
+                            keyboardType: TextInputType.phone,
+                            prefixIcon: Image.asset(
+                              "assets/images/main/iconChat.png",
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            const Align(
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 25),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: columnHorizontalPadding),
+                            child: const Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
                                 'Дополнительно',
@@ -724,57 +819,56 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     fontWeight: FontWeight.w300),
                               ),
                             ),
-                            // Row(
-                            //   children: [
-                            //     Checkbox(
-                            //       value: false,
-                            //       onChanged: (bool? value) {
-                            //         setState(() {});
-                            //       },
-                            //     ),
-                            //     const Text(
-                            //         'Доставка без оформления квитанции')
-                            //   ],
-                            // ),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isFragileCargo,
-                                label: 'Хрупкий груз',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isFragileCargo = newValue!;
-                                  });
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isThermalBag,
-                                label: 'Наличие термосумки',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isThermalBag = newValue!;
-                                  });
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isRegistrationInTransportCompany,
-                                label:
-                                    'Оформление отправления в транспортной компании',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isRegistrationInTransportCompany =
-                                        newValue!;
-                                  });
-                                }),
+                          ),
+                          // Row(
+                          //   children: [
+                          //     Checkbox(
+                          //       value: false,
+                          //       onChanged: (bool? value) {
+                          //         setState(() {});
+                          //       },
+                          //     ),
+                          //     const Text(
+                          //         'Доставка без оформления квитанции')
+                          //   ],
+                          // ),
+                          DeliveryMainCustomCheckboxListTile(
+                              isChecked: _isFragileCargo,
+                              label: 'Хрупкий груз',
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  _isFragileCargo = newValue!;
+                                });
+                              }),
+                          DeliveryMainCustomCheckboxListTile(
+                              isChecked: _isThermalBag,
+                              label: 'Наличие термосумки',
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  _isThermalBag = newValue!;
+                                });
+                              }),
+                          DeliveryMainCustomCheckboxListTile(
+                              isChecked: _isRegistrationInTransportCompany,
+                              label:
+                                  'Оформление отправления в транспортной компании',
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  _isRegistrationInTransportCompany = newValue!;
+                                });
+                              }),
 
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isCorrespondenceInRussianPostOffice,
-                                label:
-                                    'Отправка/получение корреспонденции в отделениях Почты России',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isCorrespondenceInRussianPostOffice =
-                                        newValue!;
-                                  });
-                                }),
-                          ],
-                        ),
+                          DeliveryMainCustomCheckboxListTile(
+                              isChecked: _isCorrespondenceInRussianPostOffice,
+                              label:
+                                  'Отправка/получение корреспонденции в отделениях Почты России',
+                              onChanged: (bool? newValue) {
+                                setState(() {
+                                  _isCorrespondenceInRussianPostOffice =
+                                      newValue!;
+                                });
+                              }),
+                        ],
                       ),
                     ),
                   ),
