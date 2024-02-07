@@ -32,6 +32,7 @@ class _DeliveryAuthConfirmCodeTextfieldState
               textAlign: TextAlign.center,
               showCursor: false,
               maxLength: 1,
+              keyboardType: TextInputType.number,
               onChanged: widget.onChanged,
               controller: widget.controller,
               name: 'first',
@@ -46,7 +47,7 @@ class _DeliveryAuthConfirmCodeTextfieldState
                   counterText: "",
                   contentPadding: EdgeInsets.zero,
                   filled: true,
-                  fillColor: const Color.fromRGBO(255, 136, 136, .5),
+                  fillColor: Color.fromRGBO(255, 136, 136, .5),
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
@@ -62,6 +63,7 @@ class _DeliveryAuthConfirmCodeTextfieldState
               textAlign: TextAlign.center,
               showCursor: false,
               maxLength: 1,
+              keyboardType: TextInputType.number,
               onChanged: widget.onChanged,
               controller: widget.controller,
               name: 'first',
@@ -76,7 +78,7 @@ class _DeliveryAuthConfirmCodeTextfieldState
                   counterText: "",
                   contentPadding: EdgeInsets.zero,
                   filled: false,
-                  fillColor: const Color.fromRGBO(255, 136, 136, .5),
+                  fillColor:  Color.fromRGBO(255, 136, 136, .5),
                   border: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.transparent),
                   ),
