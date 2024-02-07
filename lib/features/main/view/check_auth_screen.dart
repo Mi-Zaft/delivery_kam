@@ -13,14 +13,11 @@ class CheckAuthScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError || snapshot.data == null) {
-              print('Open auth screen');
               return const DeliveryAuthChooseScreen();
             } else {
-              print('Open main screen');
               return const DeliveryMainScreen();
             }
           }
-          print('Open auth screen');
           return const DeliveryAuthChooseScreen();
         });
   }

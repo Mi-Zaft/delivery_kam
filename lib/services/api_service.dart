@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:delivery_kam/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   final Dio _dio = Dio();
@@ -25,7 +28,7 @@ class ApiService {
 
     _token = await getToken();
     _dio.options.headers['Authorization'] = 'Bearer $_token';
-    print('Bearer $_token');
+    // print('Bearer $_token');
   }
 
   // ApiService() {
@@ -46,9 +49,9 @@ class ApiService {
   // }
 
   Future<String?> getToken() async {
-    final token = await storage.read(key: 'jwt_token');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('jwt_token');
     // Check if token is expired
-    print(token);
     return token;
   }
 
@@ -62,14 +65,14 @@ class ApiService {
       return response;
     } catch (error) {
       if (error is DioException) {
-        print(error.response?.data['detail']);
+        // print(error.response?.data['detail']);
         return Response(
             requestOptions: RequestOptions(path: endPoint),
             statusCode: 400,
             statusMessage:
                 error.response?.data['detail'] ?? 'Неизвестная ошибка');
       } else {
-        print(error);
+        // print(error);
         return Response(
             requestOptions: RequestOptions(path: endPoint),
             statusCode: 400,
@@ -80,7 +83,8 @@ class ApiService {
 
   Future<Response> postData(String endPoint, Object dataToSend) async {
     try {
-      print(dataToSend);
+      _token = await getToken();
+      _dio.options.headers['Authorization'] = 'Bearer $_token';
       final response = await _dio.post(endPoint, data: dataToSend);
       return response;
     } catch (error) {
