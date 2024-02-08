@@ -86,7 +86,7 @@ class _DeliveryAuthConfirmCodeScreenState
             bloc: _deliveryAuthConfirmCodeBloc,
             listener: (context, state) {
               if (state is DeliveryAuthConfirmCodeSuccess) {
-                Navigator.pushNamed(context, '/main-screen', arguments: {});
+                Navigator.pushNamedAndRemoveUntil(context, '/main-screen', (route) => false);
               }
             },
             child: Padding(
