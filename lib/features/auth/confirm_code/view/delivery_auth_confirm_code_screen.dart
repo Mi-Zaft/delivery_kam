@@ -2,7 +2,6 @@ import 'package:delivery_kam/features/auth/confirm_code/bloc/delivery_auth_confi
 import 'package:delivery_kam/features/auth/confirm_code/widgets/delivery_auth_confirm_code_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class DeliveryAuthConfirmCodeScreen extends StatefulWidget {
   const DeliveryAuthConfirmCodeScreen({Key? key}) : super(key: key);
@@ -14,7 +13,6 @@ class DeliveryAuthConfirmCodeScreen extends StatefulWidget {
 
 class _DeliveryAuthConfirmCodeScreenState
     extends State<DeliveryAuthConfirmCodeScreen> {
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final _deliveryAuthConfirmCodeBloc = DeliveryAuthConfirmCodeBloc();
   final double buttonHeight = 15; // Высота кнопок
   final double columnHorizontalPadding =
@@ -66,11 +64,6 @@ class _DeliveryAuthConfirmCodeScreenState
     super.dispose();
   }
 
-  void _requestFocus(int index) {
-    if (index < focusNodes.length - 1) {
-      FocusScope.of(context).requestFocus(focusNodes[index + 1]);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -423,7 +416,6 @@ class _DeliveryAuthConfirmCodeScreenState
                                                     .value.text +
                                                 _sixTextFieldController
                                                     .value.text;
-                                            print(code);
                                             _deliveryAuthConfirmCodeBloc.add(
                                                 LoadingConfirmCodeRequest(
                                                     code, unMaskedPhoneNumber));

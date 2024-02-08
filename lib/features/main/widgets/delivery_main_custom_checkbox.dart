@@ -4,15 +4,15 @@ class DeliveryMainCustomCheckbox extends StatefulWidget {
   final bool isChecked;
   final Function(bool) onChanged;
 
-  DeliveryMainCustomCheckbox(
-      {required this.isChecked, required this.onChanged});
+  const DeliveryMainCustomCheckbox(
+      {super.key, required this.isChecked, required this.onChanged});
 
   @override
-  _DeliveryMainCustomCheckboxState createState() =>
-      _DeliveryMainCustomCheckboxState();
+  DeliveryMainCustomCheckboxState createState() =>
+      DeliveryMainCustomCheckboxState();
 }
 
-class _DeliveryMainCustomCheckboxState
+class DeliveryMainCustomCheckboxState
     extends State<DeliveryMainCustomCheckbox> {
   @override
   Widget build(BuildContext context) {

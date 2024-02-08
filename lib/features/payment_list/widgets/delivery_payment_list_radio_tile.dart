@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 
 class DeliveryPaymentListRadioTile extends StatelessWidget {
-  Image? leadingImage;
-  String title;
-  bool? active;
+  final Image? leadingImage;
+  final String title;
+  final bool? active;
   final Function() onTap;
-  DeliveryPaymentListRadioTile(
+  const DeliveryPaymentListRadioTile(
       {super.key,
       required this.title,
       required this.onTap,
@@ -19,7 +18,6 @@ class DeliveryPaymentListRadioTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: InkWell(
         onTap: () {
-          print('tap');
           onTap();
         },
         child: Column(

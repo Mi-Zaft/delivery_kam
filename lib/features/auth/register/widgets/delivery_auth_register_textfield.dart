@@ -20,11 +20,11 @@ class DeliveryAuthRegisterTextfield extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DeliveryAuthRegisterTextfieldState createState() =>
-      _DeliveryAuthRegisterTextfieldState();
+  DeliveryAuthRegisterTextfieldState createState() =>
+      DeliveryAuthRegisterTextfieldState();
 }
 
-class _DeliveryAuthRegisterTextfieldState
+class DeliveryAuthRegisterTextfieldState
     extends State<DeliveryAuthRegisterTextfield> {
   @override
   Widget build(BuildContext context) {

@@ -157,7 +157,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
             ),
             GestureDetector(
               child: ListTile(
-                onTap: () => {},
+                onTap: () async => {
+                  _deliveryMainBloc.add(
+                    LoadingExitFromAccount(),
+                  ),
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false)
+                },
                 leading: Image.asset(
                   'assets/images/main/exit.png',
                 ),
@@ -182,9 +187,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           child: ElevatedButton(
             onPressed: () {
               // Navigator.of(context).pushNamed("/register");
-              print('Укажите адрес');
-
-              print(addressFromTextFieldController.text);
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -210,10 +212,13 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
               if (notification.extent == maxChildSize) {
+                // ignore: avoid_print
                 print('DraggableScrollableSheet в положении "вытянуто"');
               } else if (notification.extent == minChildSize) {
+                // ignore: avoid_print
                 print('DraggableScrollableSheet в положении "свернуто"');
               } else {
+                // ignore: avoid_print
                 print('DraggableScrollableSheet в промежуточном положении');
               }
               return true;
@@ -285,9 +290,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             padding: EdgeInsets.only(bottom: 10),
                           ),
                           DeliveryMainTextfieldAddress(
-                            onChange: () {
-                              print(addressToTextFieldController.text);
-                            },
+                            onChange: () {},
                             labelText: 'Куда доставить',
                             prefixStyle: const TextStyle(
                               fontSize: 20,

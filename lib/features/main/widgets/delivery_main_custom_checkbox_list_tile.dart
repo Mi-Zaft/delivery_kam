@@ -2,21 +2,21 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox
 import 'package:flutter/material.dart';
 
 class DeliveryMainCustomCheckboxListTile extends StatefulWidget {
-  bool isChecked;
+  final bool isChecked;
   final Function(bool) onChanged;
   final String? label;
 
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
 
-  DeliveryMainCustomCheckboxListTile(
-      {required this.isChecked, required this.onChanged, this.label});
+  const DeliveryMainCustomCheckboxListTile(
+      {super.key, required this.isChecked, required this.onChanged, this.label});
 
   @override
-  _DeliveryMainCustomCheckboxListTileState createState() =>
-      _DeliveryMainCustomCheckboxListTileState();
+  DeliveryMainCustomCheckboxListTileState createState() =>
+      DeliveryMainCustomCheckboxListTileState();
 }
 
-class _DeliveryMainCustomCheckboxListTileState
+class DeliveryMainCustomCheckboxListTileState
     extends State<DeliveryMainCustomCheckboxListTile> {
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _DeliveryMainCustomCheckboxListTileState
                   child: InkResponse(
                     child: InkWell(
                       onTap: () {
-                        widget.onChanged?.call(!widget.isChecked);
+                        widget.onChanged.call(!widget.isChecked);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(

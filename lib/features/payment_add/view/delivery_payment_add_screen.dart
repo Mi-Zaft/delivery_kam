@@ -35,7 +35,7 @@ class _DeliveryPaymentAddScreenState extends State<DeliveryPaymentAddScreen> {
         title: const Text('Новая карта'),
       ),
       body: GestureDetector(
-        onTap: () => {FocusScope.of(context).requestFocus(new FocusNode())},
+        onTap: () => {FocusScope.of(context).requestFocus(FocusNode())},
         child: Container(
           decoration: const BoxDecoration(color: Colors.white),
           padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -128,7 +128,6 @@ class _DeliveryPaymentAddScreenState extends State<DeliveryPaymentAddScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         // Navigator.of(context).pushNamed("/register");
-                        print('Добавить карту');
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
