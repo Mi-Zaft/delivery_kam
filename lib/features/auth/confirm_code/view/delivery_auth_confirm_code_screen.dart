@@ -64,19 +64,20 @@ class _DeliveryAuthConfirmCodeScreenState
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final String phoneNumber = args['phoneNumber'];
-    final String userName = args['userName'];
+    final String? userName = args['userName'];
     final String unMaskedPhoneNumber = args['unMaskedPhoneNumber'];
     return BlocProvider(
         create: (BuildContext context) => DeliveryAuthConfirmCodeBloc(),
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Регистрация"),
+            title: userName != null
+                ? const Text("Регистрация")
+                : const Text("Авторизация"),
             iconTheme:
                 const IconThemeData(color: Color.fromRGBO(149, 149, 149, 1)),
           ),
@@ -329,8 +330,8 @@ class _DeliveryAuthConfirmCodeScreenState
                   Center(
                       child: TextButton(
                           onPressed: () {
-                            _deliveryAuthConfirmCodeBloc.add(LoadingResendCode(
-                                userName, unMaskedPhoneNumber));
+                            _deliveryAuthConfirmCodeBloc.add(
+                                LoadingResendCode(null, unMaskedPhoneNumber));
                           },
                           child: const Text(
                             "Отправить код повторно",
@@ -416,9 +417,17 @@ class _DeliveryAuthConfirmCodeScreenState
                                                     .value.text +
                                                 _sixTextFieldController
                                                     .value.text;
-                                            _deliveryAuthConfirmCodeBloc.add(
+                                            if (userName != null) {
+                                              _deliveryAuthConfirmCodeBloc.add(
                                                 LoadingConfirmCodeRequest(
-                                                    code, unMaskedPhoneNumber));
+                                                    code, unMaskedPhoneNumber),
+                                              );
+                                            } else {
+                                              _deliveryAuthConfirmCodeBloc.add(
+                                                LoadingAuthConfirmCodeRequest(
+                                                    code, unMaskedPhoneNumber),
+                                              );
+                                            }
                                           }
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -433,9 +442,11 @@ class _DeliveryAuthConfirmCodeScreenState
                                                 BorderRadius.circular(30.0),
                                           ),
                                         ),
-                                        child: const Text(
-                                          'Зарегистрироваться',
-                                          style: TextStyle(
+                                        child: Text(
+                                          userName != null
+                                              ? 'Зарегистрироваться'
+                                              : 'Войти',
+                                          style: const TextStyle(
                                               color: Colors.white,
                                               fontFamily:
                                                   "GT-Eesti-Pro-Display",
@@ -450,9 +461,11 @@ class _DeliveryAuthConfirmCodeScreenState
                                       backgroundColor: const Color.fromRGBO(
                                           195, 195, 195, 1)),
                                   onPressed: () {},
-                                  child: const Text(
-                                    'Зарегистрироваться',
-                                    style: TextStyle(
+                                  child: Text(
+                                    userName != null
+                                        ? 'Зарегистрироваться'
+                                        : 'Войти',
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: "GT-Eesti-Pro-Display",
                                         fontSize: 18,

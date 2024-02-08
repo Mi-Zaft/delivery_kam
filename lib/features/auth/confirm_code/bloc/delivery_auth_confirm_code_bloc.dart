@@ -12,6 +12,7 @@ class DeliveryAuthConfirmCodeBloc
   // TODO: удалить, если не возникнет ошибки
   // final storage = const FlutterSecureStorage();
   DeliveryAuthConfirmCodeBloc() : super(DeliveryAuthConfirmCodeInitial()) {
+    // Loading confirm code request
     on<LoadingConfirmCodeRequest>((event, emit) async {
       Map<String, dynamic> dataToSend = {
         'code': event.code,
@@ -35,13 +36,26 @@ class DeliveryAuthConfirmCodeBloc
             errorText: response.statusMessage ?? 'Ошибка'));
       }
     });
+    // Loading resend code
     on<LoadingResendCode>((event, emit) async {
       Map<String, dynamic> dataToSend = {
         'name': event.name,
         'phone': '+7${event.phone}'
       };
-      Response response = await ApiService()
-          .postData('/api/v1/registration/send-code', dataToSend);
+      if (event.name != null) {
+        Response response = await ApiService()
+            .postData('/api/v1/registration/send-code', dataToSend);
+        if (response.statusCode == 200) {
+          if (response.data['status'] == true) {
+            emit(DeliveryAuthConfirmCodeResendSuccess());
+          }
+        } else {
+          emit(DeliveryAuthConfirmCodeResendFail(
+              errorText: response.statusMessage ?? 'Ошибка'));
+        }
+      } else {
+        Response response = await ApiService()
+          .postData('/api/v1/authorization/send-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
           emit(DeliveryAuthConfirmCodeResendSuccess());
@@ -50,7 +64,33 @@ class DeliveryAuthConfirmCodeBloc
         emit(DeliveryAuthConfirmCodeResendFail(
             errorText: response.statusMessage ?? 'Ошибка'));
       }
+      }
     });
+    // Loading auth confirm code request
+    on<LoadingAuthConfirmCodeRequest>((event, emit) async {
+      Map<String, dynamic> dataToSend = {
+        'code': event.code,
+        'phone': '+7${event.phone}',
+      };
+      Response response = await ApiService()
+          .postData('/api/v1/authorization/verify-code', dataToSend);
+      if (response.statusCode == 200) {
+        if (response.data['status'] == true) {
+          if (response.data.containsKey('access_token')) {
+            final SharedPreferences prefs =
+                await SharedPreferences.getInstance();
+            await prefs.setString('jwt_token', response.data['access_token']);
+            emit(DeliveryAuthConfirmCodeSuccess());
+          } else {
+            emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));
+          }
+        }
+      } else {
+        emit(DeliveryAuthConfirmCodeFail(
+            errorText: response.statusMessage ?? 'Ошибка'));
+      }
+    });
+    // editing code
     on<EditingCode>((event, emit) async {
       if (state is DeliveryAuthConfirmCodeFail) {
         emit(DeliveryAuthConfirmCodeInitial());
