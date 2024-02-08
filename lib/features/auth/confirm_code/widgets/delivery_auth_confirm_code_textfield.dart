@@ -9,11 +9,13 @@ class DeliveryAuthConfirmCodeTextfield extends StatefulWidget {
       required this.controller,
       required this.focusNode,
       required this.onChanged,
+      required this.onTap,
       required this.isError});
   final TextEditingController controller;
   final FocusNode focusNode;
   final void Function(String?) onChanged;
   final bool isError;
+  final void Function() onTap;
 
   @override
   State<DeliveryAuthConfirmCodeTextfield> createState() =>
@@ -32,6 +34,7 @@ class _DeliveryAuthConfirmCodeTextfieldState
               textAlign: TextAlign.center,
               showCursor: false,
               maxLength: 1,
+              onTap: widget.onTap,
               keyboardType: TextInputType.number,
               onChanged: widget.onChanged,
               controller: widget.controller,

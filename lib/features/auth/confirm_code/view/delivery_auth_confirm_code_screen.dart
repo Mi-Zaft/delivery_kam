@@ -17,6 +17,9 @@ class _DeliveryAuthConfirmCodeScreenState
   final double buttonHeight = 15; // Высота кнопок
   final double columnHorizontalPadding =
       24.0; // Отступы по бокам столбца кнопок
+  final _focus = FocusNode();
+  final TextEditingController _codeTextFieldController =
+      TextEditingController();
   final TextEditingController _firstTextFieldController =
       TextEditingController();
   final TextEditingController _secondTextFieldController =
@@ -64,6 +67,10 @@ class _DeliveryAuthConfirmCodeScreenState
     super.dispose();
   }
 
+  void _handleBoxPressed() {
+    _focus.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
@@ -86,7 +93,8 @@ class _DeliveryAuthConfirmCodeScreenState
             bloc: _deliveryAuthConfirmCodeBloc,
             listener: (context, state) {
               if (state is DeliveryAuthConfirmCodeSuccess) {
-                Navigator.pushNamedAndRemoveUntil(context, '/main-screen', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/main-screen', (route) => false);
               }
             },
             child: Padding(
@@ -120,6 +128,23 @@ class _DeliveryAuthConfirmCodeScreenState
                       ),
                     ),
                   ),
+                  Offstage(
+                    child: TextField(
+                      controller: _codeTextFieldController,
+                      focusNode: _focus,
+                      onChanged: (value) => {
+                        if (value.length == 6)
+                          {
+                            _firstTextFieldController.text = value[0],
+                            _secondTextFieldController.text = value[1],
+                            _thirdTextFieldController.text = value[2],
+                            _fourTextFieldController.text = value[3],
+                            _fiveTextFieldController.text = value[4],
+                            _sixTextFieldController.text = value[5]
+                          }
+                      },
+                    ),
+                  ),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -131,6 +156,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 24),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[0],
                                       focusNode: focusNodes[0],
                                       isError: isError,
@@ -161,6 +187,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 5),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[1],
                                       focusNode: focusNodes[1],
                                       isError: isError,
@@ -191,6 +218,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 5),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[2],
                                       focusNode: focusNodes[2],
                                       isError: isError,
@@ -221,6 +249,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 5),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[3],
                                       focusNode: focusNodes[3],
                                       isError: isError,
@@ -251,6 +280,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 5),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[4],
                                       focusNode: focusNodes[4],
                                       isError: isError,
@@ -281,6 +311,7 @@ class _DeliveryAuthConfirmCodeScreenState
                               const SizedBox(width: 5),
                               Expanded(
                                   child: DeliveryAuthConfirmCodeTextfield(
+                                      onTap: _handleBoxPressed,
                                       controller: textControllers[5],
                                       focusNode: focusNodes[5],
                                       isError: isError,

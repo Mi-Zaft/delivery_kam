@@ -16,12 +16,8 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       Response response =
           await ApiService().postData('/api/v1/geo/suggest', dataToSend);
       if (response.statusCode == 200) {
-        emit(DeliveryMainAddressHintSuccess(addresses: response.data));
-        // if (response.data['status'] == true) {
-        // emit(DeliveryMainAddressHintSuccess(
-        //   addresses: response
-        // ));
-        // }
+        print(response.data[0]);
+        emit(DeliveryMainAddressHintSuccess(addresses: response.data as List));
       } else if (response.statusCode != 200) {
         emit(DeliveryMainAddressHintFail(
             errorText: response.statusMessage ?? 'Ошибка'));
