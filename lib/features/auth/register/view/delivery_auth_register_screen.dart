@@ -60,6 +60,12 @@ class _DeliveryAuthRegisterScreenState
                 children: [
                   Column(children: [
                     DeliveryAuthRegisterTextfield(
+                      onChanged: () {
+                        _deliveryAuthRegisterBloc.add(
+                          EditingPhoneNumber(_nameTextFieldController.text,
+                              _phoneTextFieldController.text),
+                        );
+                      },
                       labelText: "Введите имя",
                       controller: _nameTextFieldController,
                       keyboardType: TextInputType.name,
@@ -67,6 +73,12 @@ class _DeliveryAuthRegisterScreenState
                     ),
                     const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10)),
                     DeliveryAuthRegisterTextfield(
+                      onChanged: () {
+                        _deliveryAuthRegisterBloc.add(
+                          EditingPhoneNumber(_nameTextFieldController.text,
+                              _phoneTextFieldController.text),
+                        );
+                      },
                       labelText: 'Введите свой номер телефона',
                       controller: _phoneTextFieldController,
                       keyboardType: TextInputType.phone,
@@ -101,28 +113,78 @@ class _DeliveryAuthRegisterScreenState
                           fontWeight: FontWeight.w400),
                     ),
                     const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding:
-                                EdgeInsets.symmetric(vertical: buttonHeight),
-                            backgroundColor:
-                                const Color.fromRGBO(195, 195, 195, 1)),
-                        onPressed: () {
-                          String name = _nameTextFieldController.text;
-                          _deliveryAuthRegisterBloc.add(LoadingRegisterRequest(
-                              name, phoneMaskFormatter.getUnmaskedText()));
-                        },
-                        child: const Text(
-                          'Создать аккаунт',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "GT-Eesti-Pro-Display",
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
+                    BlocBuilder<DeliveryAuthRegisterBloc,
+                        DeliveryAuthRegisterState>(
+                      bloc: _deliveryAuthRegisterBloc,
+                      builder: (context, state) {
+                        if (state is DeliveryAuthRegisterDataCorrect) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Color.fromRGBO(175, 223, 234, 1),
+                                    Color.fromRGBO(33, 190, 210, 1)
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  String name = _nameTextFieldController.text;
+                                  _deliveryAuthRegisterBloc.add(
+                                      LoadingRegisterRequest(
+                                          name,
+                                          phoneMaskFormatter
+                                              .getUnmaskedText()));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: buttonHeight),
+                                  backgroundColor: Colors
+                                      .transparent, // Чтобы фон ElevatedButton был прозрачным
+                                  elevation: 0, // Отключаем подъем тени кнопки
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Создать аккаунт',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: "GT-Eesti-Pro-Display",
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                          );
+                          ;
+                        } else {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: buttonHeight),
+                                  backgroundColor:
+                                      const Color.fromRGBO(195, 195, 195, 1)),
+                              onPressed: () {},
+                              child: const Text(
+                                'Создать аккаунт',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "GT-Eesti-Pro-Display",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(height: 40)
                   ])

@@ -8,20 +8,37 @@ part 'delivery_auth_login_state.dart';
 class DeliveryAuthLoginBloc
     extends Bloc<DeliveryAuthLoginEvent, DeliveryAuthLoginState> {
   DeliveryAuthLoginBloc() : super(DeliveryAuthLoginInitial()) {
-    on<LoadingLoginRequest>((event, emit) async {
-      Map<String, dynamic> dataToSend = {
-        'phone': '+7${event.phone}',
-      };
-      Response response = await ApiService()
-          .postData('/api/v1/authorization/send-code', dataToSend);
-      if (response.statusCode == 200) {
-        if (response.data['status'] == true) {
-          emit(DeliveryAuthLoginSuccess());
+    // Loading login request
+    on<LoadingLoginRequest>(
+      (event, emit) async {
+        Map<String, dynamic> dataToSend = {
+          'phone': '+7${event.phone}',
+        };
+        Response response = await ApiService()
+            .postData('/api/v1/authorization/send-code', dataToSend);
+        if (response.statusCode == 200) {
+          if (response.data['status'] == true) {
+            emit(DeliveryAuthLoginSuccess());
+          }
+        } else if (response.statusCode != 200) {
+          emit(DeliveryAuthLoginFail(
+              errorText: response.statusMessage ?? 'Ошибка'));
         }
-      } else if (response.statusCode != 200) {
-        emit(DeliveryAuthLoginFail(
-            errorText: response.statusMessage ?? 'Ошибка'));
-      }
-    });
+      },
+    );
+    // Editing phone number
+    on<EditingPhoneNumber>(
+      (event, emit) async {
+        if (state is DeliveryAuthLoginFail) {
+          emit(DeliveryAuthLoginInitial());
+        } else {
+          if (event.phone.length == 18) {
+            emit(DeliveryAuthLoginNumberIsCorrect());
+          } else {
+            emit(DeliveryAuthLoginInitial());
+          }
+        }
+      },
+    );
   }
 }

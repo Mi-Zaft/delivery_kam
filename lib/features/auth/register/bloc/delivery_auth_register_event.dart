@@ -7,3 +7,9 @@ class LoadingRegisterRequest extends DeliveryAuthRegisterEvent {
   final String name;
   final String phone;
 }
+
+class EditingPhoneNumber extends DeliveryAuthRegisterEvent {
+  EditingPhoneNumber(this.name, this.phone);
+  final String name;
+  final String phone;
+}

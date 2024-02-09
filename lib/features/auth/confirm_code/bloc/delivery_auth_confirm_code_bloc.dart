@@ -55,15 +55,15 @@ class DeliveryAuthConfirmCodeBloc
         }
       } else {
         Response response = await ApiService()
-          .postData('/api/v1/authorization/send-code', dataToSend);
-      if (response.statusCode == 200) {
-        if (response.data['status'] == true) {
-          emit(DeliveryAuthConfirmCodeResendSuccess());
+            .postData('/api/v1/authorization/send-code', dataToSend);
+        if (response.statusCode == 200) {
+          if (response.data['status'] == true) {
+            emit(DeliveryAuthConfirmCodeResendSuccess());
+          }
+        } else {
+          emit(DeliveryAuthConfirmCodeResendFail(
+              errorText: response.statusMessage ?? 'Ошибка'));
         }
-      } else {
-        emit(DeliveryAuthConfirmCodeResendFail(
-            errorText: response.statusMessage ?? 'Ошибка'));
-      }
       }
     });
     // Loading auth confirm code request
@@ -91,16 +91,18 @@ class DeliveryAuthConfirmCodeBloc
       }
     });
     // editing code
-    on<EditingCode>((event, emit) async {
-      if (state is DeliveryAuthConfirmCodeFail) {
-        emit(DeliveryAuthConfirmCodeInitial());
-      } else {
-        if (event.code.length == 6) {
-          emit(DeliveryAuthConfirmCodeWritten());
-        } else {
+    on<EditingCode>(
+      (event, emit) async {
+        if (state is DeliveryAuthConfirmCodeFail) {
           emit(DeliveryAuthConfirmCodeInitial());
+        } else {
+          if (event.code.length == 6) {
+            emit(DeliveryAuthConfirmCodeWritten());
+          } else {
+            emit(DeliveryAuthConfirmCodeInitial());
+          }
         }
-      }
-    });
+      },
+    );
   }
 }

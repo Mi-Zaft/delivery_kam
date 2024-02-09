@@ -8,6 +8,7 @@ class DeliveryAuthRegisterTextfield extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final List<TextInputFormatter>? inputFormatters;
   final String? prefixText;
+  final Function() onChanged;
 
   const DeliveryAuthRegisterTextfield({
     Key? key,
@@ -15,6 +16,7 @@ class DeliveryAuthRegisterTextfield extends StatefulWidget {
     required this.controller,
     required this.keyboardType,
     required this.textCapitalization,
+    required this.onChanged,
     this.inputFormatters,
     this.prefixText,
   }) : super(key: key);
@@ -55,9 +57,7 @@ class DeliveryAuthRegisterTextfieldState
         ),
         controller: widget.controller,
         onChanged: (value) {
-          setState(() {
-            // Логика обновления состояния
-          });
+          widget.onChanged();
         },
       ),
     );

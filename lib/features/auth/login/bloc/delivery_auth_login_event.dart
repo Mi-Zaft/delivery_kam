@@ -6,3 +6,8 @@ class LoadingLoginRequest extends DeliveryAuthLoginEvent {
   LoadingLoginRequest(this.phone);
   final String phone;
 }
+
+class EditingPhoneNumber extends DeliveryAuthLoginEvent {
+  EditingPhoneNumber(this.phone);
+  final String phone;
+}

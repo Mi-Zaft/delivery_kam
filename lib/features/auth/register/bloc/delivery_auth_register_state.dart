@@ -11,3 +11,5 @@ class DeliveryAuthRegisterFail extends DeliveryAuthRegisterState {
 
   final String errorText;
 }
+
+class DeliveryAuthRegisterDataCorrect extends DeliveryAuthRegisterState {}
