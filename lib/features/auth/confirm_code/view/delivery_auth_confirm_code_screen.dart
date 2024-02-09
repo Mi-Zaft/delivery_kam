@@ -21,17 +21,6 @@ class _DeliveryAuthConfirmCodeScreenState
   final _focus = FocusNode();
   final TextEditingController _codeTextFieldController =
       TextEditingController();
-  final TextEditingController _firstTextFieldController =
-      TextEditingController();
-  final TextEditingController _secondTextFieldController =
-      TextEditingController();
-  final TextEditingController _thirdTextFieldController =
-      TextEditingController();
-  final TextEditingController _fourTextFieldController =
-      TextEditingController();
-  final TextEditingController _fiveTextFieldController =
-      TextEditingController();
-  final TextEditingController _sixTextFieldController = TextEditingController();
   bool isError = false;
 
   late List<TextEditingController> textControllers;
@@ -120,6 +109,9 @@ class _DeliveryAuthConfirmCodeScreenState
                     child: TextField(
                       focusNode: _focus,
                       controller: _codeTextFieldController,
+                      onChanged: (value) => {
+                        _deliveryAuthConfirmCodeBloc.add(EditingCode(_codeTextFieldController.text))
+                      },
                       autofocus: true,
                       keyboardType: TextInputType.number,
                       maxLength: 6,
@@ -277,24 +269,10 @@ class _DeliveryAuthConfirmCodeScreenState
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (_firstTextFieldController.value.text.isNotEmpty &&
-                                      _secondTextFieldController
-                                          .value.text.isNotEmpty &&
-                                      _thirdTextFieldController
-                                          .value.text.isNotEmpty &&
-                                      _fourTextFieldController
-                                          .value.text.isNotEmpty &&
-                                      _fiveTextFieldController
-                                          .value.text.isNotEmpty &&
-                                      _sixTextFieldController
-                                          .value.text.isNotEmpty) {
-                                    final code = _firstTextFieldController
-                                            .value.text +
-                                        _secondTextFieldController.value.text +
-                                        _thirdTextFieldController.value.text +
-                                        _fourTextFieldController.value.text +
-                                        _fiveTextFieldController.value.text +
-                                        _sixTextFieldController.value.text;
+                                  // TODO: сделать проверку на кол-во чисел в коде
+                                  if (_codeTextFieldController.text.length ==
+                                      6) {
+                                    final code = _codeTextFieldController.text;
                                     if (userName != null) {
                                       _deliveryAuthConfirmCodeBloc.add(
                                         LoadingConfirmCodeRequest(

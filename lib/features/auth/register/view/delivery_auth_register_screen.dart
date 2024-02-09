@@ -162,7 +162,6 @@ class _DeliveryAuthRegisterScreenState
                               ),
                             ),
                           );
-                          ;
                         } else {
                           return SizedBox(
                             width: double.infinity,

@@ -94,6 +94,7 @@ class DeliveryAuthConfirmCodeBloc
     on<EditingCode>(
       (event, emit) async {
         if (state is DeliveryAuthConfirmCodeFail) {
+          print(event.code);
           emit(DeliveryAuthConfirmCodeInitial());
         } else {
           if (event.code.length == 6) {
