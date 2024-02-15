@@ -26,6 +26,7 @@ class ApiService {
 
     _token = await getToken();
     _dio.options.headers['Authorization'] = 'Bearer $_token';
+    print(_token);
     // print('Bearer $_token');
   }
 

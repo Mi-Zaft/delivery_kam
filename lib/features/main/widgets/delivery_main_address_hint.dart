@@ -8,6 +8,7 @@ class DeliveryMainAddressHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 50,
       decoration: const BoxDecoration(color: Color.fromRGBO(239, 239, 239, 1)),
       child: Padding(
         padding: const EdgeInsets.only(top: 15),

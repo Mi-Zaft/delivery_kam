@@ -38,6 +38,7 @@ class DeliveryMainCustomCheckboxListTileState
                         widget.onChanged.call(!widget.isChecked);
                       },
                       child: Container(
+                        decoration: const BoxDecoration(color: Colors.white),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8.0,
                           vertical: 9.0,

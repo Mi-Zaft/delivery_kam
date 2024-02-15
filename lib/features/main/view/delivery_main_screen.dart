@@ -6,6 +6,7 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_addre
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryMainScreen extends StatefulWidget {
@@ -287,10 +288,28 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            for (var i in addressFromHint)
-                              DeliveryMainAddressHint(
-                                address: i,
-                              ),
+                            BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+                              bloc: _deliveryMainBloc,
+                              builder: (context, state) {
+                                if (state is DeliveryMainAddressHintSuccess) {
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.all(0),
+                                    itemCount: state.addresses.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder:
+                                        (BuildContext listContext, int index) {
+                                      return DeliveryMainAddressHint(
+                                        address: "${state.addresses[index].street ?? ''} ${state.addresses[index].house ?? 'ин'}",
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
                             const Padding(
                               padding: EdgeInsets.only(bottom: 10),
                             ),
@@ -308,10 +327,28 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            for (var i in addressToHint)
-                              DeliveryMainAddressHint(
-                                address: i,
-                              ),
+                            // BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+                            //   bloc: _deliveryMainBloc,
+                            //   builder: (context, state) {
+                            //     if (state is DeliveryMainAddressHintSuccess) {
+                            //       return ListView.builder(
+                            //         itemCount: state.addresses.length,
+                            //         itemBuilder: (context, index) {
+                            //           return Text(
+                            //             state.addresses[index],
+                            //           );
+                            //         },
+                            //       );
+                            //       // for (var i in addressToHint) {
+                            //       //   DeliveryMainAddressHint(
+                            //       //     address: i,
+                            //       //   );
+                            //       // }
+                            //     } else {
+                            //       return const SizedBox.shrink();
+                            //     }
+                            //   },
+                            // ),
                             const Padding(
                               padding: EdgeInsets.only(top: 25),
                             ),
