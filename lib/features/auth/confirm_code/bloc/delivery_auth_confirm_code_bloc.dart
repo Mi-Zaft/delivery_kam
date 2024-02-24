@@ -1,7 +1,6 @@
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'delivery_auth_confirm_code_event.dart';
@@ -9,8 +8,6 @@ part 'delivery_auth_confirm_code_state.dart';
 
 class DeliveryAuthConfirmCodeBloc
     extends Bloc<DeliveryAuthConfirmCodeEvent, DeliveryAuthConfirmCodeState> {
-  // TODO: удалить, если не возникнет ошибки
-  // final storage = const FlutterSecureStorage();
   DeliveryAuthConfirmCodeBloc() : super(DeliveryAuthConfirmCodeInitial()) {
     // Loading confirm code request
     on<LoadingConfirmCodeRequest>((event, emit) async {

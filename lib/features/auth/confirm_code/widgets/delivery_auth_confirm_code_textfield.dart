@@ -15,11 +15,12 @@ class DeliveryAuthConfirmCodeTextField extends StatelessWidget {
         onTap: onPressed,
         child: Container(
           decoration: const BoxDecoration(
-              border: Border(
-            bottom: BorderSide(
-              color: Color.fromRGBO(112, 112, 112, 1),
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromRGBO(112, 112, 112, 1),
+              ),
             ),
-          )),
+          ),
           child: Center(
             child: Text(
               value,

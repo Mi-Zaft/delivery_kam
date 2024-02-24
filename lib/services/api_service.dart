@@ -1,16 +1,18 @@
 import 'package:delivery_kam/constants.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
+  static ApiService? _instance;
   final Dio _dio = Dio();
   String? _token;
 
-  final storage = const FlutterSecureStorage();
-
-  ApiService() {
+  ApiService._() {
     initializeApiService();
+  }
+
+  factory ApiService() {
+    return _instance ??= ApiService._();
   }
 
   Future<void> initializeApiService() async {
@@ -26,26 +28,7 @@ class ApiService {
 
     _token = await getToken();
     _dio.options.headers['Authorization'] = 'Bearer $_token';
-    print(_token);
-    // print('Bearer $_token');
   }
-
-  // ApiService() {
-  //   // Конфигурируйте ваш экземпляр Dio здесь
-  //   // Например, установите базовый URL API, заголовки и т.д.
-  //   _dio.options.baseUrl = AppConfig.apiUrl;
-  //   _dio.options.headers['x-api-key'] = AppConfig.apiKey;
-  //   _dio.options.headers['Content-Type'] = 'application/json';
-  //   _dio.options.validateStatus = (status) {
-  //     return status! < 501;
-  //   };
-  //   _dio.interceptors.addAll([
-  //     ErrorInterceptor(),
-  //   ]);
-  //   final token = getToken();
-  //   print('ТОКЕН $token');
-  //   _dio.options.headers['Authorization'] = 'Bearer $token';
-  // }
 
   Future<String?> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -110,7 +110,8 @@ class _DeliveryAuthConfirmCodeScreenState
                       focusNode: _focus,
                       controller: _codeTextFieldController,
                       onChanged: (value) => {
-                        _deliveryAuthConfirmCodeBloc.add(EditingCode(_codeTextFieldController.text))
+                        _deliveryAuthConfirmCodeBloc
+                            .add(EditingCode(_codeTextFieldController.text))
                       },
                       autofocus: true,
                       keyboardType: TextInputType.number,
