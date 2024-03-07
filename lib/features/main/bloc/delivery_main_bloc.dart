@@ -1,3 +1,4 @@
+import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -18,20 +19,26 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
           await ApiService().postData('/api/v1/geo/suggest', dataToSend);
       if (response.statusCode == 200) {
         //TODO: доделать обработку подсказок
-        print(response.data);
-        // print(response.data[0]);
+        print(response.data[0]);
+        List<AddressApi> addressess = [];
+        var responseData;
         if (response.data is List) {
           if (response.data.length > 3) {
-            emit(
-              DeliveryMainAddressHintSuccess(
-                addresses: response.data.sublist(0, 3),
-              ),
-            );
+            responseData = response.data.sublist(0, 3);
+            // emit(
+            //   DeliveryMainAddressHintSuccess(
+            //     addresses: response.data.sublist(0, 3),
+            //   ),
+            // );
           } else {
-            emit(
-              DeliveryMainAddressHintSuccess(addresses: response.data),
-            );
+            responseData = response.data;
           }
+          for (var i = 0; i < responseData.length; i++) {
+            addressess.add(AddressApi.fromJson(responseData[i]));
+          }
+          emit(
+            DeliveryMainAddressHintSuccess(addresses: addressess),
+          );
           print('DeliveryMainAddressHintSuccess');
         }
       } else if (response.statusCode != 200) {

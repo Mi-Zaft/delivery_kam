@@ -301,7 +301,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     itemBuilder:
                                         (BuildContext listContext, int index) {
                                       return DeliveryMainAddressHint(
-                                        address: "${state.addresses[index].street ?? ''} ${state.addresses[index].house ?? 'ин'}",
+                                        address:
+                                            "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
                                       );
                                     },
                                   );

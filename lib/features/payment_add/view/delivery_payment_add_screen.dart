@@ -13,17 +13,17 @@ class _DeliveryPaymentAddScreenState extends State<DeliveryPaymentAddScreen> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController cvvController = TextEditingController();
 
-  var cardMaskFormatter = MaskTextInputFormatter(
+  final MaskTextInputFormatter cardMaskFormatter = MaskTextInputFormatter(
       mask: '####-####-####-####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
-  var dateMaskFormatter = MaskTextInputFormatter(
+  final MaskTextInputFormatter dateMaskFormatter = MaskTextInputFormatter(
       mask: '##/##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
-  var cvvMaskFormatter = MaskTextInputFormatter(
+  final MaskTextInputFormatter cvvMaskFormatter = MaskTextInputFormatter(
       mask: '###',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
