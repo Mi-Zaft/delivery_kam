@@ -21,7 +21,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
         //TODO: доделать обработку подсказок
         print(response.data[0]);
         List<AddressApi> addressess = [];
-        var responseData;
+        List responseData;
         if (response.data is List) {
           if (response.data.length > 3) {
             responseData = response.data.sublist(0, 3);
@@ -39,7 +39,6 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
           emit(
             DeliveryMainAddressHintSuccess(addresses: addressess),
           );
-          print('DeliveryMainAddressHintSuccess');
         }
       } else if (response.statusCode != 200) {
         emit(DeliveryMainAddressHintFail(

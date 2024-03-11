@@ -1,3 +1,4 @@
+import 'package:delivery_kam/models/user.dart';
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -23,6 +24,12 @@ class DeliveryAuthConfirmCodeBloc
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setString('jwt_token', response.data['access_token']);
+            print('name next');
+            if (response.data.containsKey('name')) {
+              print(response.data['name']);
+              User().name = response.data['name'];
+              await prefs.setString('name', response.data['name']);
+            }
             emit(DeliveryAuthConfirmCodeSuccess());
           } else {
             emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));
@@ -77,6 +84,13 @@ class DeliveryAuthConfirmCodeBloc
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setString('jwt_token', response.data['access_token']);
+            print('name next');
+            print(response.data);
+            if (response.data.containsKey('name')) {
+              print(response.data['name']);
+              User().name = response.data['name'];
+              await prefs.setString('name', response.data['name']);
+            }
             emit(DeliveryAuthConfirmCodeSuccess());
           } else {
             emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));
@@ -91,7 +105,6 @@ class DeliveryAuthConfirmCodeBloc
     on<EditingCode>(
       (event, emit) async {
         if (state is DeliveryAuthConfirmCodeFail) {
-          print(event.code);
           emit(DeliveryAuthConfirmCodeInitial());
         } else {
           if (event.code.length == 6) {

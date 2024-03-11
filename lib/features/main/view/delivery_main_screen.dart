@@ -5,6 +5,7 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
+import 'package:delivery_kam/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -96,12 +97,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                   ),
                 ),
                 const Padding(padding: EdgeInsets.only(right: 24)),
-                const SizedBox(
+                SizedBox(
                   width: 150,
                   child: Text(
-                    'Дарья',
+                    User().name ?? '',
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: "GT-Eesti-Pro-Display",
                       fontWeight: FontWeight.w400,
                       fontSize: 24,

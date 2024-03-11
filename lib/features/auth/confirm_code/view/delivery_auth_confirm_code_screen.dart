@@ -270,7 +270,6 @@ class _DeliveryAuthConfirmCodeScreenState
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // TODO: сделать проверку на кол-во чисел в коде
                                   if (_codeTextFieldController.text.length ==
                                       6) {
                                     final code = _codeTextFieldController.text;
