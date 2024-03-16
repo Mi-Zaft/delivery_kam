@@ -60,6 +60,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isThermalBag = false;
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
+  bool _isShowFromSuggest = false;
+  bool _isShowToSuggest = false;
 
   List addressToHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
   List addressFromHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
@@ -266,15 +268,26 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               padding: EdgeInsets.only(top: 20),
                             ),
                             DeliveryMainTextfieldAddress(
+                              onEditingComplete: () {
+                                print('exit from');
+                              },
                               onChange: () {
+                                setState(() {
+                                  _isShowToSuggest = false;
+                                });
                                 if (addressFromTextFieldController
                                         .text.length >=
                                     3) {
+                                  _isShowFromSuggest = true;
                                   _deliveryMainBloc.add(
                                     LoadingMainAddressHintRequest(
                                       addressFromTextFieldController.text,
                                     ),
                                   );
+                                } else {
+                                  setState(() {
+                                    _isShowFromSuggest = false;
+                                  });
                                 }
                               },
                               labelText: 'Откуда забрать',
@@ -292,7 +305,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
                               bloc: _deliveryMainBloc,
                               builder: (context, state) {
-                                if (state is DeliveryMainAddressHintSuccess) {
+                                if (state is DeliveryMainAddressHintSuccess &&
+                                    _isShowFromSuggest) {
                                   return ListView.builder(
                                     padding: const EdgeInsets.all(0),
                                     itemCount: state.addresses.length,
@@ -316,7 +330,28 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               padding: EdgeInsets.only(bottom: 10),
                             ),
                             DeliveryMainTextfieldAddress(
-                              onChange: () {},
+                              onEditingComplete: () {
+                                print('exit to');
+                              },
+                              onChange: () {
+                                setState(() {
+                                  _isShowFromSuggest = false;
+                                });
+                                if (addressToTextFieldController
+                                        .text.length >=
+                                    3) {
+                                  _isShowToSuggest = true;
+                                  _deliveryMainBloc.add(
+                                    LoadingMainAddressHintRequest(
+                                      addressToTextFieldController.text,
+                                    ),
+                                  );
+                                } else {
+                                  setState(() {
+                                    _isShowToSuggest = false;
+                                  });
+                                }
+                              },
                               labelText: 'Куда доставить',
                               prefixStyle: const TextStyle(
                                 fontSize: 20,
@@ -329,28 +364,30 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            // BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
-                            //   bloc: _deliveryMainBloc,
-                            //   builder: (context, state) {
-                            //     if (state is DeliveryMainAddressHintSuccess) {
-                            //       return ListView.builder(
-                            //         itemCount: state.addresses.length,
-                            //         itemBuilder: (context, index) {
-                            //           return Text(
-                            //             state.addresses[index],
-                            //           );
-                            //         },
-                            //       );
-                            //       // for (var i in addressToHint) {
-                            //       //   DeliveryMainAddressHint(
-                            //       //     address: i,
-                            //       //   );
-                            //       // }
-                            //     } else {
-                            //       return const SizedBox.shrink();
-                            //     }
-                            //   },
-                            // ),
+                            BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+                              bloc: _deliveryMainBloc,
+                              builder: (context, state) {
+                                if (state is DeliveryMainAddressHintSuccess &&
+                                    _isShowToSuggest) {
+                                  return ListView.builder(
+                                    padding: const EdgeInsets.all(0),
+                                    itemCount: state.addresses.length,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemBuilder:
+                                        (BuildContext listContext, int index) {
+                                      return DeliveryMainAddressHint(
+                                        address:
+                                            "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
                             const Padding(
                               padding: EdgeInsets.only(top: 25),
                             ),

@@ -19,7 +19,6 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
           await ApiService().postData('/api/v1/geo/suggest', dataToSend);
       if (response.statusCode == 200) {
         //TODO: доделать обработку подсказок
-        print(response.data[0]);
         List<AddressApi> addressess = [];
         List responseData;
         if (response.data is List) {
