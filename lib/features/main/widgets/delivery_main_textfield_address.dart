@@ -64,9 +64,9 @@ class DeliveryMainTextfieldAddressState
                   const SizedBox(width: 5.0),
                   Flexible(
                     child: TextField(
-                      onSubmitted: (value) {
-                        widget.onEditingComplete();
-                      },
+                      // onSubmitted: (value) {
+                      //   widget.onEditingComplete();
+                      // },
                       onTapOutside: (event) => {
                         widget.onEditingComplete()
                       },

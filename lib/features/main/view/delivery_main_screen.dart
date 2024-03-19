@@ -2,10 +2,10 @@ import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_address_hint.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
-import 'package:delivery_kam/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -62,9 +62,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isCorrespondenceInRussianPostOffice = false;
   bool _isShowFromSuggest = false;
   bool _isShowToSuggest = false;
-
-  List addressToHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
-  List addressFromHint = ['Карякина 17', 'Карякина 18', 'Карякина 15'];
+  String _activeTextfield = '';
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -81,108 +79,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            const Padding(padding: EdgeInsets.only(top: 24)),
-            Row(
-              children: [
-                const Padding(padding: EdgeInsets.only(left: 24)),
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircleAvatar(
-                    child: Image.asset(
-                      'assets/images/main/iconavatar.png',
-                      width: 60,
-                    ),
-                  ),
-                ),
-                const Padding(padding: EdgeInsets.only(right: 24)),
-                SizedBox(
-                  width: 150,
-                  child: Text(
-                    User().name ?? '',
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w400,
-                      fontSize: 24,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            const Padding(padding: EdgeInsets.only(top: 40)),
-            GestureDetector(
-              child: ListTile(
-                onTap: () => {Navigator.of(context).pushNamed('/payment-list')},
-                leading: Image.asset(
-                  'assets/images/main/wallet.png',
-                ),
-                title: const Text(
-                  'Способы оплаты',
-                  style: TextStyle(
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w300,
-                      fontSize: 20),
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: ListTile(
-                onTap: () => {},
-                leading: Image.asset(
-                  'assets/images/main/becomeCourier.png',
-                ),
-                title: const Text(
-                  'Стать курьером',
-                  style: TextStyle(
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w300,
-                      fontSize: 20),
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: ListTile(
-                onTap: () => {},
-                leading: Image.asset(
-                  'assets/images/main/chat.png',
-                ),
-                title: const Text(
-                  'Служба поддержки',
-                  style: TextStyle(
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w300,
-                      fontSize: 20),
-                ),
-              ),
-            ),
-            GestureDetector(
-              child: ListTile(
-                onTap: () async => {
-                  _deliveryMainBloc.add(
-                    LoadingExitFromAccount(),
-                  ),
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/', (route) => false)
-                },
-                leading: Image.asset(
-                  'assets/images/main/exit.png',
-                ),
-                title: const Text(
-                  'Выйти из аккаунта',
-                  style: TextStyle(
-                      fontFamily: "GT-Eesti-Pro-Display",
-                      fontWeight: FontWeight.w300,
-                      fontSize: 20),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      drawer: const DeliveryMainDrawer(),
       bottomNavigationBar: Container(
         color: Colors.white,
         padding:
@@ -216,16 +113,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
-              if (notification.extent == maxChildSize) {
-                // ignore: avoid_print
-                print('DraggableScrollableSheet в положении "вытянуто"');
-              } else if (notification.extent == minChildSize) {
-                // ignore: avoid_print
-                print('DraggableScrollableSheet в положении "свернуто"');
-              } else {
-                // ignore: avoid_print
-                print('DraggableScrollableSheet в промежуточном положении');
-              }
               return true;
             },
             child: DraggableScrollableSheet(
@@ -269,9 +156,13 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             ),
                             DeliveryMainTextfieldAddress(
                               onEditingComplete: () {
-                                print('exit from');
+                                if (_activeTextfield == 'addressFrom') {
+                                  print('exit from');
+                                  FocusScope.of(context).unfocus();
+                                }
                               },
                               onChange: () {
+                                _activeTextfield = 'addressFrom';
                                 setState(() {
                                   _isShowToSuggest = false;
                                 });
@@ -316,6 +207,15 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     itemBuilder:
                                         (BuildContext listContext, int index) {
                                       return DeliveryMainAddressHint(
+                                        onClick: (address) {
+                                          addressFromTextFieldController.text =
+                                              address;
+                                          setState(() {
+                                            _isShowToSuggest = false;
+                                            _activeTextfield = '';
+                                          });
+                                          FocusScope.of(context).unfocus();
+                                        },
                                         address:
                                             "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
                                       );
@@ -331,14 +231,16 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             ),
                             DeliveryMainTextfieldAddress(
                               onEditingComplete: () {
-                                print('exit to');
+                                if (_activeTextfield == 'addressTo') {
+                                  print('exit to');
+                                }
                               },
                               onChange: () {
+                                _activeTextfield = 'addressTo';
                                 setState(() {
                                   _isShowFromSuggest = false;
                                 });
-                                if (addressToTextFieldController
-                                        .text.length >=
+                                if (addressToTextFieldController.text.length >=
                                     3) {
                                   _isShowToSuggest = true;
                                   _deliveryMainBloc.add(
@@ -378,6 +280,15 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     itemBuilder:
                                         (BuildContext listContext, int index) {
                                       return DeliveryMainAddressHint(
+                                        onClick: (address) {
+                                          addressToTextFieldController.text =
+                                              address;
+                                          setState(() {
+                                            _isShowToSuggest = false;
+                                            _activeTextfield = '';
+                                          });
+                                          FocusScope.of(context).unfocus();
+                                        },
                                         address:
                                             "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
                                       );
@@ -643,9 +554,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                              // padding:
-                                              // const EdgeInsets.symmetric(
-                                              //     horizontal: 5),
                                               width: MediaQuery.of(context)
                                                           .size
                                                           .width <=
@@ -911,18 +819,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ),
                               ),
                             ),
-                            // Row(
-                            //   children: [
-                            //     Checkbox(
-                            //       value: false,
-                            //       onChanged: (bool? value) {
-                            //         setState(() {});
-                            //       },
-                            //     ),
-                            //     const Text(
-                            //         'Доставка без оформления квитанции')
-                            //   ],
-                            // ),
                             DeliveryMainCustomCheckboxListTile(
                                 isChecked: _isFragileCargo,
                                 label: 'Хрупкий груз',
@@ -949,7 +845,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         newValue!;
                                   });
                                 }),
-
                             DeliveryMainCustomCheckboxListTile(
                                 isChecked: _isCorrespondenceInRussianPostOffice,
                                 label:
