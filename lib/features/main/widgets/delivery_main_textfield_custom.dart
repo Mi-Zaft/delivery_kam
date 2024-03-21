@@ -37,7 +37,7 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
                   text: TextSpan(
                     text: prefixText,
                     style: prefixStyle?.copyWith(
-                      height: 2,
+                      height: 2.2,
                     ),
                   ),
                 ),
@@ -54,7 +54,6 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
                   inputFormatters: maskInputFormatters,
                   style: const TextStyle(
                     fontSize: 18,
-                    fontFamily: "GT-Eesti-Pro-Display",
                     fontWeight: FontWeight.w300,
                   ),
                   textAlignVertical: const TextAlignVertical(y: 0),
@@ -73,7 +72,6 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
                         bottom: 10, left: prefixIcon != null ? 10 : 0),
                     labelStyle: const TextStyle(
                       color: Color.fromRGBO(122, 122, 122, 1),
-                      fontFamily: "GT-Eesti-Pro-Display",
                       fontSize: 18,
                       fontWeight: FontWeight.w300,
                     ),

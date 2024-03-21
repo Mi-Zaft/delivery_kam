@@ -8,4 +8,5 @@ final classicTheme = ThemeData(
       iconTheme: IconThemeData(color: Colors.black),
       backgroundColor: Colors.white,
     ),
-    useMaterial3: true);
+    useMaterial3: true,
+    fontFamily: 'GT-Eesti-Pro-Display');

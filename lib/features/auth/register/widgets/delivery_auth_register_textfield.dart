@@ -34,7 +34,6 @@ class DeliveryAuthRegisterTextfieldState
       child: TextField(
         style: const TextStyle(
           fontSize: 18,
-          fontFamily: "GT-Eesti-Pro-Display",
           fontWeight: FontWeight.w300,
         ),
         keyboardType: widget.keyboardType,
@@ -47,7 +46,6 @@ class DeliveryAuthRegisterTextfieldState
           contentPadding: const EdgeInsets.only(bottom: 0),
           labelStyle: const TextStyle(
             color: Colors.black,
-            fontFamily: "GT-Eesti-Pro-Display",
             fontSize: 18,
             fontWeight: FontWeight.w300,
           ),

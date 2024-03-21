@@ -27,7 +27,6 @@ class DeliveryAuthConfirmCodeTextField extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 48,
                 fontWeight: FontWeight.w400,
-                fontFamily: "GT-Eesti-Pro-Display",
               ),
             ),
           ),

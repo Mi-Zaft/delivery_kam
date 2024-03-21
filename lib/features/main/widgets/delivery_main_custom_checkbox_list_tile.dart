@@ -54,7 +54,6 @@ class DeliveryMainCustomCheckboxListTileState
                           maxLines: 3,
                           style: const TextStyle(
                             color: Color.fromRGBO(122, 122, 122, 1),
-                            fontFamily: "GT-Eesti-Pro-Display",
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
                           ),

@@ -44,7 +44,6 @@ class _DeliveryAuthChooseButtonsState extends State<DeliveryAuthChooseButtons> {
                       style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black,
-                          fontFamily: "GT-Eesti-Pro-Display",
                           fontWeight: FontWeight.w400)),
                 )),
             const SizedBox(height: 16.0),
@@ -68,7 +67,6 @@ class _DeliveryAuthChooseButtonsState extends State<DeliveryAuthChooseButtons> {
                   style: const TextStyle(
                       fontSize: 18,
                       color: Colors.white,
-                      fontFamily: "GT-Eesti-Pro-Display",
                       fontWeight: FontWeight.w400),
                 ),
               ),

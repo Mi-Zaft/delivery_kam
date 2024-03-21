@@ -94,7 +94,6 @@ class _DeliveryAuthRegisterScreenState
                             return Text(state.errorText,
                                 style: const TextStyle(
                                     fontSize: 12,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                     fontWeight: FontWeight.w300,
                                     color: Color.fromRGBO(255, 44, 44, 1),
                                     height: 0.9));
@@ -108,7 +107,6 @@ class _DeliveryAuthRegisterScreenState
                       bottomText,
                       style: const TextStyle(
                           color: Color.fromRGBO(122, 122, 122, 1),
-                          fontFamily: "GT-Eesti-Pro-Display",
                           fontSize: 12,
                           fontWeight: FontWeight.w400),
                     ),
@@ -155,7 +153,6 @@ class _DeliveryAuthRegisterScreenState
                                   'Создать аккаунт',
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400),
                                 ),
@@ -176,7 +173,6 @@ class _DeliveryAuthRegisterScreenState
                                 'Создать аккаунт',
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400),
                               ),
@@ -194,7 +190,6 @@ class _DeliveryAuthRegisterScreenState
       appBar: AppBar(
         title: const Text("Регистрация",
             style: TextStyle(
-              fontFamily: "GT-Eesti-Pro-Display",
               fontSize: 24,
               fontWeight: FontWeight.w400,
             )),

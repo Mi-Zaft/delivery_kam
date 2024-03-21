@@ -47,14 +47,14 @@ class ApiService {
       return response;
     } catch (error) {
       if (error is DioException) {
-        // print(error.response?.data['detail']);
+        print(error.response);
         return Response(
             requestOptions: RequestOptions(path: endPoint),
             statusCode: 400,
             statusMessage:
                 error.response?.data['detail'] ?? 'Неизвестная ошибка');
       } else {
-        // print(error);
+        print(error);
         return Response(
             requestOptions: RequestOptions(path: endPoint),
             statusCode: 400,

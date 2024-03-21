@@ -85,7 +85,6 @@ class _DeliveryAuthConfirmCodeScreenState
                       "Введите полученный код",
                       style: TextStyle(
                         color: Color.fromRGBO(122, 122, 122, 1),
-                        fontFamily: "GT-Eesti-Pro-Display",
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
                       ),
@@ -99,7 +98,6 @@ class _DeliveryAuthConfirmCodeScreenState
                       textAlign: TextAlign.left,
                       style: const TextStyle(
                         color: Color.fromRGBO(122, 122, 122, 1),
-                        fontFamily: "GT-Eesti-Pro-Display",
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
                       ),
@@ -189,7 +187,6 @@ class _DeliveryAuthConfirmCodeScreenState
                               child: Text(state.errorText,
                                   style: const TextStyle(
                                       fontSize: 12,
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontWeight: FontWeight.w300,
                                       color: Color.fromRGBO(255, 44, 44, 1),
                                       height: 0.9)));
@@ -197,7 +194,6 @@ class _DeliveryAuthConfirmCodeScreenState
                           return const Text("",
                               style: TextStyle(
                                   fontSize: 12,
-                                  fontFamily: "GT-Eesti-Pro-Display",
                                   fontWeight: FontWeight.w300,
                                   color: Color.fromRGBO(255, 255, 255, 0),
                                   height: 0.9));
@@ -225,7 +221,6 @@ class _DeliveryAuthConfirmCodeScreenState
                               child: Text(state.errorText,
                                   style: const TextStyle(
                                       fontSize: 12,
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontWeight: FontWeight.w300,
                                       color: Color.fromRGBO(255, 44, 44, 1),
                                       height: 0.9)));
@@ -237,7 +232,6 @@ class _DeliveryAuthConfirmCodeScreenState
                               child: const Text('Код успешно отправлен',
                                   style: TextStyle(
                                       fontSize: 12,
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontWeight: FontWeight.w300,
                                       color: Colors.green,
                                       height: 0.9)));
@@ -302,7 +296,6 @@ class _DeliveryAuthConfirmCodeScreenState
                                       : 'Войти',
                                   style: const TextStyle(
                                       color: Colors.white,
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400),
                                 ),
@@ -322,7 +315,6 @@ class _DeliveryAuthConfirmCodeScreenState
                                     : 'Войти',
                                 style: const TextStyle(
                                     color: Colors.white,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                     fontSize: 18,
                                     fontWeight: FontWeight.w400),
                               ),

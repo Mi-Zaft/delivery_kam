@@ -141,7 +141,6 @@ class _DeliveryPaymentAddScreenState extends State<DeliveryPaymentAddScreen> {
                         style: TextStyle(
                             fontSize: 18,
                             color: Colors.white,
-                            fontFamily: "GT-Eesti-Pro-Display",
                             fontWeight: FontWeight.w400),
                       ),
                     ),

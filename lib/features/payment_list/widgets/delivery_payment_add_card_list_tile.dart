@@ -19,10 +19,7 @@ class DeliveryPaymentAddCardListTile extends StatelessWidget {
                 const Expanded(
                   child: Text(
                     'Добавить карту',
-                    style: TextStyle(
-                        fontFamily: "GT-Eesti-Pro-Display",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 20),
+                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
                   ),
                 ),
                 const Icon(

@@ -10,9 +10,7 @@ class DeliveryMainAddressHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {
-        onClick(address ?? 'qwe')
-      },
+      onTap: () => {onClick(address ?? 'qwe')},
       child: Container(
         height: 50,
         decoration:
@@ -34,7 +32,6 @@ class DeliveryMainAddressHint extends StatelessWidget {
                     style: const TextStyle(
                       color: Color.fromRGBO(122, 122, 122, 1),
                       fontSize: 18,
-                      fontFamily: "GT-Eesti-Pro-Display",
                       fontWeight: FontWeight.w300,
                     ),
                   )

@@ -31,9 +31,7 @@ class DeliveryPaymentListRadioTile extends StatelessWidget {
                   child: Text(
                     title,
                     style: const TextStyle(
-                        fontFamily: "GT-Eesti-Pro-Display",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 20),
+                        fontWeight: FontWeight.w300, fontSize: 20),
                   ),
                 ),
                 if (active != true)

@@ -102,7 +102,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.white,
-                  fontFamily: "GT-Eesti-Pro-Display",
                   fontWeight: FontWeight.w400),
             ),
           ),
@@ -158,7 +157,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               onEditingComplete: () {
                                 if (_activeTextfield == 'addressFrom') {
                                   print('exit from');
-                                  FocusScope.of(context).unfocus();
                                 }
                               },
                               onChange: () {
@@ -188,7 +186,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               ),
                               controller: addressFromTextFieldController,
                               keyboardType: TextInputType.streetAddress,
-                              prefixText: "A",
+                              prefixText: "А",
                             ),
                             const SizedBox(
                               height: 15,
@@ -211,7 +209,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                           addressFromTextFieldController.text =
                                               address;
                                           setState(() {
-                                            _isShowToSuggest = false;
+                                            _isShowFromSuggest = false;
                                             _activeTextfield = '';
                                           });
                                           FocusScope.of(context).unfocus();
@@ -391,7 +389,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     color: Color.fromRGBO(93, 105, 114, 1),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                   ),
                                 ),
                               ),
@@ -425,8 +422,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w300,
                                                 color: Colors.black,
-                                                fontFamily:
-                                                    "GT-Eesti-Pro-Display",
                                               ),
                                             ),
                                             Text(
@@ -434,8 +429,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w300,
-                                                fontFamily:
-                                                    "GT-Eesti-Pro-Display",
                                                 color: Color.fromRGBO(
                                                     93, 105, 114, 1),
                                               ),
@@ -474,8 +467,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w300,
                                                 color: Colors.black,
-                                                fontFamily:
-                                                    "GT-Eesti-Pro-Display",
                                               ),
                                             ),
                                             Text(
@@ -483,8 +474,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w300,
-                                                fontFamily:
-                                                    "GT-Eesti-Pro-Display",
                                                 color: Color.fromRGBO(
                                                     93, 105, 114, 1),
                                               ),
@@ -516,7 +505,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     color: Color.fromRGBO(93, 105, 114, 1),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                   ),
                                 ),
                               ),
@@ -573,8 +561,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.black,
-                                                  fontFamily:
-                                                      "GT-Eesti-Pro-Display",
                                                 ),
                                               ),
                                             ),
@@ -597,8 +583,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                 style: TextStyle(
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.w300,
-                                                  fontFamily:
-                                                      "GT-Eesti-Pro-Display",
                                                   color: Color.fromRGBO(
                                                       93, 105, 114, 1),
                                                 ),
@@ -654,7 +638,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300,
                                             color: Colors.black,
-                                            fontFamily: "GT-Eesti-Pro-Display",
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
@@ -683,7 +666,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     color: Color.fromRGBO(93, 105, 114, 1),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                   ),
                                 ),
                               ),
@@ -693,7 +675,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               controller: senderNumberTextFieldController,
                               maskInputFormatters: [phoneMaskFormatter],
                               prefixStyle: const TextStyle(
-                                fontFamily: "GT-Eesti-Pro-Display",
                                 fontSize: 18,
                                 fontWeight: FontWeight.w300,
                                 color: Colors.black,
@@ -722,7 +703,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     color: Color.fromRGBO(93, 105, 114, 1),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w300,
-                                    fontFamily: "GT-Eesti-Pro-Display",
                                   ),
                                 ),
                               ),
@@ -732,7 +712,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               controller: recipientNumberTextFieldController,
                               maskInputFormatters: [phoneMaskFormatter],
                               prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black),
@@ -757,7 +736,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 child: Text(
                                   'Детали отправки',
                                   style: TextStyle(
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontSize: 18,
                                       fontWeight: FontWeight.w300),
                                 ),
@@ -767,7 +745,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               labelText: 'Предмет доставки',
                               controller: subjectTextFieldController,
                               prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black),
@@ -780,7 +757,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               labelText: 'Комментарий курьеру',
                               controller: envelopeTextFieldController,
                               prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black),
@@ -793,7 +769,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               labelText: 'Сообщение получателю',
                               controller: chatTextFieldController,
                               prefixStyle: const TextStyle(
-                                  fontFamily: "GT-Eesti-Pro-Display",
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black),
@@ -813,7 +788,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 child: Text(
                                   'Дополнительно',
                                   style: TextStyle(
-                                      fontFamily: "GT-Eesti-Pro-Display",
                                       fontSize: 18,
                                       fontWeight: FontWeight.w300),
                                 ),
