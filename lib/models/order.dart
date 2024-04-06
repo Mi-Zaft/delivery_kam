@@ -1,9 +1,21 @@
 class Order {
-  String fromWhere;
-  String toWhere;
+  String fromFiasId;
+  String whereFiasId;
   bool byCar = false;
+  bool fragileCargo = false;
+  bool bulkyCargo = false;
+  bool transportDepartureRegistration = false;
+  bool postOfficeCorrespondence = false;
 
-  Order({required this.fromWhere, required this.toWhere, byCar});
+  Order({
+    required this.fromFiasId,
+    required this.whereFiasId,
+    byCar,
+    fragileCargo,
+    bulkyCargo,
+    transportDepartureRegistration,
+    postOfficeCorrespondence,
+  });
 }
 
 class OrderHistoryItem {

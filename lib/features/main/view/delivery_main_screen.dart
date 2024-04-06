@@ -63,6 +63,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isShowFromSuggest = false;
   bool _isShowToSuggest = false;
   String _activeTextfield = '';
+  Order? order;
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -86,30 +87,82 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
             const EdgeInsets.only(bottom: 25.0, top: 10, left: 16, right: 16),
         child: SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              Order order =
-                  Order(fromWhere: fromWhere, toWhere: toWhere, byCar: _byCar);
-              if (order.fromWhere.isNotEmpty && order.toWhere.isNotEmpty) {
-                _deliveryMainBloc.add(OrderDataChanged(order));
-              }
-              print('Button tapped');
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-            ),
-            child: const Text(
-              "Укажите адрес",
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400),
-            ),
-          ),
+          child: BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+              bloc: _deliveryMainBloc,
+              builder: (context, state) {
+                if (state is DeliveryMainOrderPriceLoading) {
+                  return ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    child: const SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromRGBO(32, 191, 208, 1),
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (state is DeliveryMainOrderPriceSuccess) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color.fromRGBO(175, 223, 234, 1),
+                          Color.fromRGBO(33, 190, 210, 1)
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors
+                            .transparent, // Чтобы фон ElevatedButton был прозрачным
+                        elevation: 0, // Отключаем подъем тени кнопки
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      child: Text(
+                        'Заказать за ${state.price}₽',
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  );
+                } else {
+                  return ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    child: const Text(
+                      "Укажите адрес",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  );
+                }
+              }),
         ),
       ),
       body: Stack(children: [
@@ -212,17 +265,35 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       return DeliveryMainAddressHint(
                                         onClick: (address) {
                                           addressFromTextFieldController.text =
-                                              address;
-                                          fromWhere = address;
-                                          setState(() {
-                                            _isShowFromSuggest = false;
-                                            _activeTextfield = '';
-                                            print('click from suggest');
-                                          });
-                                          FocusScope.of(context).unfocus();
+                                              "${address.street} ${address.house ?? ''}";
+                                          fromWhere =
+                                              "${address.street} ${address.house ?? ''}";
+                                          fromWhereObject = address;
+                                          if (address.fiasLevel != null) {
+                                            if (address.fiasLevel! >= 8) {
+                                              setState(() {
+                                                _isShowFromSuggest = false;
+                                                _activeTextfield = '';
+                                                print('click from suggest');
+                                                print(address);
+                                              });
+                                              FocusScope.of(context).unfocus();
+                                              if (fromWhereObject.fiasId !=
+                                                      null &&
+                                                  toWhereObjext.fiasId !=
+                                                      null) {
+                                                order = Order(
+                                                    fromFiasId:
+                                                        fromWhereObject.fiasId!,
+                                                    whereFiasId:
+                                                        toWhereObjext.fiasId!,
+                                                    byCar: _byCar);
+                                                makeOrder();
+                                              }
+                                            }
+                                          }
                                         },
-                                        address:
-                                            "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
+                                        address: state.addresses[index],
                                       );
                                     },
                                   );
@@ -287,16 +358,34 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       return DeliveryMainAddressHint(
                                         onClick: (address) {
                                           addressToTextFieldController.text =
-                                              address;
-                                          toWhere = address;
-                                          setState(() {
-                                            _isShowToSuggest = false;
-                                            _activeTextfield = '';
-                                          });
-                                          FocusScope.of(context).unfocus();
+                                              "${address.street} ${address.house ?? ''}";
+                                          toWhere =
+                                              "${address.street} ${address.house ?? ''}";
+                                          toWhereObjext = address;
+                                          if (address.fiasLevel != null) {
+                                            if (address.fiasLevel! >= 8) {
+                                              setState(() {
+                                                _isShowToSuggest = false;
+                                                _activeTextfield = '';
+                                              });
+                                              FocusScope.of(context).unfocus();
+                                              if (fromWhereObject.fiasId !=
+                                                      null &&
+                                                  toWhereObjext.fiasId !=
+                                                      null) {
+                                                order = Order(
+                                                    fromFiasId:
+                                                        fromWhereObject.fiasId!,
+                                                    whereFiasId:
+                                                        toWhereObjext.fiasId!,
+                                                    byCar: _byCar);
+                                                makeOrder();
+                                              }
+                                            }
+                                          }
                                         },
-                                        address:
-                                            "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
+                                        address: state.addresses[index],
+                                        // "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
                                       );
                                     },
                                   );
@@ -339,9 +428,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ),
                                       ),
                                       onPressed: () {
+                                        order?.byCar = false;
                                         setState(() {
                                           _byCar = false;
                                         });
+                                        makeOrder();
                                       },
                                     ),
                                   ),
@@ -374,9 +465,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         ),
                                       ),
                                       onPressed: () {
+                                        order?.byCar = true;
                                         setState(() {
                                           _byCar = true;
                                         });
+                                        makeOrder();
                                       },
                                     ),
                                   ),
@@ -572,5 +665,22 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         ),
       ]),
     );
+  }
+
+  void makeOrder() {
+    if (order != null) {
+      order!.byCar = _byCar;
+    } else {
+      if (fromWhereObject.fiasId != null && toWhereObjext.fiasId != null) {
+        order = Order(
+          fromFiasId: fromWhereObject.fiasId!,
+          whereFiasId: toWhereObjext.fiasId!,
+          byCar: _byCar,
+        );
+      }
+    }
+    if (order != null) {
+      _deliveryMainBloc.add(OrderDataChanged(order!));
+    }
   }
 }

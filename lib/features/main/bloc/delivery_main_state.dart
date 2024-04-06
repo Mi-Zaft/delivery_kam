@@ -20,3 +20,11 @@ class DeliveryMainOrderCreateFail extends DeliveryMainState {
 
   final String errorText;
 }
+
+class DeliveryMainOrderPriceLoading extends DeliveryMainState {}
+
+class DeliveryMainOrderPriceSuccess extends DeliveryMainState {
+  DeliveryMainOrderPriceSuccess({required this.price});
+
+  final double price;
+}

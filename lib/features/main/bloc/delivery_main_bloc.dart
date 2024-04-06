@@ -50,7 +50,19 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       prefs.remove('jwt_token');
     });
     on<OrderDataChanged>((event, emit) async {
-      print(event.order);
+      emit(DeliveryMainOrderPriceLoading());
+      Map<String, dynamic> dataToSend = {
+        'fromFiasId': event.order.fromFiasId,
+        'whereFiasId': event.order.whereFiasId,
+        'byCar': event.order.byCar
+      };
+      Response response = await ApiService().postData('/api/v1/order/price', dataToSend);
+      if (response.statusCode == 200) {
+        print(response);
+        if (response.data is double) {
+          emit(DeliveryMainOrderPriceSuccess(price: response.data));
+        }
+      }
     });
   }
 }

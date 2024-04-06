@@ -1,9 +1,10 @@
+import 'package:delivery_kam/models/address_api.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryMainAddressHint extends StatelessWidget {
   final columnHorizontalPadding = 24.0;
-  final String address;
-  final Function(String) onClick;
+  final AddressApi address;
+  final Function(AddressApi) onClick;
   const DeliveryMainAddressHint(
       {super.key, required this.onClick, required this.address});
 
@@ -28,7 +29,7 @@ class DeliveryMainAddressHint extends StatelessWidget {
                     width: 10,
                   ),
                   Text(
-                    address,
+                    "${address.street} ${address.house ?? ''}",
                     style: const TextStyle(
                       color: Color.fromRGBO(122, 122, 122, 1),
                       fontSize: 18,
