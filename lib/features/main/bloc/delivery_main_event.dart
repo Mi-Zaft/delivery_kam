@@ -10,3 +10,8 @@ class LoadingMainAddressHintRequest extends DeliveryMainEvent {
 class LoadingExitFromAccount extends DeliveryMainEvent {
   LoadingExitFromAccount();
 }
+
+class OrderDataChanged extends DeliveryMainEvent {
+  OrderDataChanged(this.order);
+  Order order;
+}

@@ -78,6 +78,17 @@ class DeliveryMainDrawer extends StatelessWidget {
           ),
           GestureDetector(
             child: ListTile(
+              onTap: () =>
+                  {Navigator.of(context).pushNamed('/order-history-list')},
+              leading: Image.asset('assets/images/main/iconOrderHistory.png'),
+              title: const Text(
+                'История заказов',
+                style: TextStyle(fontWeight: FontWeight.w300, fontSize: 20),
+              ),
+            ),
+          ),
+          GestureDetector(
+            child: ListTile(
               onTap: () async => {
                 deliveryMainBloc.add(
                   LoadingExitFromAccount(),

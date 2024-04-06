@@ -1,4 +1,5 @@
 import 'package:delivery_kam/models/address_api.dart';
+import 'package:delivery_kam/models/order.dart';
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
@@ -14,11 +15,9 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       Map<String, dynamic> dataToSend = {
         'name': event.address,
       };
-      print('request');
       Response response =
           await ApiService().postData('/api/v1/geo/suggest', dataToSend);
       if (response.statusCode == 200) {
-        //TODO: доделать обработку подсказок
         List<AddressApi> addressess = [];
         List responseData;
         if (response.data is List) {
@@ -35,6 +34,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
           for (var i = 0; i < responseData.length; i++) {
             addressess.add(AddressApi.fromJson(responseData[i]));
           }
+          print(addressess[0].fiasLevel);
           emit(
             DeliveryMainAddressHintSuccess(addresses: addressess),
           );
@@ -48,6 +48,9 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
     on<LoadingExitFromAccount>((event, emit) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('jwt_token');
+    });
+    on<OrderDataChanged>((event, emit) async {
+      print(event.order);
     });
   }
 }

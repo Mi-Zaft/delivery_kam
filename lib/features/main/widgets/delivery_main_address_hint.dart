@@ -10,7 +10,7 @@ class DeliveryMainAddressHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => {onClick(address ?? 'qwe')},
+      onTap: () => {onClick(address)},
       child: Container(
         height: 50,
         decoration:

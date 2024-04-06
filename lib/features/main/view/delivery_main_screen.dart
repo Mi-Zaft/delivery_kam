@@ -6,6 +6,8 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
+import 'package:delivery_kam/models/address_api.dart';
+import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -51,11 +53,15 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   final TextEditingController chatTextFieldController = TextEditingController();
 
   final double maxChildSize = 0.9;
-  final double minChildSize = .425;
+  final double minChildSize = .39;
 
-  bool _isAuto = false;
-  bool _isExpress = false;
-  bool _isToDoor = false;
+  String fromWhere = '';
+  AddressApi fromWhereObject = AddressApi(street: '');
+  AddressApi toWhereObjext = AddressApi(street: '');
+  String toWhere = '';
+  bool _byCar = false;
+  // bool _isExpress = false;
+  // bool _isToDoor = false;
   bool _isFragileCargo = false;
   bool _isThermalBag = false;
   bool _isRegistrationInTransportCompany = false;
@@ -88,7 +94,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // Navigator.of(context).pushNamed("/register");
+              Order order =
+                  Order(fromWhere: fromWhere, toWhere: toWhere, byCar: _byCar);
+              if (order.fromWhere.isNotEmpty && order.toWhere.isNotEmpty) {
+                _deliveryMainBloc.add(OrderDataChanged(order));
+              }
+              print('Button tapped');
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -115,7 +126,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
               return true;
             },
             child: DraggableScrollableSheet(
-              initialChildSize: .425,
+              initialChildSize: minChildSize,
               minChildSize: minChildSize,
               maxChildSize: maxChildSize,
               builder:
@@ -208,6 +219,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         onClick: (address) {
                                           addressFromTextFieldController.text =
                                               address;
+                                          fromWhere = address;
                                           setState(() {
                                             _isShowFromSuggest = false;
                                             _activeTextfield = '';
@@ -281,6 +293,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         onClick: (address) {
                                           addressToTextFieldController.text =
                                               address;
+                                          toWhere = address;
                                           setState(() {
                                             _isShowToSuggest = false;
                                             _activeTextfield = '';
@@ -310,7 +323,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       strokeWidth: 4,
                                       radius: 16,
                                       gradient: LinearGradient(
-                                        colors: _isAuto
+                                        colors: _byCar
                                             ? _inactiveGradientColor
                                             : _activeGradientColor,
                                         begin: Alignment.topRight,
@@ -332,7 +345,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _isAuto = false;
+                                          _byCar = false;
                                         });
                                       },
                                     ),
@@ -345,7 +358,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       strokeWidth: 4,
                                       radius: 16,
                                       gradient: LinearGradient(
-                                        colors: !_isAuto
+                                        colors: !_byCar
                                             ? _inactiveGradientColor
                                             : _activeGradientColor,
                                         begin: Alignment.topRight,
@@ -367,7 +380,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          _isAuto = true;
+                                          _byCar = true;
                                         });
                                       },
                                     ),
@@ -375,283 +388,283 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 ],
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Время доставки',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: !_isExpress
-                                            ? _activeGradientColor
-                                            : _inactiveGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              'Обычная',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(
-                                              '2-5 часов',
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    93, 105, 114, 1),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _isExpress = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 15),
-                                  ),
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: _isExpress
-                                            ? _activeGradientColor
-                                            : _inactiveGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              'Экспресс',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Самая быстрая',
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    93, 105, 114, 1),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _isExpress = true;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Как доставить',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      height:
-                                          MediaQuery.of(context).size.width <=
-                                                  350
-                                              ? 90
-                                              : 60,
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: !_isToDoor
-                                            ? _activeGradientColor
-                                            : _inactiveGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                          .size
-                                                          .width <=
-                                                      350
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.3
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                              child: const Text(
-                                                'Выйти к машине',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                          .size
-                                                          .width <=
-                                                      300
-                                                  ? MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.3
-                                                  : MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                              child: const Text(
-                                                'При отправке и получении',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Color.fromRGBO(
-                                                      93, 105, 114, 1),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _isToDoor = false;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 15),
-                                  ),
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      height:
-                                          MediaQuery.of(context).size.width <=
-                                                  350
-                                              ? 90
-                                              : 60,
-                                      gradient: LinearGradient(
-                                        colors: _isToDoor
-                                            ? _activeGradientColor
-                                            : _inactiveGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        width: MediaQuery.of(context)
-                                                    .size
-                                                    .width <=
-                                                300
-                                            ? MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.3
-                                            : MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.4,
-                                        child: const Text(
-                                          'От двери до двери',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _isToDoor = true;
-                                        });
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
+                            // const Padding(
+                            //   padding: EdgeInsets.only(top: 25),
+                            // ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: columnHorizontalPadding),
+                            //   child: const Align(
+                            //     alignment: Alignment.centerLeft,
+                            //     child: Text(
+                            //       'Время доставки',
+                            //       style: TextStyle(
+                            //         color: Color.fromRGBO(93, 105, 114, 1),
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.w300,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            // const Padding(
+                            //   padding: EdgeInsets.only(bottom: 10),
+                            // ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: columnHorizontalPadding),
+                            //   child: Row(
+                            //     children: [
+                            //       Expanded(
+                            //         child: UnicornOutlineButton(
+                            //           strokeWidth: 4,
+                            //           radius: 16,
+                            //           gradient: LinearGradient(
+                            //             colors: !_isExpress
+                            //                 ? _activeGradientColor
+                            //                 : _inactiveGradientColor,
+                            //             begin: Alignment.topRight,
+                            //             end: Alignment.bottomCenter,
+                            //           ),
+                            //           child: const Padding(
+                            //             padding: EdgeInsets.all(10),
+                            //             child: Column(
+                            //               children: [
+                            //                 Text(
+                            //                   'Обычная',
+                            //                   style: TextStyle(
+                            //                     fontSize: 14,
+                            //                     fontWeight: FontWeight.w300,
+                            //                     color: Colors.black,
+                            //                   ),
+                            //                 ),
+                            //                 Text(
+                            //                   '2-5 часов',
+                            //                   style: TextStyle(
+                            //                     fontSize: 10,
+                            //                     fontWeight: FontWeight.w300,
+                            //                     color: Color.fromRGBO(
+                            //                         93, 105, 114, 1),
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //           onPressed: () {
+                            //             setState(() {
+                            //               _isExpress = false;
+                            //             });
+                            //           },
+                            //         ),
+                            //       ),
+                            //       const Padding(
+                            //         padding: EdgeInsets.only(right: 15),
+                            //       ),
+                            //       Expanded(
+                            //         child: UnicornOutlineButton(
+                            //           strokeWidth: 4,
+                            //           radius: 16,
+                            //           gradient: LinearGradient(
+                            //             colors: _isExpress
+                            //                 ? _activeGradientColor
+                            //                 : _inactiveGradientColor,
+                            //             begin: Alignment.topRight,
+                            //             end: Alignment.bottomCenter,
+                            //           ),
+                            //           child: const Padding(
+                            //             padding: EdgeInsets.all(10),
+                            //             child: Column(
+                            //               children: [
+                            //                 Text(
+                            //                   'Экспресс',
+                            //                   style: TextStyle(
+                            //                     fontSize: 14,
+                            //                     fontWeight: FontWeight.w300,
+                            //                     color: Colors.black,
+                            //                   ),
+                            //                 ),
+                            //                 Text(
+                            //                   'Самая быстрая',
+                            //                   style: TextStyle(
+                            //                     fontSize: 10,
+                            //                     fontWeight: FontWeight.w300,
+                            //                     color: Color.fromRGBO(
+                            //                         93, 105, 114, 1),
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //           onPressed: () {
+                            //             setState(() {
+                            //               _isExpress = true;
+                            //             });
+                            //           },
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // const Padding(
+                            //   padding: EdgeInsets.only(top: 20),
+                            // ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: columnHorizontalPadding),
+                            //   child: const Align(
+                            //     alignment: Alignment.centerLeft,
+                            //     child: Text(
+                            //       'Как доставить',
+                            //       style: TextStyle(
+                            //         color: Color.fromRGBO(93, 105, 114, 1),
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.w300,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            // const Padding(
+                            //   padding: EdgeInsets.only(bottom: 10),
+                            // ),
+                            // Padding(
+                            //   padding: EdgeInsets.symmetric(
+                            //       horizontal: columnHorizontalPadding),
+                            //   child: Row(
+                            //     mainAxisAlignment:
+                            //         MainAxisAlignment.spaceBetween,
+                            //     children: [
+                            //       Expanded(
+                            //         child: UnicornOutlineButton(
+                            //           height:
+                            //               MediaQuery.of(context).size.width <=
+                            //                       350
+                            //                   ? 90
+                            //                   : 60,
+                            //           strokeWidth: 4,
+                            //           radius: 16,
+                            //           gradient: LinearGradient(
+                            //             colors: !_isToDoor
+                            //                 ? _activeGradientColor
+                            //                 : _inactiveGradientColor,
+                            //             begin: Alignment.topRight,
+                            //             end: Alignment.bottomCenter,
+                            //           ),
+                            //           child: Padding(
+                            //             padding: const EdgeInsets.all(5),
+                            //             child: Column(
+                            //               mainAxisAlignment:
+                            //                   MainAxisAlignment.center,
+                            //               children: [
+                            //                 SizedBox(
+                            //                   width: MediaQuery.of(context)
+                            //                               .size
+                            //                               .width <=
+                            //                           350
+                            //                       ? MediaQuery.of(context)
+                            //                               .size
+                            //                               .width *
+                            //                           0.3
+                            //                       : MediaQuery.of(context)
+                            //                               .size
+                            //                               .width *
+                            //                           0.35,
+                            //                   child: const Text(
+                            //                     'Выйти к машине',
+                            //                     textAlign: TextAlign.center,
+                            //                     style: TextStyle(
+                            //                       fontSize: 14,
+                            //                       fontWeight: FontWeight.w300,
+                            //                       color: Colors.black,
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //                 SizedBox(
+                            //                   width: MediaQuery.of(context)
+                            //                               .size
+                            //                               .width <=
+                            //                           300
+                            //                       ? MediaQuery.of(context)
+                            //                               .size
+                            //                               .width *
+                            //                           0.3
+                            //                       : MediaQuery.of(context)
+                            //                               .size
+                            //                               .width *
+                            //                           0.35,
+                            //                   child: const Text(
+                            //                     'При отправке и получении',
+                            //                     textAlign: TextAlign.center,
+                            //                     style: TextStyle(
+                            //                       fontSize: 10,
+                            //                       fontWeight: FontWeight.w300,
+                            //                       color: Color.fromRGBO(
+                            //                           93, 105, 114, 1),
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ),
+                            //           onPressed: () {
+                            //             setState(() {
+                            //               _isToDoor = false;
+                            //             });
+                            //           },
+                            //         ),
+                            //       ),
+                            //       const Padding(
+                            //         padding: EdgeInsets.only(right: 15),
+                            //       ),
+                            //       Expanded(
+                            //         child: UnicornOutlineButton(
+                            //           strokeWidth: 4,
+                            //           radius: 16,
+                            //           height:
+                            //               MediaQuery.of(context).size.width <=
+                            //                       350
+                            //                   ? 90
+                            //                   : 60,
+                            //           gradient: LinearGradient(
+                            //             colors: _isToDoor
+                            //                 ? _activeGradientColor
+                            //                 : _inactiveGradientColor,
+                            //             begin: Alignment.topRight,
+                            //             end: Alignment.bottomCenter,
+                            //           ),
+                            //           child: Container(
+                            //             padding: const EdgeInsets.symmetric(
+                            //                 horizontal: 5),
+                            //             width: MediaQuery.of(context)
+                            //                         .size
+                            //                         .width <=
+                            //                     300
+                            //                 ? MediaQuery.of(context)
+                            //                         .size
+                            //                         .width *
+                            //                     0.3
+                            //                 : MediaQuery.of(context)
+                            //                         .size
+                            //                         .width *
+                            //                     0.4,
+                            //             child: const Text(
+                            //               'От двери до двери',
+                            //               style: TextStyle(
+                            //                 fontSize: 14,
+                            //                 fontWeight: FontWeight.w300,
+                            //                 color: Colors.black,
+                            //               ),
+                            //               textAlign: TextAlign.center,
+                            //             ),
+                            //           ),
+                            //           onPressed: () {
+                            //             setState(() {
+                            //               _isToDoor = true;
+                            //             });
+                            //           },
+                            //         ),
+                            //       )
+                            //     ],
+                            //   ),
+                            // ),
                             const Padding(
                               padding: EdgeInsets.only(top: 20),
                             ),
