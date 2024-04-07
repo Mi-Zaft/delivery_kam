@@ -11,6 +11,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
   final List<MaskTextInputFormatter>? maskInputFormatters;
   final Function onChange;
   final Function onEditingComplete;
+  final Function onTap;
 
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
 
@@ -21,6 +22,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
     required this.keyboardType,
     required this.onChange,
     required this.onEditingComplete,
+    required this.onTap,
     this.prefixText,
     this.prefixStyle,
     this.maskInputFormatters,
@@ -67,8 +69,16 @@ class DeliveryMainTextfieldAddressState
                       // onSubmitted: (value) {
                       //   widget.onEditingComplete();
                       // },
-                      onTapOutside: (event) => {widget.onEditingComplete()},
+                      onTapOutside: (event) => {
+                        // widget.onEditingComplete()
+                        },
                       cursorColor: Colors.black,
+                      onTap: () {
+                        widget.onTap();
+                      },
+                      onEditingComplete: () {
+                        widget.onEditingComplete();
+                      },
                       inputFormatters: widget.maskInputFormatters,
                       style: const TextStyle(
                         fontSize: 18,

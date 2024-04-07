@@ -33,7 +33,7 @@ class DeliveryAuthRegisterBloc
         if (state is DeliveryAuthRegisterFail) {
           emit(DeliveryAuthRegisterInitial());
         } else {
-          if (event.phone.length == 18 && event.name.length >= 2) {
+          if (event.phone.length == 16 && event.name.length >= 2) {
             emit(DeliveryAuthRegisterDataCorrect());
           } else {
             emit(DeliveryAuthRegisterInitial());

@@ -15,3 +15,8 @@ class OrderDataChanged extends DeliveryMainEvent {
   OrderDataChanged(this.order);
   Order order;
 }
+
+class OrderCreateLoading extends DeliveryMainEvent {
+  OrderCreateLoading(this.order);
+  Order order;
+}

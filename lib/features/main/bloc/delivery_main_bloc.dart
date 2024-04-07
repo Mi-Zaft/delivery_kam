@@ -34,7 +34,6 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
           for (var i = 0; i < responseData.length; i++) {
             addressess.add(AddressApi.fromJson(responseData[i]));
           }
-          print(addressess[0].fiasLevel);
           emit(
             DeliveryMainAddressHintSuccess(addresses: addressess),
           );
@@ -50,19 +49,51 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       prefs.remove('jwt_token');
     });
     on<OrderDataChanged>((event, emit) async {
-      emit(DeliveryMainOrderPriceLoading());
+      emit(DeliveryMainLoading());
       Map<String, dynamic> dataToSend = {
         'fromFiasId': event.order.fromFiasId,
         'whereFiasId': event.order.whereFiasId,
-        'byCar': event.order.byCar
+        'byCar': event.order.byCar,
+        'fragileCargo': event.order.fragileCargo,
+        'thermalBag': event.order.thermalBag,
+        'bulkyCargo': event.order.bulkyCargo,
+        'transportDepartureRegistration':
+            event.order.transportDepartureRegistration,
+        'postOfficeCorrespondence': event.order.postOfficeCorrespondence,
       };
-      Response response = await ApiService().postData('/api/v1/order/price', dataToSend);
+      Response response =
+          await ApiService().postData('/api/v1/order/price', dataToSend);
       if (response.statusCode == 200) {
-        print(response);
-        if (response.data is double) {
+        if (response.data is int) {
           emit(DeliveryMainOrderPriceSuccess(price: response.data));
         }
       }
+    });
+    on<OrderCreateLoading>((event, emit) async {
+      emit(DeliveryMainLoading());
+      Map<String, dynamic> dataToSend = {
+        'fromFiasId': event.order.fromFiasId,
+        'whereFiasId': event.order.whereFiasId,
+        'byCar': event.order.byCar,
+        "floorFlatOrOfficeSender": "string",
+        "floorFlatOrOfficeRecipient": "string",
+        "senderPhone": "string",
+        "senderName": "string",
+        "recipientPhone": "string",
+        "recipientName": "string",
+        "cargoItem": "string",
+        "cargoValue": 0,
+        "cargoMass": 0,
+        "comment": "string",
+        "messageToRecipient": "string",
+        "deliveryWithoutIssuingAReceipt": false,
+        'fragileCargo': event.order.fragileCargo,
+        'thermalBag': event.order.thermalBag,
+        'bulkyCargo': event.order.bulkyCargo,
+        'transportDepartureRegistration':
+            event.order.transportDepartureRegistration,
+        'postOfficeCorrespondence': event.order.postOfficeCorrespondence,
+      };
     });
   }
 }

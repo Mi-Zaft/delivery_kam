@@ -24,9 +24,7 @@ class DeliveryAuthConfirmCodeBloc
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
             await prefs.setString('jwt_token', response.data['access_token']);
-            print('name next');
             if (response.data.containsKey('name')) {
-              print(response.data['name']);
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);
             }

@@ -26,7 +26,7 @@ class _DeliveryAuthRegisterScreenState
       "Вы получите на свой телефон сообщение с кодом, чтобы его подтвердить. За отправку сообщения может взиматься дополнительная плата.";
 
   var phoneMaskFormatter = MaskTextInputFormatter(
-      mask: '+7 (###) ###-##-##',
+      mask: ' (###) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
@@ -82,6 +82,7 @@ class _DeliveryAuthRegisterScreenState
                       labelText: 'Введите свой номер телефона',
                       controller: _phoneTextFieldController,
                       keyboardType: TextInputType.phone,
+                      prefixText: '+7',
                       textCapitalization: TextCapitalization.none,
                       inputFormatters: [phoneMaskFormatter],
                     ),

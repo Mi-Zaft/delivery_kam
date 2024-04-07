@@ -3,6 +3,7 @@ class Order {
   String whereFiasId;
   bool byCar = false;
   bool fragileCargo = false;
+  bool thermalBag = false;
   bool bulkyCargo = false;
   bool transportDepartureRegistration = false;
   bool postOfficeCorrespondence = false;
@@ -12,6 +13,7 @@ class Order {
     required this.whereFiasId,
     byCar,
     fragileCargo,
+    thermalBag,
     bulkyCargo,
     transportDepartureRegistration,
     postOfficeCorrespondence,

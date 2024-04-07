@@ -23,7 +23,7 @@ class _DeliveryAuthLoginScreenState extends State<DeliveryAuthLoginScreen> {
       "Вы получите на свой телефон сообщение с кодом, чтобы его подтвердить. За отправку сообщения может взиматься дополнительная плата.";
 
   var phoneMaskFormatter = MaskTextInputFormatter(
-      mask: '+7 (###) ###-##-##',
+      mask: ' (###) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
@@ -65,6 +65,7 @@ class _DeliveryAuthLoginScreenState extends State<DeliveryAuthLoginScreen> {
                       controller: _phoneTextFieldController,
                       keyboardType: TextInputType.phone,
                       textCapitalization: TextCapitalization.none,
+                      prefixText: '+7',
                       inputFormatters: [phoneMaskFormatter],
                     ),
                     const Padding(padding: EdgeInsets.only(top: 7)),

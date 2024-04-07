@@ -32,7 +32,7 @@ class DeliveryAuthLoginBloc
         if (state is DeliveryAuthLoginFail) {
           emit(DeliveryAuthLoginInitial());
         } else {
-          if (event.phone.length == 18) {
+          if (event.phone.length == 16) {
             emit(DeliveryAuthLoginNumberIsCorrect());
           } else {
             emit(DeliveryAuthLoginInitial());

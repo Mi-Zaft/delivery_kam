@@ -58,6 +58,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _byCar = false;
   bool _isFragileCargo = false;
   bool _isThermalBag = false;
+  bool _isBulkyCargo = false;
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
   bool _isShowFromSuggest = false;
@@ -90,7 +91,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           child: BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
               bloc: _deliveryMainBloc,
               builder: (context, state) {
-                if (state is DeliveryMainOrderPriceLoading) {
+                if (state is DeliveryMainLoading) {
                   return ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
@@ -212,9 +213,20 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               padding: EdgeInsets.only(top: 20),
                             ),
                             DeliveryMainTextfieldAddress(
+                              onTap: () {
+                                _activeTextfield = 'addressFrom';
+                                setState(() {
+                                  _isShowToSuggest = false;
+                                });
+                              },
                               onEditingComplete: () {
                                 if (_activeTextfield == 'addressFrom') {
                                   print('exit from');
+                                  setState(() {
+                                    _isShowFromSuggest = false;
+                                    _activeTextfield = '';
+                                  });
+                                  FocusScope.of(context).unfocus();
                                 }
                               },
                               onChange: () {
@@ -274,8 +286,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                               setState(() {
                                                 _isShowFromSuggest = false;
                                                 _activeTextfield = '';
-                                                print('click from suggest');
-                                                print(address);
                                               });
                                               FocusScope.of(context).unfocus();
                                               if (fromWhereObject.fiasId !=
@@ -306,9 +316,20 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               padding: EdgeInsets.only(bottom: 10),
                             ),
                             DeliveryMainTextfieldAddress(
+                              onTap: () {
+                                _activeTextfield = 'addressTo';
+                                setState(() {
+                                  _isShowFromSuggest = false;
+                                });
+                              },
                               onEditingComplete: () {
                                 if (_activeTextfield == 'addressTo') {
                                   print('exit to');
+                                  setState(() {
+                                    _isShowToSuggest = false;
+                                    _activeTextfield = '';
+                                  });
+                                  FocusScope.of(context).unfocus();
                                 }
                               },
                               onChange: () {
@@ -624,6 +645,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   setState(() {
                                     _isFragileCargo = newValue!;
                                   });
+                                  makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
                                 isChecked: _isThermalBag,
@@ -632,6 +654,16 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   setState(() {
                                     _isThermalBag = newValue!;
                                   });
+                                  makeOrder();
+                                }),
+                            DeliveryMainCustomCheckboxListTile(
+                                isChecked: _isBulkyCargo,
+                                label: 'Крупногабаритный груз 120 - 210 см',
+                                onChanged: (bool? newValue) {
+                                  setState(() {
+                                    _isBulkyCargo = newValue!;
+                                  });
+                                  makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
                                 isChecked: _isRegistrationInTransportCompany,
@@ -642,6 +674,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     _isRegistrationInTransportCompany =
                                         newValue!;
                                   });
+                                  makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
                                 isChecked: _isCorrespondenceInRussianPostOffice,
@@ -652,6 +685,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     _isCorrespondenceInRussianPostOffice =
                                         newValue!;
                                   });
+                                  makeOrder();
                                 }),
                           ],
                         ),
@@ -670,12 +704,22 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   void makeOrder() {
     if (order != null) {
       order!.byCar = _byCar;
+      order!.fragileCargo = _isFragileCargo;
+      order!.thermalBag = _isThermalBag;
+      order!.bulkyCargo = _isBulkyCargo;
+      order!.transportDepartureRegistration = _isRegistrationInTransportCompany;
+      order!.postOfficeCorrespondence = _isCorrespondenceInRussianPostOffice;
     } else {
       if (fromWhereObject.fiasId != null && toWhereObjext.fiasId != null) {
         order = Order(
           fromFiasId: fromWhereObject.fiasId!,
           whereFiasId: toWhereObjext.fiasId!,
           byCar: _byCar,
+          fragileCargo: _isFragileCargo,
+          thermalBag: _isThermalBag,
+          bulkyCargo: _isBulkyCargo,
+          transportDepartureRegistration: _isRegistrationInTransportCompany,
+          postOfficeCorrespondence: _isCorrespondenceInRussianPostOffice,
         );
       }
     }
