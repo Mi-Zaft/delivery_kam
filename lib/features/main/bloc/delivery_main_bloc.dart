@@ -75,18 +75,17 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
         'fromFiasId': event.order.fromFiasId,
         'whereFiasId': event.order.whereFiasId,
         'byCar': event.order.byCar,
-        "floorFlatOrOfficeSender": "string",
-        "floorFlatOrOfficeRecipient": "string",
-        "senderPhone": "string",
-        "senderName": "string",
-        "recipientPhone": "string",
-        "recipientName": "string",
-        "cargoItem": "string",
+        "floorFlatOrOfficeSender": event.order.floorFlatOrOfficeSender,
+        "floorFlatOrOfficeRecipient": event.order.floorFlatOrOfficeRecipient,
+        "senderPhone": event.order.senderPhone,
+        "senderName": event.order.senderName,
+        "recipientPhone": event.order.recipientPhone,
+        "recipientName": event.order.recipientName,
+        "cargoItem": event.order.cargoItem,
         "cargoValue": 0,
         "cargoMass": 0,
-        "comment": "string",
-        "messageToRecipient": "string",
-        "deliveryWithoutIssuingAReceipt": false,
+        "comment": event.order.comment,
+        "messageToRecipient": event.order.messageToRecipient,
         'fragileCargo': event.order.fragileCargo,
         'thermalBag': event.order.thermalBag,
         'bulkyCargo': event.order.bulkyCargo,
@@ -94,6 +93,12 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
             event.order.transportDepartureRegistration,
         'postOfficeCorrespondence': event.order.postOfficeCorrespondence,
       };
+
+      Response response = await ApiService().postData('/api/v1/order', dataToSend);
+      if (response.statusCode == 200) {
+        print('success!');
+        print(response.statusMessage);
+      }
     });
   }
 }

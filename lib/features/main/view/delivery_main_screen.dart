@@ -34,6 +34,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       TextEditingController();
   final TextEditingController addressToTextFieldController =
       TextEditingController();
+  final TextEditingController floorFlatOrOfficeSenderController = TextEditingController();
+  final TextEditingController floorFlatOrOfficeRecipientController =
+      TextEditingController();
   final TextEditingController senderNumberTextFieldController =
       TextEditingController();
   final TextEditingController senderNameTextFieldController =
@@ -42,11 +45,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       TextEditingController();
   final TextEditingController recipientNameTextFieldController =
       TextEditingController();
-  final TextEditingController subjectTextFieldController =
+  final TextEditingController cargoItemTextFieldController =
       TextEditingController();
-  final TextEditingController envelopeTextFieldController =
+  final TextEditingController commentTextFieldController =
       TextEditingController();
-  final TextEditingController chatTextFieldController = TextEditingController();
+  final TextEditingController messageToRecipientTextFieldController = TextEditingController();
 
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
@@ -125,7 +128,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        makeOrder();
+                        if (order != null) {
+                          _deliveryMainBloc.add(OrderCreateLoading(order!));
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         backgroundColor: Colors
@@ -452,6 +460,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         order?.byCar = false;
                                         setState(() {
                                           _byCar = false;
+                                          if (_isBulkyCargo == true) {
+                                            _isBulkyCargo = false;
+                                          }
                                         });
                                         makeOrder();
                                       },
@@ -495,6 +506,52 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     ),
                                   ),
                                 ],
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: columnHorizontalPadding),
+                              child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Уточнение адреса',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(93, 105, 114, 1),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: DeliveryMainTextfieldCustom(
+                                labelText: 'Этаж, квартира/офис отправителя',
+                                controller: floorFlatOrOfficeSenderController,
+                                prefixStyle: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black,
+                                ),
+                                keyboardType: TextInputType.streetAddress,
+                                prefixText: "А",
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: DeliveryMainTextfieldCustom(
+                                labelText: 'Этаж, квартира/офис получателя',
+                                controller: floorFlatOrOfficeRecipientController,
+                                prefixStyle: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black,
+                                ),
+                                keyboardType: TextInputType.streetAddress,
+                                prefixText: "Б",
                               ),
                             ),
                             const Padding(
@@ -588,7 +645,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             ),
                             DeliveryMainTextfieldCustom(
                               labelText: 'Предмет доставки',
-                              controller: subjectTextFieldController,
+                              controller: cargoItemTextFieldController,
                               prefixStyle: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
@@ -600,7 +657,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             ),
                             DeliveryMainTextfieldCustom(
                               labelText: 'Комментарий курьеру',
-                              controller: envelopeTextFieldController,
+                              controller: commentTextFieldController,
                               prefixStyle: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
@@ -612,7 +669,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                             ),
                             DeliveryMainTextfieldCustom(
                               labelText: 'Сообщение получателю',
-                              controller: chatTextFieldController,
+                              controller: messageToRecipientTextFieldController,
                               prefixStyle: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
@@ -662,6 +719,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 onChanged: (bool? newValue) {
                                   setState(() {
                                     _isBulkyCargo = newValue!;
+                                    if (_isBulkyCargo == true &&
+                                        _byCar == false) {
+                                      _byCar = true;
+                                    }
                                   });
                                   makeOrder();
                                 }),
@@ -704,6 +765,15 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   void makeOrder() {
     if (order != null) {
       order!.byCar = _byCar;
+      order!.floorFlatOrOfficeSender = floorFlatOrOfficeSenderController.text;
+      order!.floorFlatOrOfficeRecipient = floorFlatOrOfficeRecipientController.text;
+      order!.senderPhone = '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
+      order!.senderName = senderNameTextFieldController.text;
+      order!.recipientPhone = '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
+      order!.recipientName = recipientNameTextFieldController.text;
+      order!.cargoItem = cargoItemTextFieldController.text;
+      order!.comment = commentTextFieldController.text;
+      order!.messageToRecipient = messageToRecipientTextFieldController.text;
       order!.fragileCargo = _isFragileCargo;
       order!.thermalBag = _isThermalBag;
       order!.bulkyCargo = _isBulkyCargo;
