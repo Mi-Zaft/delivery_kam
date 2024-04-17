@@ -34,7 +34,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       TextEditingController();
   final TextEditingController addressToTextFieldController =
       TextEditingController();
-  final TextEditingController floorFlatOrOfficeSenderController = TextEditingController();
+  final TextEditingController floorFlatOrOfficeSenderController =
+      TextEditingController();
   final TextEditingController floorFlatOrOfficeRecipientController =
       TextEditingController();
   final TextEditingController senderNumberTextFieldController =
@@ -49,7 +50,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       TextEditingController();
   final TextEditingController commentTextFieldController =
       TextEditingController();
-  final TextEditingController messageToRecipientTextFieldController = TextEditingController();
+  final TextEditingController messageToRecipientTextFieldController =
+      TextEditingController();
 
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
@@ -59,6 +61,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   AddressApi toWhereObjext = AddressApi(street: '');
   String toWhere = '';
   bool _byCar = false;
+  bool _toDoor = false;
   bool _isFragileCargo = false;
   bool _isThermalBag = false;
   bool _isBulkyCargo = false;
@@ -517,6 +520,102 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               child: const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
+                                  'Как доставить',
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(93, 105, 114, 1),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 10),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: columnHorizontalPadding),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: UnicornOutlineButton(
+                                      strokeWidth: 4,
+                                      radius: 16,
+                                      gradient: LinearGradient(
+                                        colors: _toDoor
+                                            ? _inactiveGradientColor
+                                            : _activeGradientColor,
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          children: [
+                                            Text('Выйти к машине'),
+                                            Text(
+                                              'При отправке и получении',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w100),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        order?.toDoor = false;
+                                        setState(() {
+                                          _toDoor = false;
+                                        });
+                                        makeOrder();
+                                      },
+                                    ),
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.only(right: 15),
+                                  ),
+                                  Expanded(
+                                    child: UnicornOutlineButton(
+                                      strokeWidth: 4,
+                                      radius: 16,
+                                      gradient: LinearGradient(
+                                        colors: !_toDoor
+                                            ? _inactiveGradientColor
+                                            : _activeGradientColor,
+                                        begin: Alignment.topRight,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: SizedBox(
+                                          height: 35,
+                                          child: Center(
+                                            child: Text('От двери до двери',
+                                                textAlign: TextAlign.center),
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        order?.toDoor = true;
+                                        setState(() {
+                                          _toDoor = true;
+                                        });
+                                        makeOrder();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: columnHorizontalPadding),
+                              child: const Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
                                   'Уточнение адреса',
                                   style: TextStyle(
                                     color: Color.fromRGBO(93, 105, 114, 1),
@@ -544,7 +643,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               padding: const EdgeInsets.only(top: 5),
                               child: DeliveryMainTextfieldCustom(
                                 labelText: 'Этаж, квартира/офис получателя',
-                                controller: floorFlatOrOfficeRecipientController,
+                                controller:
+                                    floorFlatOrOfficeRecipientController,
                                 prefixStyle: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
@@ -765,11 +865,15 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   void makeOrder() {
     if (order != null) {
       order!.byCar = _byCar;
+      order!.toDoor = _toDoor;
       order!.floorFlatOrOfficeSender = floorFlatOrOfficeSenderController.text;
-      order!.floorFlatOrOfficeRecipient = floorFlatOrOfficeRecipientController.text;
-      order!.senderPhone = '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
+      order!.floorFlatOrOfficeRecipient =
+          floorFlatOrOfficeRecipientController.text;
+      order!.senderPhone =
+          '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
       order!.senderName = senderNameTextFieldController.text;
-      order!.recipientPhone = '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
+      order!.recipientPhone =
+          '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
       order!.recipientName = recipientNameTextFieldController.text;
       order!.cargoItem = cargoItemTextFieldController.text;
       order!.comment = commentTextFieldController.text;
@@ -785,6 +889,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           fromFiasId: fromWhereObject.fiasId!,
           whereFiasId: toWhereObjext.fiasId!,
           byCar: _byCar,
+          toDoor: _toDoor,
           fragileCargo: _isFragileCargo,
           thermalBag: _isThermalBag,
           bulkyCargo: _isBulkyCargo,

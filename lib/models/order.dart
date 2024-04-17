@@ -5,6 +5,7 @@ class Order {
   String fromFiasId;
   String whereFiasId;
   bool byCar = false;
+  bool toDoor = false;
   String floorFlatOrOfficeSender = '';
   String floorFlatOrOfficeRecipient = '';
   String senderPhone = '';
@@ -26,6 +27,7 @@ class Order {
     required this.fromFiasId,
     required this.whereFiasId,
     byCar,
+    toDoor,
     floorFlatOrOfficeSender,
     floorFlatOrOfficeRecipient,
     senderPhone,
