@@ -34,7 +34,6 @@ class ApiService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('jwt_token');
     // Check if token is expired
-    print(token);
     return token;
   }
 
@@ -70,11 +69,18 @@ class ApiService {
       return response;
     } catch (error) {
       if (error is DioException) {
-        return Response(
-            requestOptions: RequestOptions(path: endPoint),
-            statusCode: 400,
-            statusMessage:
-                error.response?.data['detail'] ?? 'Неизвестная ошибка');
+        if (error.response?.data['detail'].runtimeType is String) {
+          return Response(
+              requestOptions: RequestOptions(path: endPoint),
+              statusCode: 400,
+              statusMessage:
+                  error.response?.data['detail'] ?? 'Неизвестная ошибка');
+        } else {
+          return Response(
+              requestOptions: RequestOptions(path: endPoint),
+              statusCode: 400,
+              statusMessage: 'Неизвестная ошибка');
+        }
       } else {
         return Response(
             requestOptions: RequestOptions(path: endPoint),
