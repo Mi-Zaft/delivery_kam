@@ -5,8 +5,9 @@ class DeliveryMainState {}
 class DeliveryMainInitial extends DeliveryMainState {}
 
 class DeliveryMainAddressHintSuccess extends DeliveryMainState {
-  DeliveryMainAddressHintSuccess({required this.addresses});
+  DeliveryMainAddressHintSuccess({required this.addresses, required this.fieldName});
   final List<AddressApi> addresses;
+  final String fieldName;
 }
 
 class DeliveryMainAddressHintFail extends DeliveryMainState {

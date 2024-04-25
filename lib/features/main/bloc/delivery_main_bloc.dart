@@ -35,7 +35,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
             addressess.add(AddressApi.fromJson(responseData[i]));
           }
           emit(
-            DeliveryMainAddressHintSuccess(addresses: addressess),
+            DeliveryMainAddressHintSuccess(addresses: addressess, fieldName: event.fieldName),
           );
         }
       } else if (response.statusCode != 200) {

@@ -1,17 +1,14 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_address_hint.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_textfield_hint.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_bottom_navbar.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_address.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_textfield_custom.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline_button.dart';
-import 'package:delivery_kam/main.dart';
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryMainScreen extends StatefulWidget {
@@ -22,7 +19,7 @@ class DeliveryMainScreen extends StatefulWidget {
 }
 
 class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
-  final _deliveryMainBloc = DeliveryMainBloc();
+  final deliveryMainBloc = DeliveryMainBloc();
   final _activeGradientColor = [
     const Color.fromRGBO(175, 223, 233, 1),
     const Color.fromRGBO(32, 191, 208, 1)
@@ -55,12 +52,13 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   final TextEditingController messageToRecipientTextFieldController =
       TextEditingController();
 
+  final DraggableScrollableController draggableScrollableController = DraggableScrollableController();
+
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
 
-  String fromWhere = '';
-  AddressApi fromWhereObject = AddressApi(street: '');
-  AddressApi toWhereObjext = AddressApi(street: '');
+  AddressApi fromWhereObject = AddressApi(street: '', city: '');
+  AddressApi toWhereObjext = AddressApi(street: '', city: '');
   String toWhere = '';
   bool _byCar = false;
   bool _toDoor = false;
@@ -69,9 +67,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isBulkyCargo = false;
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
-  bool _isShowFromSuggest = false;
-  bool _isShowToSuggest = false;
-  String _activeTextfield = '';
+
   Order? order;
   Order? mainOrder;
 
@@ -92,7 +88,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       key: _scaffoldKey,
       drawer: const DeliveryMainDrawer(),
       bottomNavigationBar: DeliveryMainBottomNavbar(
-        deliveryMainBloc: _deliveryMainBloc,
+        deliveryMainBloc: deliveryMainBloc,
         makeOrder: makeOrder,
         order: mainOrder,
       ),
@@ -101,12 +97,16 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
+              FocusScope.of(context).unfocus();
               return true;
             },
             child: DraggableScrollableSheet(
+              controller: draggableScrollableController,
               initialChildSize: minChildSize,
               minChildSize: minChildSize,
               maxChildSize: maxChildSize,
+              // snap: true,
+              // snapSizes: [minChildSize, maxChildSize],
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -139,213 +139,35 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                         ),
                         child: Column(
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            DeliveryMainTextfieldAddress(
-                              onTap: () {
-                                _activeTextfield = 'addressFrom';
-                                setState(() {
-                                  _isShowToSuggest = false;
-                                });
-                              },
-                              onEditingComplete: () {
-                                if (_activeTextfield == 'addressFrom') {
-                                  print('exit from');
-                                  setState(() {
-                                    _isShowFromSuggest = false;
-                                    _activeTextfield = '';
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                }
-                              },
-                              onChange: () {
-                                _activeTextfield = 'addressFrom';
-                                setState(() {
-                                  _isShowToSuggest = false;
-                                });
-                                if (addressFromTextFieldController
-                                        .text.length >=
-                                    3) {
-                                  _isShowFromSuggest = true;
-                                  _deliveryMainBloc.add(
-                                    LoadingMainAddressHintRequest(
-                                      addressFromTextFieldController.text,
-                                    ),
-                                  );
-                                } else {
-                                  setState(() {
-                                    _isShowFromSuggest = false;
-                                  });
-                                }
-                              },
-                              labelText: 'Откуда забрать',
-                              prefixStyle: const TextStyle(
-                                fontSize: 20,
-                                color: Color.fromRGBO(122, 122, 122, 1),
-                              ),
-                              controller: addressFromTextFieldController,
-                              keyboardType: TextInputType.streetAddress,
-                              prefixText: "А",
-                            ),
+                            const Padding(padding: EdgeInsets.only(top: 10)),
                             const SizedBox(
-                              height: 15,
+                              width: 50,
+                              child: Divider(
+                                thickness: 5,
+                              ),
                             ),
-                            BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
-                              bloc: _deliveryMainBloc,
-                              builder: (context, state) {
-                                if (state is DeliveryMainAddressHintSuccess &&
-                                    _isShowFromSuggest) {
-                                  return ListView.builder(
-                                    padding: const EdgeInsets.all(0),
-                                    itemCount: state.addresses.length,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder:
-                                        (BuildContext listContext, int index) {
-                                      return DeliveryMainAddressHint(
-                                        onClick: (address) {
-                                          addressFromTextFieldController.text =
-                                              "${address.street} ${address.house ?? ''}";
-                                          fromWhere =
-                                              "${address.street} ${address.house ?? ''}";
-                                          fromWhereObject = address;
-                                          if (address.fiasLevel != null) {
-                                            if (address.fiasLevel! >= 8) {
-                                              setState(() {
-                                                _isShowFromSuggest = false;
-                                                _activeTextfield = '';
-                                              });
-                                              FocusScope.of(context).unfocus();
-                                              if (fromWhereObject.fiasId !=
-                                                      null &&
-                                                  toWhereObjext.fiasId !=
-                                                      null) {
-                                                order = Order(
-                                                    fromFiasId:
-                                                        fromWhereObject.fiasId!,
-                                                    whereFiasId:
-                                                        toWhereObjext.fiasId!,
-                                                    byCar: _byCar);
-                                                makeOrder();
-                                              }
-                                            }
-                                          }
-                                        },
-                                        address: state.addresses[index],
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  return const SizedBox.shrink();
-                                }
-                              },
+                            const Padding(
+                              padding: EdgeInsets.only(top: 10),
                             ),
+                            DeliveryMainAddressTextfieldHint(
+                                textfieldController:
+                                    addressFromTextFieldController,
+                                deliveryMainBloc: deliveryMainBloc,
+                                fieldName: 'whereFrom',
+                                labelText: 'Откуда забрать',
+                                prefixText: 'А',
+                                onTap: openDraggableScrollableSheet,),
                             const Padding(
                               padding: EdgeInsets.only(bottom: 10),
                             ),
-                            // Куда доставить
-                            DeliveryMainTextfieldAddress(
-                              onTap: () {
-                                _activeTextfield = 'addressTo';
-                                setState(() {
-                                  _isShowFromSuggest = false;
-                                });
-                              },
-                              onEditingComplete: () {
-                                if (_activeTextfield == 'addressTo') {
-                                  print('exit to');
-                                  setState(() {
-                                    _isShowToSuggest = false;
-                                    _activeTextfield = '';
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                }
-                              },
-                              onChange: () {
-                                _activeTextfield = 'addressTo';
-                                setState(() {
-                                  _isShowFromSuggest = false;
-                                });
-                                if (addressToTextFieldController.text.length >=
-                                    3) {
-                                  _isShowToSuggest = true;
-                                  _deliveryMainBloc.add(
-                                    LoadingMainAddressHintRequest(
-                                      addressToTextFieldController.text,
-                                    ),
-                                  );
-                                } else {
-                                  setState(() {
-                                    _isShowToSuggest = false;
-                                  });
-                                }
-                              },
-                              labelText: 'Куда доставить',
-                              prefixStyle: const TextStyle(
-                                fontSize: 20,
-                                color: Color.fromRGBO(122, 122, 122, 1),
-                              ),
-                              controller: addressToTextFieldController,
-                              keyboardType: TextInputType.streetAddress,
-                              prefixText: "Б",
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
-                              bloc: _deliveryMainBloc,
-                              builder: (context, state) {
-                                if (state is DeliveryMainAddressHintSuccess &&
-                                    _isShowToSuggest) {
-                                  return ListView.builder(
-                                    padding: const EdgeInsets.all(0),
-                                    itemCount: state.addresses.length,
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemBuilder:
-                                        (BuildContext listContext, int index) {
-                                      return DeliveryMainAddressHint(
-                                        onClick: (address) {
-                                          addressToTextFieldController.text =
-                                              "${address.street} ${address.house ?? ''}";
-                                          toWhere =
-                                              "${address.street} ${address.house ?? ''}";
-                                          toWhereObjext = address;
-                                          if (address.fiasLevel != null) {
-                                            if (address.fiasLevel! >= 8) {
-                                              setState(() {
-                                                _isShowToSuggest = false;
-                                                _activeTextfield = '';
-                                              });
-                                              FocusScope.of(context).unfocus();
-                                              if (fromWhereObject.fiasId !=
-                                                      null &&
-                                                  toWhereObjext.fiasId !=
-                                                      null) {
-                                                order = Order(
-                                                    fromFiasId:
-                                                        fromWhereObject.fiasId!,
-                                                    whereFiasId:
-                                                        toWhereObjext.fiasId!,
-                                                    byCar: _byCar);
-                                                makeOrder();
-                                              }
-                                            }
-                                          }
-                                        },
-                                        address: state.addresses[index],
-                                        // "${state.addresses[index].street} ${state.addresses[index].house ?? ''}",
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  return const SizedBox.shrink();
-                                }
-                              },
-                            ),
+                            DeliveryMainAddressTextfieldHint(
+                                textfieldController:
+                                    addressToTextFieldController,
+                                deliveryMainBloc: deliveryMainBloc,
+                                fieldName: 'whereTo',
+                                labelText: 'Куда доставить',
+                                prefixText: 'Б',
+                                onTap: openDraggableScrollableSheet,),
                             const Padding(
                               padding: EdgeInsets.only(top: 25),
                             ),
@@ -387,6 +209,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                             _isBulkyCargo = false;
                                           }
                                         });
+                                        FocusScope.of(context).unfocus();
                                         makeOrder();
                                       },
                                     ),
@@ -424,6 +247,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         setState(() {
                                           _byCar = true;
                                         });
+                                        FocusScope.of(context).unfocus();
                                         makeOrder();
                                       },
                                     ),
@@ -487,6 +311,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         setState(() {
                                           _toDoor = false;
                                         });
+                                        FocusScope.of(context).unfocus();
                                         makeOrder();
                                       },
                                     ),
@@ -520,6 +345,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                         setState(() {
                                           _toDoor = true;
                                         });
+                                        FocusScope.of(context).unfocus();
                                         makeOrder();
                                       },
                                     ),
@@ -722,6 +548,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   setState(() {
                                     _isFragileCargo = newValue!;
                                   });
+                                  FocusScope.of(context).unfocus();
                                   makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
@@ -731,6 +558,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   setState(() {
                                     _isThermalBag = newValue!;
                                   });
+                                  FocusScope.of(context).unfocus();
                                   makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
@@ -744,6 +572,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                       _byCar = true;
                                     }
                                   });
+                                  FocusScope.of(context).unfocus();
                                   makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
@@ -755,6 +584,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     _isRegistrationInTransportCompany =
                                         newValue!;
                                   });
+                                  FocusScope.of(context).unfocus();
                                   makeOrder();
                                 }),
                             DeliveryMainCustomCheckboxListTile(
@@ -766,6 +596,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                     _isCorrespondenceInRussianPostOffice =
                                         newValue!;
                                   });
+                                  FocusScope.of(context).unfocus();
                                   makeOrder();
                                 }),
                           ],
@@ -780,6 +611,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         ),
       ]),
     );
+  }
+
+  void openDraggableScrollableSheet() {
+    draggableScrollableController.animateTo(1, duration: const Duration(seconds: 1), curve: Curves.easeOutQuint);
   }
 
   void makeOrder() {
@@ -822,7 +657,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       mainOrder = order;
     });
     if (order != null) {
-      _deliveryMainBloc.add(OrderDataChanged(order!));
+      deliveryMainBloc.add(OrderDataChanged(order!));
     }
   }
 }

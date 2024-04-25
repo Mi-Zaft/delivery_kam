@@ -13,11 +13,11 @@ class DeliveryMainAddressHint extends StatelessWidget {
     return InkWell(
       onTap: () => {onClick(address)},
       child: Container(
-        height: 50,
+        height: 60,
         decoration:
             const BoxDecoration(color: Color.fromRGBO(239, 239, 239, 1)),
         child: Padding(
-          padding: const EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(top: 5),
           child: Column(
             children: [
               Row(
@@ -28,13 +28,27 @@ class DeliveryMainAddressHint extends StatelessWidget {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    "${address.street} ${address.house ?? ''}",
-                    style: const TextStyle(
-                      color: Color.fromRGBO(122, 122, 122, 1),
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${address.street} ${address.house ?? ''}",
+                        style: const TextStyle(
+                          color: Color.fromRGBO(122, 122, 122, 1),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      Text(
+                          "${address.city}",
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(122, 122, 122, 1),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w100,
+                          ),
+                        ),
+                    ],
                   )
                 ],
               ),

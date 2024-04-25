@@ -3,8 +3,9 @@ part of 'delivery_main_bloc.dart';
 class DeliveryMainEvent {}
 
 class LoadingMainAddressHintRequest extends DeliveryMainEvent {
-  LoadingMainAddressHintRequest(this.address);
+  LoadingMainAddressHintRequest(this.address, this.fieldName);
   final String address;
+  final String fieldName;
 }
 
 class LoadingExitFromAccount extends DeliveryMainEvent {

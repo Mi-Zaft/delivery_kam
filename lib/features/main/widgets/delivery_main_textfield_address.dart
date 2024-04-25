@@ -12,6 +12,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
   final Function onChange;
   final Function onEditingComplete;
   final Function onTap;
+  final FocusNode textfieldFocusNode;
 
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
 
@@ -23,6 +24,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
     required this.onChange,
     required this.onEditingComplete,
     required this.onTap,
+    required this.textfieldFocusNode,
     this.prefixText,
     this.prefixStyle,
     this.maskInputFormatters,
@@ -66,6 +68,7 @@ class DeliveryMainTextfieldAddressState
                   const SizedBox(width: 5.0),
                   Flexible(
                     child: TextField(
+                      focusNode: widget.textfieldFocusNode,
                       // onSubmitted: (value) {
                       //   widget.onEditingComplete();
                       // },
