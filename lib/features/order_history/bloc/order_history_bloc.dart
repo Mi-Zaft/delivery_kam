@@ -9,7 +9,6 @@ part 'order_history_state.dart';
 class OrderHistoryBloc extends Bloc<OrderHistoryEvent, OrderHistoryState> {
   OrderHistoryBloc() : super(OrderHistoryInitial()) {
     on<OrderHistoryLoad>((event, emit) async {
-      print('qweq');
       Response response = await ApiService().fetchData('/api/v1/order');
       List<OrderHistoryItem> orders = [];
       print(response.data);

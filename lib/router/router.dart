@@ -3,7 +3,6 @@ import 'package:delivery_kam/features/auth/login/view/delivery_auth_login_screen
 import 'package:delivery_kam/features/auth/register/delivery_auth_register.dart';
 import 'package:delivery_kam/features/main/delivery_main_screen.dart';
 import 'package:delivery_kam/features/main/view/check_auth_screen.dart';
-import 'package:delivery_kam/features/order_active/view/order_active_screen.dart';
 import 'package:delivery_kam/features/order_history/view/order_history_list_screen.dart';
 import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_screen.dart';
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';

@@ -20,10 +20,10 @@ class DeliveryAuthConfirmCodeBloc
           .postData('/api/v1/registration/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
-          if (response.data.containsKey('access_token')) {
+          if (response.data.containsKey('accessToken')) {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
-            await prefs.setString('jwt_token', response.data['access_token']);
+            await prefs.setString('jwt_token', response.data['accessToken']);
             if (response.data.containsKey('name')) {
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);
@@ -78,10 +78,10 @@ class DeliveryAuthConfirmCodeBloc
           .postData('/api/v1/authorization/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
-          if (response.data.containsKey('access_token')) {
+          if (response.data.containsKey('accessToken')) {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
-            await prefs.setString('jwt_token', response.data['access_token']);
+            await prefs.setString('jwt_token', response.data['accessToken']);
             if (response.data.containsKey('name')) {
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);

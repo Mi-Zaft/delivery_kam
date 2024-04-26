@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -38,6 +40,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
 
 class DeliveryMainTextfieldAddressState
     extends State<DeliveryMainTextfieldAddress> {
+  bool readOnly = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -68,18 +71,20 @@ class DeliveryMainTextfieldAddressState
                   const SizedBox(width: 5.0),
                   Flexible(
                     child: TextField(
+                      readOnly: readOnly,
                       focusNode: widget.textfieldFocusNode,
-                      // onSubmitted: (value) {
-                      //   widget.onEditingComplete();
-                      // },
                       onTapOutside: (event) => {
                         // widget.onEditingComplete()
-                        },
+                      },
                       cursorColor: Colors.black,
                       onTap: () {
                         widget.onTap();
+                        FocusScope.of(context).requestFocus();
                       },
                       onEditingComplete: () {
+                        setState(() {
+                          readOnly = true;
+                        });
                         widget.onEditingComplete();
                       },
                       inputFormatters: widget.maskInputFormatters,
