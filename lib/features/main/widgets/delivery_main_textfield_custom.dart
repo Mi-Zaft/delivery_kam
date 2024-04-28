@@ -71,7 +71,7 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
                     contentPadding: EdgeInsets.only(
                         bottom: 10, left: prefixIcon != null ? 10 : 0),
                     labelStyle: const TextStyle(
-                      color: Color.fromRGBO(122, 122, 122, 1),
+                      color: Color(0xff7A7A7A),
                       fontSize: 18,
                       fontWeight: FontWeight.w300,
                     ),

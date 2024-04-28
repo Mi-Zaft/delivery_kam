@@ -1,8 +1,7 @@
-import 'dart:math';
-
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_address_textfield_hint.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_additional_address_tapped_row.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_tapped_row.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_bottom_navbar.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
@@ -31,8 +30,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
     const Color.fromRGBO(195, 195, 195, 1)
   ];
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
-  final TextEditingController addressFromTextFieldController =
-      TextEditingController();
+
   final TextEditingController addressToTextFieldController =
       TextEditingController();
   final TextEditingController floorFlatOrOfficeSenderController =
@@ -54,8 +52,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   final TextEditingController messageToRecipientTextFieldController =
       TextEditingController();
 
-  final DraggableScrollableController draggableScrollableController = DraggableScrollableController();
-
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
 
@@ -69,9 +65,28 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   bool _isBulkyCargo = false;
   bool _isRegistrationInTransportCompany = false;
   bool _isCorrespondenceInRussianPostOffice = false;
+  final DraggableScrollableController _draggableBottomSheetController =
+      DraggableScrollableController();
 
   Order? order;
   Order? mainOrder;
+
+  List<Widget> addressesWidgetList = [
+    DeliveryMainAddressTappedRow(
+      labelText: 'Откуда забрать',
+      prefixText: 'А',
+      onAddressReady: (addressFromRow) {
+        print('Откуда');
+      },
+    ),
+    DeliveryMainAddressTappedRow(
+      labelText: 'Куда доставить',
+      prefixText: 'Б',
+      onAddressReady: (addressFromRow) {
+        print('Куда');
+      },
+    ),
+  ];
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -87,6 +102,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       drawer: const DeliveryMainDrawer(),
       bottomNavigationBar: DeliveryMainBottomNavbar(
@@ -103,12 +119,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
               return true;
             },
             child: DraggableScrollableSheet(
-              controller: draggableScrollableController,
+              controller: _draggableBottomSheetController,
               initialChildSize: minChildSize,
               minChildSize: minChildSize,
               maxChildSize: maxChildSize,
-              // snap: true,
-              // snapSizes: [minChildSize, maxChildSize],
+              snap: true,
+              snapSizes: [minChildSize, maxChildSize],
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -141,41 +157,53 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                         ),
                         child: Column(
                           children: [
-                            const Padding(padding: EdgeInsets.only(top: 10)),
                             const SizedBox(
                               width: 50,
                               child: Divider(
                                 thickness: 5,
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            DeliveryMainAddressTextfieldHint(
-                                textfieldController:
-                                    addressFromTextFieldController,
-                                deliveryMainBloc: deliveryMainBloc,
-                                fieldName: 'whereFrom',
-                                labelText: 'Откуда забрать',
-                                prefixText: 'А',
-                                onTap: openDraggableScrollableSheet,),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 10),
-                            ),
-                            DeliveryMainAddressTextfieldHint(
-                                textfieldController:
-                                    addressToTextFieldController,
-                                deliveryMainBloc: deliveryMainBloc,
-                                fieldName: 'whereTo',
-                                labelText: 'Куда доставить',
-                                prefixText: 'Б',
-                                onTap: openDraggableScrollableSheet,),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
+                            ListView.builder(
+                                padding: const EdgeInsets.only(top: 5),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: addressesWidgetList.length,
+                                itemBuilder:
+                                    (BuildContext listContext, int index) {
+                                  return addressesWidgetList[index];
+                                }),
+                            if (addressesWidgetList.length < 5)
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    addressesWidgetList
+                                        .add(DeliveryMainAdditionalTapperRow(
+                                      labelText: 'Дополнительный адрес',
+                                      prefixText: '+',
+                                      onAddressReady: (addressFromRow) {
+                                        print('Дополнительный');
+                                      },
+                                    ));
+                                  });
+                                  _draggableBottomSheetController.animateTo(1,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeOutQuint);
+                                  print('clicked!');
+                                },
+                                icon: const Icon(
+                                  Icons.add_rounded,
+                                  color: Color.fromRGBO(32, 191, 208, 1),
+                                ),
+                              )
+                            else
+                              const SizedBox(
+                                height: 15,
+                              ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
+                                      horizontal: columnHorizontalPadding)
+                                  .copyWith(top: 10),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -613,11 +641,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         ),
       ]),
     );
-  }
-
-  void openDraggableScrollableSheet() {
-    // FocusScope.of(context).unfocus();
-    draggableScrollableController.animateTo(1, duration: const Duration(milliseconds: 500), curve: Curves.easeOutQuint);
   }
 
   void makeOrder() {

@@ -21,16 +21,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
         List<AddressApi> addressess = [];
         List responseData;
         if (response.data is List) {
-          if (response.data.length > 3) {
-            responseData = response.data.sublist(0, 3);
-            // emit(
-            //   DeliveryMainAddressHintSuccess(
-            //     addresses: response.data.sublist(0, 3),
-            //   ),
-            // );
-          } else {
-            responseData = response.data;
-          }
+          responseData = response.data;
           for (var i = 0; i < responseData.length; i++) {
             addressess.add(AddressApi.fromJson(responseData[i]));
           }

@@ -26,7 +26,7 @@ class DeliveryMainCustomCheckboxState
         decoration: BoxDecoration(
           border: Border.all(
             width: 2.0,
-            color: const Color.fromRGBO(122, 122, 122, 1),
+            color: const Color(0xff7A7A7A),
           ),
           borderRadius: BorderRadius.circular(4.0),
         ),
@@ -34,7 +34,7 @@ class DeliveryMainCustomCheckboxState
             ? const Icon(
                 Icons.check,
                 size: 14.0,
-                color: Color.fromRGBO(122, 122, 122, 1),
+                color: Color(0xff7A7A7A),
               )
             : null,
       ),

@@ -4,17 +4,28 @@ class AddressApi {
   final String? house;
   final int? fiasLevel;
   final String? fiasId;
+  final double? latitude;
+  final double? longitude;
 
-  AddressApi({required this.city, required this.street, this.house, this.fiasLevel, this.fiasId});
+  AddressApi({
+    required this.city,
+    required this.street,
+    this.house,
+    this.fiasLevel,
+    this.fiasId,
+    this.latitude,
+    this.longitude,
+  });
 
   factory AddressApi.fromJson(Map<String, dynamic> json) {
     return AddressApi(
-      city: json['city'],
-      street: json['street'],
-      house: json['house'],
-      fiasLevel: json['fiasLevel'],
-      fiasId: json['fiasId'],
-    );
+        city: json['city'],
+        street: json['street'],
+        house: json['house'],
+        fiasLevel: json['fiasLevel'],
+        fiasId: json['fiasId'],
+        latitude: json['latitude'],
+        longitude: json['longitude']);
   }
 }
 

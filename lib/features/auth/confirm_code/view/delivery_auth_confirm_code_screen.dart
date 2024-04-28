@@ -84,7 +84,7 @@ class _DeliveryAuthConfirmCodeScreenState
                     child: Text(
                       "Введите полученный код",
                       style: TextStyle(
-                        color: Color.fromRGBO(122, 122, 122, 1),
+                        color: Color(0xff7A7A7A),
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
                       ),
@@ -97,7 +97,7 @@ class _DeliveryAuthConfirmCodeScreenState
                       phoneNumber,
                       textAlign: TextAlign.left,
                       style: const TextStyle(
-                        color: Color.fromRGBO(122, 122, 122, 1),
+                        color: Color(0xff7A7A7A),
                         fontSize: 18,
                         fontWeight: FontWeight.w300,
                       ),

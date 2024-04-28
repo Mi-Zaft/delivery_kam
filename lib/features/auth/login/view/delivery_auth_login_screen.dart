@@ -91,7 +91,7 @@ class _DeliveryAuthLoginScreenState extends State<DeliveryAuthLoginScreen> {
                     Text(
                       bottomText,
                       style: const TextStyle(
-                          color: Color.fromRGBO(122, 122, 122, 1),
+                          color: Color(0xff7A7A7A),
                           fontSize: 12,
                           fontWeight: FontWeight.w400),
                     ),
