@@ -5,8 +5,6 @@ part 'order_active_state.dart';
 
 class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
   OrderActiveBloc() : super(OrderActiveInitial()) {
-    on<OrderActiveLoad>((event, emit) async {
-      print('OrderActiveLoad');
-    });
+    on<OrderActiveLoad>((event, emit) async {});
   }
 }

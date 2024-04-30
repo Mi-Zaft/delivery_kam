@@ -13,7 +13,7 @@ class OrderItem extends StatelessWidget {
         child: Material(
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
-            onTap: () => {print('tap')},
+            onTap: () => {},
             child: Container(
               height: 60,
               decoration: BoxDecoration(

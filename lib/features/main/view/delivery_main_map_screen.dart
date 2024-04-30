@@ -4,9 +4,13 @@ import 'package:latlong2/latlong.dart';
 
 class DeliveryMainMapScreen extends StatefulWidget {
   final VoidCallback openDrawer;
+  final List<Marker> markers;
+  final MapController mapController;
   const DeliveryMainMapScreen({
     required this.openDrawer,
     super.key,
+    required this.markers,
+    required this.mapController,
   });
 
   @override
@@ -14,20 +18,12 @@ class DeliveryMainMapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<DeliveryMainMapScreen> {
-  late final MapController _mapController;
   late List<LatLng> polylineCoordinates;
 
   @override
   void initState() {
     super.initState();
-    _mapController = MapController();
     polylineCoordinates = [];
-  }
-
-  @override
-  void dispose() {
-    _mapController.dispose();
-    super.dispose();
   }
 
   @override
@@ -35,7 +31,7 @@ class _MapScreenState extends State<DeliveryMainMapScreen> {
     return Stack(
       children: [
         FlutterMap(
-          mapController: _mapController,
+          mapController: widget.mapController,
           options: const MapOptions(
             initialCenter: LatLng(45.066760, 39.010371),
             initialZoom: 17,
@@ -52,6 +48,9 @@ class _MapScreenState extends State<DeliveryMainMapScreen> {
                     color: Colors.red,
                     strokeWidth: 5)
               ],
+            ),
+            MarkerLayer(
+              markers: widget.markers,
             ),
           ],
         ),

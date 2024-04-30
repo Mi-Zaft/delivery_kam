@@ -82,39 +82,40 @@ class _DeliveryMainAddressTextfieldHintState
             if (state is DeliveryMainAddressHintSuccess &&
                 state.fieldName == widget.fieldName &&
                 isShowSuggest) {
-              return ListView.builder(
-                padding: const EdgeInsets.all(0),
-                itemCount: state.addresses.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext listContext, int index) {
-                  return DeliveryMainAddressHint(
-                    onClick: (address) {
-                      widget.textfieldController.text =
-                          "${address.city} ${address.street} ${address.house ?? ''}";
-                      fromWhereObject = address;
-                      if (address.fiasLevel != null) {
-                        if (address.fiasLevel! >= 8) {
-                          setState(() {
-                            isShowSuggest = false;
-                          });
-                          print('qweqw');
-                          widget.onAddressReady(address);
-                          FocusScope.of(context).unfocus();
-                          if (fromWhereObject.fiasId != null &&
-                              toWhereObjext.fiasId != null) {
-                            // order = Order(
-                            //     fromFiasId: fromWhereObject.fiasId!,
-                            //     whereFiasId: toWhereObjext.fiasId!,
-                            //     byCar: _byCar);
-                            // makeOrder();
+              return Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(0),
+                  itemCount: state.addresses.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext listContext, int index) {
+                    return DeliveryMainAddressHint(
+                      onClick: (address) {
+                        widget.textfieldController.text =
+                            "${address.city} ${address.street} ${address.house ?? ''}";
+                        fromWhereObject = address;
+                        if (address.fiasLevel != null) {
+                          if (address.fiasLevel! >= 8) {
+                            setState(() {
+                              // isShowSuggest = false;
+                            });
+                            widget.onAddressReady(address);
+                            FocusScope.of(context).unfocus();
+                            if (fromWhereObject.fiasId != null &&
+                                toWhereObjext.fiasId != null) {
+                              // order = Order(
+                              //     fromFiasId: fromWhereObject.fiasId!,
+                              //     whereFiasId: toWhereObjext.fiasId!,
+                              //     byCar: _byCar);
+                              // makeOrder();
+                            }
                           }
                         }
-                      }
-                    },
-                    address: state.addresses[index],
-                  );
-                },
+                      },
+                      address: state.addresses[index],
+                    );
+                  },
+                ),
               );
             } else {
               return const SizedBox.shrink();

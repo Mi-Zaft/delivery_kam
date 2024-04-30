@@ -89,8 +89,6 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
 
       Response response = await ApiService().postData('/api/v1/order', dataToSend);
       if (response.statusCode == 200) {
-        print('success!');
-        print(response.statusMessage);
       }
     });
   }

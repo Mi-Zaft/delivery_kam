@@ -1,6 +1,7 @@
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 class OrderActiveScreen extends StatefulWidget {
   const OrderActiveScreen({super.key});
@@ -19,11 +20,16 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final MapController mapController = MapController();
     return Scaffold(
       key: _scaffoldKey,
       drawer: const DeliveryMainDrawer(),
       body: Stack(children: [
-        DeliveryMainMapScreen(openDrawer: openDrawer),
+        DeliveryMainMapScreen(
+          openDrawer: openDrawer,
+          markers: const [],
+          mapController: mapController,
+        ),
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {

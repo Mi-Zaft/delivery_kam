@@ -1,7 +1,8 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_additional_address_tapped_row.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_address_tapped_row.dart';
+import 'package:delivery_kam/features/main/widgets/address_modal_bottom_sheet.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_to_tapped_row.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_from_tapped_row.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_bottom_navbar.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_custom_checkbox_list_tile.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
@@ -10,6 +11,8 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryMainScreen extends StatefulWidget {
@@ -51,9 +54,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       TextEditingController();
   final TextEditingController messageToRecipientTextFieldController =
       TextEditingController();
+  final MapController mapController = MapController();
 
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
+  final List<Marker> markers = [];
 
   AddressApi fromWhereObject = AddressApi(street: '', city: '');
   AddressApi toWhereObjext = AddressApi(street: '', city: '');
@@ -70,23 +75,10 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
 
   Order? order;
   Order? mainOrder;
-
-  List<Widget> addressesWidgetList = [
-    DeliveryMainAddressTappedRow(
-      labelText: 'Откуда забрать',
-      prefixText: 'А',
-      onAddressReady: (addressFromRow) {
-        print('Откуда');
-      },
-    ),
-    DeliveryMainAddressTappedRow(
-      labelText: 'Куда доставить',
-      prefixText: 'Б',
-      onAddressReady: (addressFromRow) {
-        print('Куда');
-      },
-    ),
-  ];
+  AddressPost? addressPostFrom;
+  AddressApi? addressApiFrom;
+  List<AddressPost> addressPostToList = [];
+  List<AddressApi> addressApiToList = [];
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -111,7 +103,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         order: mainOrder,
       ),
       body: Stack(children: [
-        DeliveryMainMapScreen(openDrawer: openDrawer),
+        DeliveryMainMapScreen(
+          openDrawer: openDrawer,
+          markers: markers,
+          mapController: mapController,
+        ),
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
             onNotification: (notification) {
@@ -163,43 +159,124 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 thickness: 5,
                               ),
                             ),
-                            ListView.builder(
-                                padding: const EdgeInsets.only(top: 5),
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: addressesWidgetList.length,
-                                itemBuilder:
-                                    (BuildContext listContext, int index) {
-                                  return addressesWidgetList[index];
-                                }),
-                            if (addressesWidgetList.length < 5)
-                              IconButton(
-                                onPressed: () {
+                            DeliveryMainAddressFromTappedRow(
+                              labelText: addressPostFrom != null
+                                  ? addressPostFrom!.addressRow
+                                  : 'Откуда забрать',
+                              prefixText: 'А',
+                              onAddressReady: (addressFromRow) {
+                                addressApiFrom = addressFromRow;
+                                setState(() {
+                                  addressPostFrom = AddressPost(
+                                      fiasId: '12321',
+                                      priority: 1,
+                                      addressRow:
+                                          '${addressFromRow.street} ${addressFromRow.house}');
+                                });
+                                updateMap();
+                              },
+                            ),
+                            DeliveryMainAddressToTappedRow(
+                                addressList: addressApiToList,
+                                labelText: getRowWhere(),
+                                prefixText: 'Б',
+                                onAddressReady: (List<AddressApi> addressList) {
+                                  addressApiToList = addressList;
                                   setState(() {
-                                    addressesWidgetList
-                                        .add(DeliveryMainAdditionalTapperRow(
-                                      labelText: 'Дополнительный адрес',
-                                      prefixText: '+',
-                                      onAddressReady: (addressFromRow) {
-                                        print('Дополнительный');
-                                      },
-                                    ));
+                                    addressPostToList.clear();
+                                    for (var i = 0;
+                                        i < addressList.length;
+                                        i++) {
+                                      addressPostToList.add(
+                                        AddressPost(
+                                          fiasId: addressList[i].fiasId!,
+                                          priority: i,
+                                          addressRow:
+                                              '${addressList[i].street} ${addressList[i].house}',
+                                        ),
+                                      );
+                                    }
                                   });
-                                  _draggableBottomSheetController.animateTo(1,
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      curve: Curves.easeOutQuint);
-                                  print('clicked!');
-                                },
-                                icon: const Icon(
-                                  Icons.add_rounded,
-                                  color: Color.fromRGBO(32, 191, 208, 1),
-                                ),
-                              )
-                            else
-                              const SizedBox(
-                                height: 15,
+                                  updateMap();
+                                }),
+                            if (addressPostToList.isNotEmpty &&
+                                addressPostToList.length < 5)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          isScrollControlled: true,
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AddressModalBottomSheet(
+                                              addressFromTextFieldController:
+                                                  TextEditingController(),
+                                              deliveryMainBloc:
+                                                  deliveryMainBloc,
+                                              onAddressReady:
+                                                  (AddressApi address) {
+                                                setState(() {
+                                                  addressApiToList.add(address);
+                                                  addressPostToList.add(
+                                                    AddressPost(
+                                                        fiasId: address.fiasId!,
+                                                        priority:
+                                                            addressPostToList
+                                                                .length,
+                                                        addressRow:
+                                                            '${address.street} ${address.house}'),
+                                                  );
+                                                });
+                                                updateMap();
+                                                Navigator.pop(context);
+                                              },
+                                              labelText: 'Дополнительный адрес',
+                                              prefixText: '',
+                                            );
+                                          });
+                                    },
+                                    child: Icon(
+                                      Icons.add_outlined,
+                                      color: _activeGradientColor[1],
+                                    )),
                               ),
+                            // IconButton(
+                            //     onPressed: () {
+                            //       List<String> items = List.generate(
+                            //           5, (index) => "Item ${index + 1}");
+                            //       showModalBottomSheet(
+                            //           // isScrollControlled: true,
+                            //           elevation: 0,
+                            //           backgroundColor: Colors.white,
+                            //           context: context,
+                            //           builder: (BuildContext context) {
+                            //             return ReorderableListView(
+                            //               physics:
+                            //                   const NeverScrollableScrollPhysics(),
+                            //               children: items
+                            //                   .map((item) => ListTile(
+                            //                         key: Key(item),
+                            //                         title: Text(item),
+                            //                       ))
+                            //                   .toList(),
+                            //               onReorder: (oldIndex, newIndex) {
+                            //                 setState(() {
+                            //                   if (newIndex > oldIndex) {
+                            //                     newIndex -= 1;
+                            //                   }
+                            //                   final String item =
+                            //                       items.removeAt(oldIndex);
+                            //                   items.insert(newIndex, item);
+                            //                 });
+                            //               },
+                            //             );
+                            //           });
+                            //     },
+                            //     icon: Icon(Icons.abc_outlined)),
                             Padding(
                               padding: EdgeInsets.symmetric(
                                       horizontal: columnHorizontalPadding)
@@ -641,6 +718,91 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         ),
       ]),
     );
+  }
+
+  String getRowWhere() {
+    if (addressPostToList.length == 1) {
+      return addressPostToList[0].addressRow;
+    } else if (addressPostToList.length > 1 && addressPostToList.length < 5) {
+      return 'Выбрано ${addressPostToList.length} адреса';
+    } else if (addressPostToList.length == 5) {
+      return 'Выбрано 5 адресов';
+    } else {
+      return 'Куда доставить';
+    }
+  }
+
+  LatLng findCenter(List<LatLng> points) {
+    double sumLat = 0;
+    double sumLng = 0;
+    int count = points.length;
+
+    for (var point in points) {
+      sumLat += point.latitude;
+      sumLng += point.longitude;
+    }
+
+    double centerLat = sumLat / count;
+    double centerLng = sumLng / count;
+
+    return LatLng(centerLat, centerLng);
+  }
+
+  void updateMap() {
+    markers.clear();
+    if (addressApiFrom != null) {
+      markers.add(
+        Marker(
+          point: LatLng(addressApiFrom!.latitude!, addressApiFrom!.longitude!),
+          width: 60,
+          height: 60,
+          child: const Icon(
+            Icons.location_on,
+            color: Color.fromRGBO(32, 191, 208, 1),
+            size: 45,
+          ),
+        ),
+      );
+      mapController.move(
+          LatLng(addressApiFrom!.latitude!, addressApiFrom!.longitude!), 17);
+    }
+
+    if (addressApiToList.isNotEmpty) {
+      for (var i = 0; i < addressApiToList.length; i++) {
+        markers.add(
+          Marker(
+            point: LatLng(addressApiToList[i].latitude!, addressApiToList[i].longitude!),
+            width: 60,
+            height: 60,
+            child: const Icon(
+              Icons.location_on,
+              color: Colors.red,
+              size: 45,
+            ),
+          ),
+        );
+      }
+      List<LatLng> points = [];
+
+      for (var i = 0; i < markers.length; i++) {
+        points.add(markers[i].point);
+      }
+
+      LatLng centerPoint = findCenter(points);
+      mapController.move(centerPoint, 17);
+    }
+
+    // markers.add(
+    //   const Marker(
+    //     point: LatLng(45.066760, 39.010371),
+    //     width: 30,
+    //     height: 30,
+    //     child: Icon(
+    //       Icons.location_on,
+    //       color: Color.fromRGBO(32, 191, 208, 1),
+    //     ),
+    //   ),
+    // );
   }
 
   void makeOrder() {

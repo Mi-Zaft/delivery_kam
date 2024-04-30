@@ -3,11 +3,11 @@ import 'package:delivery_kam/features/main/widgets/address_modal_bottom_sheet.da
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:flutter/material.dart';
 
-class DeliveryMainAddressTappedRow extends StatelessWidget {
+class DeliveryMainAddressFromTappedRow extends StatelessWidget {
   final String labelText;
   final String prefixText;
   final Function(AddressApi) onAddressReady;
-  const DeliveryMainAddressTappedRow({
+  const DeliveryMainAddressFromTappedRow({
     super.key,
     required this.labelText,
     required this.prefixText,
@@ -55,12 +55,15 @@ class DeliveryMainAddressTappedRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 5.0),
-                Text(
-                  labelText,
-                  style: const TextStyle(
-                    color: Color(0xff7A7A7A),
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300,
+                Expanded(
+                  child: Text(
+                    labelText,
+                    maxLines: null,
+                    style: const TextStyle(
+                      color: Color(0xff7A7A7A),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
                 ),
               ],

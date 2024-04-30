@@ -2,65 +2,64 @@ import 'package:delivery_kam/models/address_api.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryMainAddressHint extends StatelessWidget {
-  final columnHorizontalPadding = 24.0;
   final AddressApi address;
   final Function(AddressApi) onClick;
-  const DeliveryMainAddressHint(
-      {super.key, required this.onClick, required this.address});
+
+  static const columnHorizontalPadding = 24.0;
+  static const backgroundColor = Color.fromRGBO(239, 239, 239, 1);
+  static const textColor = Color(0xff7A7A7A);
+  static const dividerColor = Color.fromRGBO(112, 112, 112, 1);
+
+  const DeliveryMainAddressHint({
+    super.key,
+    required this.onClick,
+    required this.address,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => {onClick(address)},
       child: Container(
-        height: 60,
-        decoration:
-            const BoxDecoration(color: Color.fromRGBO(239, 239, 239, 1)),
+        // height: 60,
+        decoration: const BoxDecoration(color: backgroundColor),
         child: Padding(
           padding: const EdgeInsets.only(top: 5),
-          child: Column(
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Padding(
-                      padding: EdgeInsets.only(left: columnHorizontalPadding)),
-                  Image.asset('assets/images/main/iconPoint.png'),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${address.street} ${address.house ?? ''}",
-                        style: const TextStyle(
-                          color: Color(0xff7A7A7A),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Text(
-                          "${address.city}",
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            color: Color(0xff7A7A7A),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w100,
-                          ),
-                        ),
-                    ],
-                  )
-                ],
+              const Padding(
+                  padding: EdgeInsets.only(left: columnHorizontalPadding)),
+              Image.asset('assets/images/main/iconPoint.png'),
+              const SizedBox(
+                width: 10,
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: columnHorizontalPadding,
-                  right: columnHorizontalPadding,
-                  top: 5,
-                ),
-                child: const Divider(
-                  height: 1.5,
-                  color: Color.fromRGBO(112, 112, 112, 1),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${address.street} ${address.house ?? ''}",
+                      maxLines: null,
+                      style: const TextStyle(
+                        color: textColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    Text(
+                      "${address.city}",
+                      textAlign: TextAlign.start,
+                      style: const TextStyle(
+                        color: textColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w100,
+                      ),
+                    ),
+                    const Divider(
+                      height: 1.5,
+                      color: dividerColor,
+                    )
+                  ],
                 ),
               )
             ],

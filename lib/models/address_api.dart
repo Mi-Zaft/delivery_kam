@@ -32,6 +32,11 @@ class AddressApi {
 class AddressPost {
   String fiasId;
   int priority;
+  String addressRow;
 
-  AddressPost({required this.fiasId, required this.priority});
+  AddressPost({
+    required this.fiasId,
+    required this.priority,
+    required this.addressRow,
+  });
 }
