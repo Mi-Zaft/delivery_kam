@@ -26,7 +26,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
             addressess.add(AddressApi.fromJson(responseData[i]));
           }
           emit(
-            DeliveryMainAddressHintSuccess(addresses: addressess, fieldName: event.fieldName),
+            DeliveryMainAddressHintSuccess(addresses: addressess),
           );
         }
       } else if (response.statusCode != 200) {
@@ -41,55 +41,24 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
     });
     on<OrderDataChanged>((event, emit) async {
       emit(DeliveryMainLoading());
-      Map<String, dynamic> dataToSend = {
-        'fromFiasId': event.order.fromFiasId,
-        'whereFiasId': event.order.whereFiasId,
-        'byCar': event.order.byCar,
-        'toDoor': event.order.toDoor,
-        'fragileCargo': event.order.fragileCargo,
-        'thermalBag': event.order.thermalBag,
-        'bulkyCargo': event.order.bulkyCargo,
-        'transportDepartureRegistration':
-            event.order.transportDepartureRegistration,
-        'postOfficeCorrespondence': event.order.postOfficeCorrespondence,
-      };
+
+      Map<String, dynamic> dataToSend = event.order.toJson();
       Response response =
           await ApiService().postData('/api/v1/order/price', dataToSend);
       if (response.statusCode == 200) {
-        if (response.data is int) {
-          emit(DeliveryMainOrderPriceSuccess(price: response.data));
+        if (response.statusCode == 200) {
+          OrderPrice data = OrderPrice.fromJson(response.data);
+          emit(DeliveryMainOrderPriceSuccess(orderPrice: data));
         }
       }
     });
     on<OrderCreateLoading>((event, emit) async {
       emit(DeliveryMainLoading());
-      Map<String, dynamic> dataToSend = {
-        'fromFiasId': event.order.fromFiasId,
-        'whereFiasId': event.order.whereFiasId,
-        'byCar': event.order.byCar,
-        'toDoor': event.order.toDoor,
-        "floorFlatOrOfficeSender": event.order.floorFlatOrOfficeSender,
-        "floorFlatOrOfficeRecipient": event.order.floorFlatOrOfficeRecipient,
-        "senderPhone": event.order.senderPhone,
-        "senderName": event.order.senderName,
-        "recipientPhone": event.order.recipientPhone,
-        "recipientName": event.order.recipientName,
-        "cargoItem": event.order.cargoItem,
-        "cargoValue": 0,
-        "cargoMass": 0,
-        "comment": event.order.comment,
-        "messageToRecipient": event.order.messageToRecipient,
-        'fragileCargo': event.order.fragileCargo,
-        'thermalBag': event.order.thermalBag,
-        'bulkyCargo': event.order.bulkyCargo,
-        'transportDepartureRegistration':
-            event.order.transportDepartureRegistration,
-        'postOfficeCorrespondence': event.order.postOfficeCorrespondence,
-      };
+      Map<String, dynamic> dataToSend = event.order.toJson();
 
-      Response response = await ApiService().postData('/api/v1/order', dataToSend);
-      if (response.statusCode == 200) {
-      }
+      Response response =
+          await ApiService().postData('/api/v1/order', dataToSend);
+      if (response.statusCode == 200) {}
     });
   }
 }

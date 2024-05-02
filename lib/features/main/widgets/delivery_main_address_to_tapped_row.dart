@@ -1,4 +1,5 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_reordable_addresses.dart';
 import 'package:delivery_kam/features/main/widgets/address_modal_bottom_sheet.dart';
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class DeliveryMainAddressToTappedRow extends StatelessWidget {
   final String labelText;
   final String prefixText;
   final List<AddressApi> addressList;
+  final Function(List<AddressApi>) callBack;
   final Function(List<AddressApi>) onAddressReady;
   const DeliveryMainAddressToTappedRow({
     super.key,
@@ -14,6 +16,7 @@ class DeliveryMainAddressToTappedRow extends StatelessWidget {
     required this.prefixText,
     required this.onAddressReady,
     required this.addressList,
+    required this.callBack,
   });
 
   @override
@@ -27,46 +30,40 @@ class DeliveryMainAddressToTappedRow extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              // if (addressList.isEmpty) {
-              showModalBottomSheet(
-                  isScrollControlled: true,
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AddressModalBottomSheet(
-                      addressFromTextFieldController:
-                          addressFromTextFieldController,
-                      deliveryMainBloc: deliveryMainBloc,
-                      onAddressReady: (addressApi) {
-                        addressList.add(addressApi);
-                        onAddressReady(addressList);
-                        Navigator.pop(context);
-                      },
-                      labelText: labelText,
-                      prefixText: prefixText,
-                    );
-                  });
-              // } else {
-              //   showModalBottomSheet(
-              //       isScrollControlled: true,
-              //       elevation: 0,
-              //       backgroundColor: Colors.transparent,
-              //       context: context,
-              //       builder: (BuildContext context) {
-              //         return AddressModalBottomSheet(
-              //           addressFromTextFieldController:
-              //               addressFromTextFieldController,
-              //           deliveryMainBloc: deliveryMainBloc,
-              //           onAddressReady: (addressApi) {
-              //             onAddressReady(addressList);
-              //             Navigator.pop(context);
-              //           },
-              //           labelText: labelText,
-              //           prefixText: prefixText,
-              //         );
-              //       });
-              // }
+              if (addressList.isEmpty) {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AddressModalBottomSheet(
+                        addressFromTextFieldController:
+                            addressFromTextFieldController,
+                        deliveryMainBloc: deliveryMainBloc,
+                        onAddressReady: (addressApi) {
+                          addressList.add(addressApi);
+                          onAddressReady(addressList);
+                          Navigator.pop(context);
+                        },
+                        labelText: labelText,
+                        prefixText: prefixText,
+                      );
+                    });
+              } else {
+                showModalBottomSheet(
+                    isScrollControlled: true,
+                    elevation: 0,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DeliveryMainReordableAddresses(
+                        addressList: addressList,
+                        callback: callBack,
+                        deliveryMainBloc: deliveryMainBloc,
+                      );
+                    });
+              }
             },
             child: Row(
               children: [

@@ -64,7 +64,7 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      // widget.makeOrder();
+                      widget.makeOrder();
                       if (widget.order != null) {
                         widget.deliveryMainBloc
                             .add(OrderCreateLoading(widget.order!));
@@ -80,7 +80,7 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                       ),
                     ),
                     child: Text(
-                      'Заказать за ${state.price}₽',
+                      'Заказать за ${state.orderPrice.price}₽',
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,

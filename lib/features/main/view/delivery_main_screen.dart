@@ -168,37 +168,53 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                 addressApiFrom = addressFromRow;
                                 setState(() {
                                   addressPostFrom = AddressPost(
-                                      fiasId: '12321',
-                                      priority: 1,
+                                      fiasId: addressFromRow.fiasId!,
+                                      priority: 0,
                                       addressRow:
                                           '${addressFromRow.street} ${addressFromRow.house}');
                                 });
+                                makeOrder();
                                 updateMap();
                               },
                             ),
                             DeliveryMainAddressToTappedRow(
-                                addressList: addressApiToList,
-                                labelText: getRowWhere(),
-                                prefixText: 'Б',
-                                onAddressReady: (List<AddressApi> addressList) {
-                                  addressApiToList = addressList;
-                                  setState(() {
-                                    addressPostToList.clear();
-                                    for (var i = 0;
-                                        i < addressList.length;
-                                        i++) {
-                                      addressPostToList.add(
-                                        AddressPost(
-                                          fiasId: addressList[i].fiasId!,
-                                          priority: i,
-                                          addressRow:
-                                              '${addressList[i].street} ${addressList[i].house}',
-                                        ),
-                                      );
-                                    }
-                                  });
-                                  updateMap();
-                                }),
+                              addressList: addressApiToList,
+                              labelText: getRowWhere(),
+                              prefixText: 'Б',
+                              onAddressReady: (List<AddressApi> addressList) {
+                                addressApiToList = addressList;
+                                setState(() {
+                                  addressPostToList.clear();
+                                  for (var i = 0; i < addressList.length; i++) {
+                                    addressPostToList.add(
+                                      AddressPost(
+                                        fiasId: addressList[i].fiasId!,
+                                        priority: i + 1,
+                                        addressRow:
+                                            '${addressList[i].street} ${addressList[i].house}',
+                                      ),
+                                    );
+                                  }
+                                });
+                                makeOrder();
+                                updateMap();
+                              },
+                              callBack:
+                                  (List<AddressApi> reorderedAddressToList) {
+                                addressApiToList = reorderedAddressToList;
+                                addressPostToList.clear();
+                                for (var i = 0;
+                                    i < addressApiToList.length;
+                                    i++) {
+                                  addressPostToList.add(AddressPost(
+                                      fiasId: addressApiToList[i].fiasId!,
+                                      priority: i + 1,
+                                      addressRow:
+                                          '${addressApiToList[i].street} ${addressApiToList[i].house}'));
+                                }
+                                makeOrder();
+                              },
+                            ),
                             if (addressPostToList.isNotEmpty &&
                                 addressPostToList.length < 5)
                               Padding(
@@ -226,11 +242,13 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                         fiasId: address.fiasId!,
                                                         priority:
                                                             addressPostToList
-                                                                .length,
+                                                                    .length +
+                                                                1,
                                                         addressRow:
                                                             '${address.street} ${address.house}'),
                                                   );
                                                 });
+                                                makeOrder();
                                                 updateMap();
                                                 Navigator.pop(context);
                                               },
@@ -771,7 +789,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       for (var i = 0; i < addressApiToList.length; i++) {
         markers.add(
           Marker(
-            point: LatLng(addressApiToList[i].latitude!, addressApiToList[i].longitude!),
+            point: LatLng(
+                addressApiToList[i].latitude!, addressApiToList[i].longitude!),
             width: 60,
             height: 60,
             child: const Icon(
@@ -791,46 +810,41 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       LatLng centerPoint = findCenter(points);
       mapController.move(centerPoint, 17);
     }
-
-    // markers.add(
-    //   const Marker(
-    //     point: LatLng(45.066760, 39.010371),
-    //     width: 30,
-    //     height: 30,
-    //     child: Icon(
-    //       Icons.location_on,
-    //       color: Color.fromRGBO(32, 191, 208, 1),
-    //     ),
-    //   ),
-    // );
   }
 
   void makeOrder() {
-    if (order != null) {
-      order!.byCar = _byCar;
-      order!.toDoor = _toDoor;
-      order!.floorFlatOrOfficeSender = floorFlatOrOfficeSenderController.text;
-      order!.floorFlatOrOfficeRecipient =
-          floorFlatOrOfficeRecipientController.text;
-      order!.senderPhone =
-          '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
-      order!.senderName = senderNameTextFieldController.text;
-      order!.recipientPhone =
-          '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
-      order!.recipientName = recipientNameTextFieldController.text;
-      order!.cargoItem = cargoItemTextFieldController.text;
-      order!.comment = commentTextFieldController.text;
-      order!.messageToRecipient = messageToRecipientTextFieldController.text;
-      order!.fragileCargo = _isFragileCargo;
-      order!.thermalBag = _isThermalBag;
-      order!.bulkyCargo = _isBulkyCargo;
-      order!.transportDepartureRegistration = _isRegistrationInTransportCompany;
-      order!.postOfficeCorrespondence = _isCorrespondenceInRussianPostOffice;
-    } else {
-      if (fromWhereObject.fiasId != null && toWhereObjext.fiasId != null) {
+    if (addressPostFrom != null && addressPostToList.isNotEmpty) {
+      final List<AddressPost> finalAddressList = [];
+      finalAddressList.insert(0, addressPostFrom!);
+      for (var i = 0; i < addressPostToList.length; i++) {
+        addressPostToList[i].priority = i + 1;
+        finalAddressList.add(addressPostToList[i]);
+      }
+      if (order != null) {
+        order!.address = finalAddressList;
+        order!.byCar = _byCar;
+        order!.toDoor = _toDoor;
+        order!.floorFlatOrOfficeSender = floorFlatOrOfficeSenderController.text;
+        order!.floorFlatOrOfficeRecipient =
+            floorFlatOrOfficeRecipientController.text;
+        order!.senderPhone =
+            '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
+        order!.senderName = senderNameTextFieldController.text;
+        order!.recipientPhone =
+            '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
+        order!.recipientName = recipientNameTextFieldController.text;
+        order!.cargoItem = cargoItemTextFieldController.text;
+        order!.comment = commentTextFieldController.text;
+        order!.messageToRecipient = messageToRecipientTextFieldController.text;
+        order!.fragileCargo = _isFragileCargo;
+        order!.thermalBag = _isThermalBag;
+        order!.bulkyCargo = _isBulkyCargo;
+        order!.transportDepartureRegistration =
+            _isRegistrationInTransportCompany;
+        order!.postOfficeCorrespondence = _isCorrespondenceInRussianPostOffice;
+      } else {
         order = Order(
-          fromFiasId: fromWhereObject.fiasId!,
-          whereFiasId: toWhereObjext.fiasId!,
+          address: finalAddressList,
           byCar: _byCar,
           toDoor: _toDoor,
           fragileCargo: _isFragileCargo,
@@ -840,12 +854,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           postOfficeCorrespondence: _isCorrespondenceInRussianPostOffice,
         );
       }
-    }
-    setState(() {
-      mainOrder = order;
-    });
-    if (order != null) {
-      deliveryMainBloc.add(OrderDataChanged(order!));
+      setState(() {
+        mainOrder = order;
+      });
+      if (order != null) {
+        deliveryMainBloc.add(OrderDataChanged(order!));
+      }
     }
   }
 }

@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DeliveryMainAddressTextfieldHint extends StatefulWidget {
   final TextEditingController textfieldController;
   final DeliveryMainBloc deliveryMainBloc;
-  final String fieldName;
   final String labelText;
   final String? prefixText;
   final Function onTap;
@@ -19,7 +18,6 @@ class DeliveryMainAddressTextfieldHint extends StatefulWidget {
       {super.key,
       required this.textfieldController,
       required this.deliveryMainBloc,
-      required this.fieldName,
       required this.labelText,
       required this.onTap,
       this.prefixText,
@@ -79,9 +77,7 @@ class _DeliveryMainAddressTextfieldHintState
         BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
           bloc: widget.deliveryMainBloc,
           builder: (context, state) {
-            if (state is DeliveryMainAddressHintSuccess &&
-                state.fieldName == widget.fieldName &&
-                isShowSuggest) {
+            if (state is DeliveryMainAddressHintSuccess && isShowSuggest) {
               return Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(0),
@@ -132,8 +128,7 @@ class _DeliveryMainAddressTextfieldHintState
         isShowSuggest = true;
       });
       widget.deliveryMainBloc.add(
-        LoadingMainAddressHintRequest(
-            widget.textfieldController.text, widget.fieldName),
+        LoadingMainAddressHintRequest(widget.textfieldController.text),
       );
     } else {
       setState(() {

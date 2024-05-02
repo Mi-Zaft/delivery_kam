@@ -34,7 +34,6 @@ class AddressModalBottomSheet extends StatelessWidget {
           child: DeliveryMainAddressTextfieldHint(
               textfieldController: addressFromTextFieldController,
               deliveryMainBloc: deliveryMainBloc,
-              fieldName: 'whereFrom',
               labelText: labelText,
               prefixText: prefixText,
               onTap: () {},

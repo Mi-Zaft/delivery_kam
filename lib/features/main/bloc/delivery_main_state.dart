@@ -5,9 +5,8 @@ class DeliveryMainState {}
 class DeliveryMainInitial extends DeliveryMainState {}
 
 class DeliveryMainAddressHintSuccess extends DeliveryMainState {
-  DeliveryMainAddressHintSuccess({required this.addresses, required this.fieldName});
+  DeliveryMainAddressHintSuccess({required this.addresses});
   final List<AddressApi> addresses;
-  final String fieldName;
 }
 
 class DeliveryMainAddressHintFail extends DeliveryMainState {
@@ -25,7 +24,7 @@ class DeliveryMainOrderCreateFail extends DeliveryMainState {
 class DeliveryMainLoading extends DeliveryMainState {}
 
 class DeliveryMainOrderPriceSuccess extends DeliveryMainState {
-  DeliveryMainOrderPriceSuccess({required this.price});
+  DeliveryMainOrderPriceSuccess({required this.orderPrice});
 
-  final int price;
+  final OrderPrice orderPrice;
 }

@@ -1,9 +1,9 @@
+import 'package:delivery_kam/models/address_api.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class Order {
-  String fromFiasId;
-  String whereFiasId;
+  List<AddressPost> address;
   bool byCar = false;
   bool toDoor = false;
   String floorFlatOrOfficeSender = '';
@@ -24,8 +24,7 @@ class Order {
   bool postOfficeCorrespondence = false;
 
   Order({
-    required this.fromFiasId,
-    required this.whereFiasId,
+    required this.address,
     byCar,
     toDoor,
     floorFlatOrOfficeSender,
@@ -45,6 +44,48 @@ class Order {
     transportDepartureRegistration,
     postOfficeCorrespondence,
   });
+
+  Map<String, dynamic> toJson() {
+    List<Map<String, dynamic>> addressJson = [];
+    for (var address in address) {
+      addressJson.add(address.toJson());
+    }
+    return {'address': address, 'byCar': byCar};
+  }
+}
+
+class OrderRoute {
+  final double latitude;
+  final double longitude;
+
+  OrderRoute({required this.latitude, required this.longitude});
+
+  factory OrderRoute.fromJson(Map<String, dynamic> json) {
+    return OrderRoute(
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+    );
+  }
+}
+
+class OrderPrice {
+  final double price;
+  final List<OrderRoute> routes;
+
+  OrderPrice({required this.price, required this.routes});
+
+  factory OrderPrice.fromJson(Map<String, dynamic> json) {
+    List<OrderRoute> routes = [];
+    if (json['routes'] != null) {
+      json['routes'].forEach((orderRouteJson) {
+        routes.add(OrderRoute.fromJson(orderRouteJson));
+      });
+    }
+    return OrderPrice(
+      price: json['price'],
+      routes: routes,
+    );
+  }
 }
 
 class OrderHistoryItem {

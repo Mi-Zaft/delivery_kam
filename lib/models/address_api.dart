@@ -33,10 +33,30 @@ class AddressPost {
   String fiasId;
   int priority;
   String addressRow;
-
+  int? entrance;
+  int? floor;
+  int ? flatOrOffice;
+  String? comment;
+  String? phone;
+  String? intercom;
+  
   AddressPost({
     required this.fiasId,
     required this.priority,
     required this.addressRow,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fiasId': fiasId,
+      'priority': priority,
+      'addressRow': addressRow,
+      'entrance': entrance,
+      'floor': floor,
+      'flatOrOffice': flatOrOffice,
+      'comment': comment,
+      'phone': phone,
+      'intercom': intercom,
+    };
+  }
 }
