@@ -79,6 +79,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   AddressApi? addressApiFrom;
   List<AddressPost> addressPostToList = [];
   List<AddressApi> addressApiToList = [];
+  List<AddressPost> addressPostAllList = [];
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
@@ -98,6 +99,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       key: _scaffoldKey,
       drawer: const DeliveryMainDrawer(),
       bottomNavigationBar: DeliveryMainBottomNavbar(
+        addressPostAllList: addressPostAllList,
         deliveryMainBloc: deliveryMainBloc,
         makeOrder: makeOrder,
         order: mainOrder,
@@ -819,6 +821,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       for (var i = 0; i < addressPostToList.length; i++) {
         addressPostToList[i].priority = i + 1;
         finalAddressList.add(addressPostToList[i]);
+        addressPostAllList = finalAddressList;
       }
       if (order != null) {
         order!.address = finalAddressList;

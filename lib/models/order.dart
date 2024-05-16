@@ -69,7 +69,7 @@ class OrderRoute {
 }
 
 class OrderPrice {
-  final double price;
+  final int price;
   final List<OrderRoute> routes;
 
   OrderPrice({required this.price, required this.routes});

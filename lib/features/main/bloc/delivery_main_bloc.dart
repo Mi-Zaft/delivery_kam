@@ -46,6 +46,7 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       Response response =
           await ApiService().postData('/api/v1/order/price', dataToSend);
       if (response.statusCode == 200) {
+        print(response.data);
         if (response.statusCode == 200) {
           OrderPrice data = OrderPrice.fromJson(response.data);
           emit(DeliveryMainOrderPriceSuccess(orderPrice: data));

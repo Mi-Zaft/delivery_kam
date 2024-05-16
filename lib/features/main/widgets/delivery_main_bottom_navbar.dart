@@ -1,17 +1,22 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
+import 'package:delivery_kam/features/main/widgets/delivery_main_address_details_edit.dart';
+import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DeliveryMainBottomNavbar extends StatefulWidget {
+  final List<AddressPost> addressPostAllList;
   final DeliveryMainBloc deliveryMainBloc;
   final Function() makeOrder;
   final Order? order;
-  const DeliveryMainBottomNavbar(
-      {super.key,
-      required this.deliveryMainBloc,
-      required this.makeOrder,
-      required this.order});
+  const DeliveryMainBottomNavbar({
+    super.key,
+    required this.deliveryMainBloc,
+    required this.makeOrder,
+    required this.order,
+    required this.addressPostAllList,
+  });
   @override
   State<DeliveryMainBottomNavbar> createState() =>
       _DeliveryMainBottomNavbarState();
@@ -66,12 +71,22 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                     onPressed: () {
                       widget.makeOrder();
                       if (widget.order != null) {
-                        widget.deliveryMainBloc
-                            .add(OrderCreateLoading(widget.order!));
+                        // widget.deliveryMainBloc
+                        //     .add(OrderCreateLoading(widget.order!));
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return DeliveryMainAddressDetailsEdit(
+                                addressPostAllList: widget.addressPostAllList,
+                              );
+                            });
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                       backgroundColor: Colors
                           .transparent, // Чтобы фон ElevatedButton был прозрачным
                       elevation: 0, // Отключаем подъем тени кнопки
@@ -79,12 +94,22 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: Text(
-                      'Заказать за ${state.orderPrice.price}₽',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${state.orderPrice.price}р',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        const Text('Уточнить детали',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400))
+                      ],
                     ),
                   ),
                 );
