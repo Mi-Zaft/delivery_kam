@@ -36,23 +36,9 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
 
   final TextEditingController addressToTextFieldController =
       TextEditingController();
-  final TextEditingController floorFlatOrOfficeSenderController =
-      TextEditingController();
-  final TextEditingController floorFlatOrOfficeRecipientController =
-      TextEditingController();
-  final TextEditingController senderNumberTextFieldController =
-      TextEditingController();
-  final TextEditingController senderNameTextFieldController =
-      TextEditingController();
-  final TextEditingController recipientNumberTextFieldController =
-      TextEditingController();
-  final TextEditingController recipientNameTextFieldController =
-      TextEditingController();
   final TextEditingController cargoItemTextFieldController =
       TextEditingController();
   final TextEditingController commentTextFieldController =
-      TextEditingController();
-  final TextEditingController messageToRecipientTextFieldController =
       TextEditingController();
   final MapController mapController = MapController();
 
@@ -489,126 +475,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               child: const Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  'Уточнение адреса',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: DeliveryMainTextfieldCustom(
-                                labelText: 'Этаж, квартира/офис отправителя',
-                                controller: floorFlatOrOfficeSenderController,
-                                prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
-                                ),
-                                keyboardType: TextInputType.streetAddress,
-                                prefixText: "А",
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: DeliveryMainTextfieldCustom(
-                                labelText: 'Этаж, квартира/офис получателя',
-                                controller:
-                                    floorFlatOrOfficeRecipientController,
-                                prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
-                                ),
-                                keyboardType: TextInputType.streetAddress,
-                                prefixText: "Б",
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Введите номер телефона отправителя',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: '',
-                              controller: senderNumberTextFieldController,
-                              maskInputFormatters: [phoneMaskFormatter],
-                              prefixStyle: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black,
-                              ),
-                              keyboardType: TextInputType.phone,
-                              prefixText: "+7",
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                                labelText: 'Введите имя отправителя',
-                                controller: senderNameTextFieldController,
-                                keyboardType: TextInputType.name),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Введите номер телефона получателя',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: '',
-                              controller: recipientNumberTextFieldController,
-                              maskInputFormatters: [phoneMaskFormatter],
-                              prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.phone,
-                              prefixText: "+7",
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                                labelText: 'Введите имя получателя',
-                                controller: recipientNameTextFieldController,
-                                keyboardType: TextInputType.name),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
                                   'Детали отправки',
                                   style: TextStyle(
                                       fontSize: 18,
@@ -638,18 +504,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                               keyboardType: TextInputType.text,
                               prefixIcon: Image.asset(
                                 "assets/images/main/iconEnvelope.png",
-                              ),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Сообщение получателю',
-                              controller: messageToRecipientTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.text,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconChat.png",
                               ),
                             ),
                             const Padding(
@@ -827,18 +681,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         order!.address = finalAddressList;
         order!.byCar = _byCar;
         order!.toDoor = _toDoor;
-        order!.floorFlatOrOfficeSender = floorFlatOrOfficeSenderController.text;
-        order!.floorFlatOrOfficeRecipient =
-            floorFlatOrOfficeRecipientController.text;
-        order!.senderPhone =
-            '+7${phoneMaskFormatter.unmaskText(senderNumberTextFieldController.text)}';
-        order!.senderName = senderNameTextFieldController.text;
-        order!.recipientPhone =
-            '+7${phoneMaskFormatter.unmaskText(recipientNumberTextFieldController.text)}';
-        order!.recipientName = recipientNameTextFieldController.text;
         order!.cargoItem = cargoItemTextFieldController.text;
         order!.comment = commentTextFieldController.text;
-        order!.messageToRecipient = messageToRecipientTextFieldController.text;
         order!.fragileCargo = _isFragileCargo;
         order!.thermalBag = _isThermalBag;
         order!.bulkyCargo = _isBulkyCargo;

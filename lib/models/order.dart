@@ -6,17 +6,10 @@ class Order {
   List<AddressPost> address;
   bool byCar = false;
   bool toDoor = false;
-  String floorFlatOrOfficeSender = '';
-  String floorFlatOrOfficeRecipient = '';
-  String senderPhone = '';
-  String senderName = '';
-  String recipientPhone = '';
-  String recipientName = '';
   String cargoItem = '';
   int cargoValue = 0;
   int cargoMass = 0;
   String comment = '';
-  String messageToRecipient = '';
   bool fragileCargo = false;
   bool thermalBag = false;
   bool bulkyCargo = false;
@@ -27,17 +20,10 @@ class Order {
     required this.address,
     byCar,
     toDoor,
-    floorFlatOrOfficeSender,
-    floorFlatOrOfficeRecipient,
-    senderPhone,
-    senderName,
-    recipientPhone,
-    recipientName,
     cargoItem,
     cargoValue,
     cargoMass,
     comment,
-    messageToRecipient,
     fragileCargo,
     thermalBag,
     bulkyCargo,
@@ -50,7 +36,20 @@ class Order {
     for (var address in address) {
       addressJson.add(address.toJson());
     }
-    return {'address': address, 'byCar': byCar};
+    return {
+      'address': address,
+      'byCar': byCar,
+      'toDoor': toDoor,
+      'cargoItem': cargoItem,
+      'cargoValue': cargoValue,
+      'cargoMass': cargoMass,
+      'comment': comment,
+      'fragileCargo': fragileCargo,
+      'thermalBag': thermalBag,
+      'bulkyCargo': bulkyCargo,
+      'transportDepartureRegistration': transportDepartureRegistration,
+      'postOfficeCorrespondence': postOfficeCorrespondence,
+    };
   }
 }
 

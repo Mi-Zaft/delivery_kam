@@ -1,40 +1,49 @@
 import 'package:delivery_kam/features/main/widgets/delivery_address_textfield_custom.dart';
+import 'package:delivery_kam/features/main/widgets/order_details_bottom_navbar.dart';
 import 'package:delivery_kam/models/address_api.dart';
+import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 
-class DeliveryMainAddressDetailsEdit extends StatefulWidget {
-  const DeliveryMainAddressDetailsEdit({
+class DeliveryMainOrderDetailsEdit extends StatefulWidget {
+  const DeliveryMainOrderDetailsEdit({
     Key? key,
-    required this.addressPostAllList,
   }) : super(key: key);
 
-  final List<AddressPost> addressPostAllList;
-
   @override
-  State<DeliveryMainAddressDetailsEdit> createState() =>
-      _DeliveryMainAddressDetailsEditState();
+  State<DeliveryMainOrderDetailsEdit> createState() =>
+      _DeliveryMainOrderDetailsEditState();
 }
 
-class _DeliveryMainAddressDetailsEditState
-    extends State<DeliveryMainAddressDetailsEdit> {
+class _DeliveryMainOrderDetailsEditState
+    extends State<DeliveryMainOrderDetailsEdit> {
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final List<AddressPost> addressPostAllList = args['addressPostAllList'];
+    final int price = args['price'];
+    final Order order = args['order'];
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Уточните детали заказа'),
+      ),
+      bottomNavigationBar: OrderDetailsBottomNavbar(
+        order: order,
+        price: price,
+      ),
       backgroundColor: Colors.transparent,
       body: Container(
         decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      margin: const EdgeInsets.only(top: 60),
-      width: double.infinity,
+          color: Colors.white,
+        ),
+        width: double.infinity,
         child: ListView.builder(
-          itemCount: widget.addressPostAllList.length,
+          itemCount: addressPostAllList.length,
           itemBuilder: (BuildContext context, int index) {
             return Column(
               children: [
+                const Padding(padding: EdgeInsets.only(top: 10)),
                 Container(
-                  margin: const EdgeInsets.only(bottom: 10),
                   padding: const EdgeInsets.symmetric(horizontal: 16)
                       .copyWith(top: 15, bottom: 15),
                   decoration: BoxDecoration(
@@ -54,7 +63,7 @@ class _DeliveryMainAddressDetailsEditState
                       Row(
                         children: [
                           Text(
-                            widget.addressPostAllList[index].addressRow,
+                            addressPostAllList[index].addressRow,
                             textAlign: TextAlign.left,
                             maxLines: null,
                             style: const TextStyle(
@@ -78,9 +87,11 @@ class _DeliveryMainAddressDetailsEditState
                               keyboardType: TextInputType.number,
                             ),
                           ),
+                          if (order.toDoor)
                           const SizedBox(
                             width: 20,
                           ),
+                          if (order.toDoor)
                           Expanded(
                             child: DeliveryAddressTextfieldCustom(
                               labelText: 'Этаж',
@@ -88,9 +99,11 @@ class _DeliveryMainAddressDetailsEditState
                               keyboardType: TextInputType.number,
                             ),
                           ),
+                          if (order.toDoor)
                           const SizedBox(
                             width: 20,
                           ),
+                          if (order.toDoor)
                           Expanded(
                             child: DeliveryAddressTextfieldCustom(
                               labelText: 'Квартира',

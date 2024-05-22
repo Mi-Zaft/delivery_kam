@@ -1,5 +1,4 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
-import 'package:delivery_kam/features/main/widgets/delivery_main_address_details_edit.dart';
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
@@ -71,18 +70,12 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                     onPressed: () {
                       widget.makeOrder();
                       if (widget.order != null) {
-                        // widget.deliveryMainBloc
-                        //     .add(OrderCreateLoading(widget.order!));
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return DeliveryMainAddressDetailsEdit(
-                                addressPostAllList: widget.addressPostAllList,
-                              );
-                            });
+                        Navigator.pushNamed(
+                            context, '/order-adress-details-edit', arguments: {
+                          'addressPostAllList': widget.addressPostAllList,
+                          'price': state.orderPrice.price,
+                          'order': widget.order
+                        });
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -104,27 +97,27 @@ class _DeliveryMainBottomNavbarState extends State<DeliveryMainBottomNavbar> {
                               fontSize: 18,
                               fontWeight: FontWeight.w400),
                         ),
-                        const Text('Уточнить детали',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400))
+                        const Text(
+                          'Уточнить детали',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400),
+                        )
                       ],
                     ),
                   ),
                 );
               } else {
-                return ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: const Color.fromRGBO(195, 195, 195, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
+                return Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(195, 195, 195, 1),
+                    borderRadius: BorderRadius.circular(30), // Скругление углов
                   ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   child: const Text(
                     "Укажите адрес",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
