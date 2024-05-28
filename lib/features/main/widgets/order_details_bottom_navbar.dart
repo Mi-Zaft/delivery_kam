@@ -1,3 +1,4 @@
+import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class OrderDetailsBottomNavbar extends StatefulWidget {
 }
 
 class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
+  final deliveryMainBloc = DeliveryMainBloc();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,14 +39,13 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
           ),
           child: ElevatedButton(
               onPressed: () {
-                // widget.deliveryMainBloc
-                //     .add(OrderCreateLoading(widget.order!));
+                deliveryMainBloc.add(OrderCreateLoading(widget.order));
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors
-                    .transparent, // Чтобы фон ElevatedButton был прозрачным
-                elevation: 0, // Отключаем подъем тени кнопки
+                    .transparent,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),

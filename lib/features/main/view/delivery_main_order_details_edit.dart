@@ -119,6 +119,11 @@ class _DeliveryMainOrderDetailsEditState
                         keyboardType: TextInputType.text,
                       ),
                       DeliveryAddressTextfieldCustom(
+                        labelText: 'Имя получателя',
+                        controller: TextEditingController(),
+                        keyboardType: TextInputType.text,
+                      ),
+                      DeliveryAddressTextfieldCustom(
                         labelText: 'Номер телефона',
                         controller: TextEditingController(),
                         keyboardType: TextInputType.number,

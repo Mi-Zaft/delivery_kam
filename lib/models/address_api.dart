@@ -39,6 +39,7 @@ class AddressPost {
   String? comment;
   String? phone;
   String? intercom;
+  String? name;
   
   AddressPost({
     required this.fiasId,
@@ -53,6 +54,7 @@ class AddressPost {
       'addressRow': addressRow,
       'entrance': entrance,
       'floor': floor,
+      'name': name,
       'flatOrOffice': flatOrOffice,
       'comment': comment,
       'phone': phone,
