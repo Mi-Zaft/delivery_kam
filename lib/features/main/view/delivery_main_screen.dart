@@ -351,7 +351,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                   EdgeInsets.only(bottom: 10),
                                             ),
                                             Image.asset(
-                                                "assets/images/main/iconcar.png"),
+                                                "assets/images/main/iconCar.png"),
                                           ],
                                         ),
                                       ),
