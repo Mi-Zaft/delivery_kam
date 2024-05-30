@@ -11,7 +11,9 @@ import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_sc
 
 final routes = {
   // '/': (context) => const CheckAuthScreen(),
-  '/': (context) => const OrderActiveScreen(),
+  '/': (context) => const OrderActiveScreen(
+        orderId: 'fed3b48a-c50d-4ff6-b117-867fec74d0bd',
+      ),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
   '/login': (context) => const DeliveryAuthLoginScreen(),
@@ -19,5 +21,6 @@ final routes = {
   '/payment-list': (context) => const DeliveryPaymentListScreen(),
   '/payment-add': (context) => const DeliveryPaymentAddScreen(),
   '/order-history-list': (context) => const OrderHistoryListScreen(),
-  '/order-adress-details-edit': (context) => const DeliveryMainOrderDetailsEdit(),
+  '/order-adress-details-edit': (context) =>
+      const DeliveryMainOrderDetailsEdit(),
 };

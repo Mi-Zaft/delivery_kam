@@ -1,27 +1,41 @@
 import 'package:delivery_kam/features/main/view/delivery_main_map_screen.dart';
 import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
+import 'package:delivery_kam/features/order_active/bloc/order_active_bloc.dart';
 import 'package:delivery_kam/features/order_active/widgets/order_active_action_button.dart';
+import 'package:delivery_kam/features/order_active/widgets/order_active_modal_cancel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class OrderActiveScreen extends StatefulWidget {
-  const OrderActiveScreen({super.key});
+  final String orderId;
+  const OrderActiveScreen({super.key, required this.orderId});
 
   @override
   State<OrderActiveScreen> createState() => _OrderActiveScreenState();
 }
 
 class _OrderActiveScreenState extends State<OrderActiveScreen> {
+  final orderActiveBloc = OrderActiveBloc();
   final double minChildSize = .55;
   final double maxChildSize = .80;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Size? _size;
 
   void openDrawer() {
     _scaffoldKey.currentState!.openDrawer();
   }
 
+  double getTheRightSize(double screenHeight) {
+    final maxHeight = 0.73 * screenHeight;
+    final calculatedHeight = _size?.height ?? maxHeight;
+    return calculatedHeight > maxHeight
+        ? maxHeight / screenHeight
+        : calculatedHeight / screenHeight;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     final MapController mapController = MapController();
     return Scaffold(
       key: _scaffoldKey,
@@ -38,7 +52,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
               return true;
             },
             child: DraggableScrollableSheet(
-              initialChildSize: minChildSize,
+              initialChildSize: getTheRightSize(height),
               minChildSize: minChildSize,
               maxChildSize: maxChildSize,
               builder:
@@ -142,8 +156,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                   label: 'Позвонить',
                                 ),
                                 OrderActiveActionButton(
-                                  imagePath:
-                                      'assets/images/main/iconMessage.png',
+                                  imagePath: 'assets/images/main/iconCar.png',
                                   label: 'о172рв 123',
                                 ),
                                 OrderActiveActionButton(
@@ -200,7 +213,16 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                       borderRadius: BorderRadius.circular(30.0),
                                     ),
                                     child: ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return OrderActiveModalCancel(
+                                                bloc: orderActiveBloc,
+                                                orderId: widget.orderId,
+                                              );
+                                            });
+                                      },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 15),
@@ -225,9 +247,6 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                 ),
                               ],
                             ),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 15),
-                            )
                           ],
                         ),
                       ),

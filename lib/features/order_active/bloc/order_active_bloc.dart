@@ -6,5 +6,8 @@ part 'order_active_state.dart';
 class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
   OrderActiveBloc() : super(OrderActiveInitial()) {
     on<OrderActiveLoad>((event, emit) async {});
+    on<OrderActiveCancel>((event, emit) async {
+      print('order cancel ${event.orderId}');
+    });
   }
 }
