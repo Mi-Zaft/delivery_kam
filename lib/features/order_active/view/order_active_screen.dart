@@ -7,8 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class OrderActiveScreen extends StatefulWidget {
-  final String orderId;
-  const OrderActiveScreen({super.key, required this.orderId});
+  const OrderActiveScreen({super.key});
 
   @override
   State<OrderActiveScreen> createState() => _OrderActiveScreenState();
@@ -35,6 +34,9 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final String orderId = args['orderId'];
     final height = MediaQuery.of(context).size.height;
     final MapController mapController = MapController();
     return Scaffold(
@@ -219,7 +221,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                             builder: (BuildContext context) {
                                               return OrderActiveModalCancel(
                                                 bloc: orderActiveBloc,
-                                                orderId: widget.orderId,
+                                                orderId: orderId,
                                               );
                                             });
                                       },

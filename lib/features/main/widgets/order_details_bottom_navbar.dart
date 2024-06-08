@@ -1,6 +1,7 @@
 import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderDetailsBottomNavbar extends StatefulWidget {
   final int price;
@@ -37,26 +38,35 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
             ),
             borderRadius: BorderRadius.circular(30.0),
           ),
-          child: ElevatedButton(
-              onPressed: () {
-                deliveryMainBloc.add(OrderCreateLoading(widget.order));
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors
-                    .transparent,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
+          child: BlocListener<DeliveryMainBloc, DeliveryMainState>(
+            bloc: deliveryMainBloc,
+            listener: (context, state) {
+              if (state is DeliveryMainOrderCreateSuccess) {
+                print(state.order.id);
+                Navigator.pushNamed(context, '/order-active',
+                    arguments: {'orderId': state.order.id});
+              }
+            },
+            child: ElevatedButton(
+                onPressed: () {
+                  deliveryMainBloc.add(OrderCreateLoading(widget.order));
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Заказать за ${widget.price}р',
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400),
-              )),
+                child: Text(
+                  'Заказать за ${widget.price}р',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400),
+                )),
+          ),
         ),
       ),
     );

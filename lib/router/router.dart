@@ -10,10 +10,10 @@ import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_scre
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';
 
 final routes = {
-  // '/': (context) => const CheckAuthScreen(),
-  '/': (context) => const OrderActiveScreen(
-        orderId: 'fed3b48a-c50d-4ff6-b117-867fec74d0bd',
-      ),
+  '/': (context) => const CheckAuthScreen(),
+  // '/': (context) => const OrderActiveScreen(
+  //       orderId: 'fed3b48a-c50d-4ff6-b117-867fec74d0bd',
+  //     ),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
   '/login': (context) => const DeliveryAuthLoginScreen(),
@@ -23,4 +23,5 @@ final routes = {
   '/order-history-list': (context) => const OrderHistoryListScreen(),
   '/order-adress-details-edit': (context) =>
       const DeliveryMainOrderDetailsEdit(),
+  '/order-active': (context) => const OrderActiveScreen()
 };

@@ -3,32 +3,34 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class Order {
+  String id;
   List<AddressPost> address;
-  bool byCar = false;
-  bool toDoor = false;
-  String cargoItem = '';
-  int cargoValue = 0;
-  int cargoMass = 0;
-  String comment = '';
-  bool fragileCargo = false;
-  bool thermalBag = false;
-  bool bulkyCargo = false;
-  bool transportDepartureRegistration = false;
-  bool postOfficeCorrespondence = false;
+  bool byCar;
+  bool toDoor;
+  String cargoItem;
+  double cargoValue;
+  double cargoMass;
+  String comment;
+  bool fragileCargo;
+  bool thermalBag;
+  bool bulkyCargo;
+  bool transportDepartureRegistration;
+  bool postOfficeCorrespondence;
 
   Order({
+    this.id = '',
     required this.address,
-    byCar,
-    toDoor,
-    cargoItem,
-    cargoValue,
-    cargoMass,
-    comment,
-    fragileCargo,
-    thermalBag,
-    bulkyCargo,
-    transportDepartureRegistration,
-    postOfficeCorrespondence,
+    this.byCar = false,
+    this.toDoor = false,
+    this.cargoItem = '',
+    this.cargoValue = 0,
+    this.cargoMass = 0,
+    this.comment = '',
+    this.fragileCargo = false,
+    this.thermalBag = false,
+    this.bulkyCargo = false,
+    this.transportDepartureRegistration = false,
+    this.postOfficeCorrespondence = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -37,6 +39,7 @@ class Order {
       addressJson.add(address.toJson());
     }
     return {
+      'id': id,
       'address': address,
       'byCar': byCar,
       'toDoor': toDoor,
@@ -50,6 +53,29 @@ class Order {
       'transportDepartureRegistration': transportDepartureRegistration,
       'postOfficeCorrespondence': postOfficeCorrespondence,
     };
+  }
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    List<AddressPost> addressess = [];
+    if (json['addresses'] != null) {
+      json['addresses'].forEach((addressPostJson) =>
+          {addressess.add(AddressPost.fromJson(addressPostJson))});
+    }
+
+    return Order(
+        id: json['id'],
+        address: addressess,
+        byCar: json['byCar'],
+        toDoor: json['toDoor'],
+        cargoItem: json['cargoItem'],
+        cargoValue: json['cargoValue'] ?? 0,
+        cargoMass: json['cargoMass'] ?? 0,
+        comment: json['comment'],
+        fragileCargo: json['fragileCargo'],
+        thermalBag: json['thermalBag'],
+        bulkyCargo: json['bulkyCargo'],
+        transportDepartureRegistration: json['transportDepartureRegistration'],
+        postOfficeCorrespondence: json['postOfficeCorrespondence']);
   }
 }
 

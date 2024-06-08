@@ -28,3 +28,9 @@ class DeliveryMainOrderPriceSuccess extends DeliveryMainState {
 
   final OrderPrice orderPrice;
 }
+
+class DeliveryMainOrderCreateSuccess extends DeliveryMainState {
+  DeliveryMainOrderCreateSuccess({required this.order});
+
+  final Order order;
+}

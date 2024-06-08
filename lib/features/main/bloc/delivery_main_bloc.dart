@@ -46,7 +46,6 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       Response response =
           await ApiService().postData('/api/v1/order/price', dataToSend);
       if (response.statusCode == 200) {
-        print(response.data);
         if (response.statusCode == 200) {
           OrderPrice data = OrderPrice.fromJson(response.data);
           emit(DeliveryMainOrderPriceSuccess(orderPrice: data));
@@ -54,12 +53,16 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       }
     });
     on<OrderCreateLoading>((event, emit) async {
+      print('OrderCreateLoading');
       emit(DeliveryMainLoading());
       Map<String, dynamic> dataToSend = event.order.toJson();
 
       Response response =
           await ApiService().postData('/api/v1/order', dataToSend);
-      if (response.statusCode == 200) {}
+      if (response.statusCode == 201) {
+        Order order = Order.fromJson(response.data);
+        emit(DeliveryMainOrderCreateSuccess(order: order));
+      }
     });
   }
 }

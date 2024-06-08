@@ -35,12 +35,12 @@ class AddressPost {
   String addressRow;
   int? entrance;
   int? floor;
-  int ? flatOrOffice;
+  int? flatOrOffice;
   String? comment;
   String? phone;
   String? intercom;
   String? name;
-  
+
   AddressPost({
     required this.fiasId,
     required this.priority,
@@ -60,5 +60,13 @@ class AddressPost {
       'phone': phone,
       'intercom': intercom,
     };
+  }
+
+  factory AddressPost.fromJson(Map<String, dynamic> json) {
+    return AddressPost(
+      fiasId: json['fiasId'],
+      priority: json['priority'],
+      addressRow: json['addressRow'] ?? 'Строка адреса',
+    );
   }
 }
