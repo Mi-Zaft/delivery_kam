@@ -3,8 +3,10 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_drawer.dart';
 import 'package:delivery_kam/features/order_active/bloc/order_active_bloc.dart';
 import 'package:delivery_kam/features/order_active/widgets/order_active_action_button.dart';
 import 'package:delivery_kam/features/order_active/widgets/order_active_modal_cancel.dart';
+import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OrderActiveScreen extends StatefulWidget {
   const OrderActiveScreen({super.key});
@@ -36,7 +38,8 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
   Widget build(BuildContext context) {
     final Map<String, dynamic> args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final String orderId = args['orderId'];
+    final String? orderId = args['orderId'];
+    final Order? order = args['order'];
     final height = MediaQuery.of(context).size.height;
     final MapController mapController = MapController();
     return Scaffold(
@@ -118,9 +121,12 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 5),
                                 ),
-                                const Text(
-                                  'Александра',
-                                  style: TextStyle(fontSize: 16),
+                                Skeletonizer(
+                                  enabled: true,
+                                  child: const Text(
+                                    'Александра',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 )
                               ],
                             ),
@@ -216,14 +222,17 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return OrderActiveModalCancel(
-                                                bloc: orderActiveBloc,
-                                                orderId: orderId,
-                                              );
-                                            });
+                                        if (orderId is String ||
+                                            order is Order) {
+                                          showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return OrderActiveModalCancel(
+                                                  bloc: orderActiveBloc,
+                                                  orderId: orderId ?? order!.id,
+                                                );
+                                              });
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(
