@@ -8,6 +8,10 @@ class DeliveryKamApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Delivery Kam', theme: classicTheme, routes: routes);
+      debugShowCheckedModeBanner: false,
+      title: 'Delivery Kam',
+      theme: classicTheme,
+      routes: routes,
+    );
   }
 }
