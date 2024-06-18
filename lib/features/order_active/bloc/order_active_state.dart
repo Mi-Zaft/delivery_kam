@@ -5,3 +5,5 @@ class OrderActiveState {}
 class OrderActiveInitial extends OrderActiveState {}
 
 class OrderActiveCancelLoading extends OrderActiveState {}
+
+class OrderActiveCancelSuccess extends OrderActiveState {}

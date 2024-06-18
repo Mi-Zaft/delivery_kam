@@ -14,9 +14,10 @@ class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
       Map<String, dynamic> dataToSend = {
         'id': event.orderId
       };
-      Response response = await ApiService().postData('/api/v1/order-cancel', dataToSend);
-
-      // Response response = await ApiService().postData('/api/v1/order/price/${event.orderId}', {});
+      Response response = await ApiService().postData('/api/v1/order/cancel', dataToSend);
+      if (response.statusCode == 200) {
+        emit(OrderActiveCancelSuccess());
+      }
     });
   }
 }

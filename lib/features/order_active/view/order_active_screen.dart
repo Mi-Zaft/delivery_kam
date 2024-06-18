@@ -121,9 +121,9 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 5),
                                 ),
-                                Skeletonizer(
+                                const Skeletonizer(
                                   enabled: true,
-                                  child: const Text(
+                                  child: Text(
                                     'Александра',
                                     style: TextStyle(fontSize: 16),
                                   ),
