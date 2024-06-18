@@ -68,7 +68,7 @@ class OrderActiveModalCancel extends StatelessWidget {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 3,
-                          color: Color.fromRGBO(80, 80, 80, 1),
+                          color: Colors.white,
                         ),
                       ),
                     ),

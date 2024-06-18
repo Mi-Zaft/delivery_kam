@@ -47,25 +47,55 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
                     arguments: {'orderId': state.order.id});
               }
             },
-            child: ElevatedButton(
-                onPressed: () {
-                  deliveryMainBloc.add(OrderCreateLoading(widget.order));
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
-                child: Text(
-                  'Заказать за ${widget.price}р',
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400),
-                )),
+            child: BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+              bloc: deliveryMainBloc,
+              builder: (context, state) {
+                if (state is DeliveryMainLoading) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      deliveryMainBloc.add(OrderCreateLoading(widget.order));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    child: const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ElevatedButton(
+                    onPressed: () {
+                      deliveryMainBloc.add(OrderCreateLoading(widget.order));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Заказать за ${widget.price}р',
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
