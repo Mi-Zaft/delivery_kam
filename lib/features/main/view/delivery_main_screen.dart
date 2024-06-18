@@ -162,7 +162,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                           '${addressFromRow.street} ${addressFromRow.house}');
                                 });
                                 makeOrder();
-                                updateMap();
+                                if (addressApiFrom!.latitude != null &&
+                                    addressApiFrom!.longitude != null) {
+                                  updateMap(LatLng(addressApiFrom!.latitude!,
+                                      addressApiFrom!.longitude!));
+                                }
                               },
                             ),
                             DeliveryMainAddressToTappedRow(
@@ -185,7 +189,11 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                   }
                                 });
                                 makeOrder();
-                                updateMap();
+                                if (addressList.last.latitude != null &&
+                                    addressList.last.longitude != null) {
+                                  updateMap(LatLng(addressList.last.latitude!,
+                                      addressList.last.longitude!));
+                                }
                               },
                               callBack:
                                   (List<AddressApi> reorderedAddressToList) {
@@ -237,7 +245,12 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
                                                   );
                                                 });
                                                 makeOrder();
-                                                updateMap();
+                                                if (address.latitude != null &&
+                                                    address.longitude != null) {
+                                                  updateMap(LatLng(
+                                                      address.latitude!,
+                                                      address.longitude!));
+                                                }
                                                 Navigator.pop(context);
                                               },
                                               labelText: 'Дополнительный адрес',
@@ -606,23 +619,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
     }
   }
 
-  LatLng findCenter(List<LatLng> points) {
-    double sumLat = 0;
-    double sumLng = 0;
-    int count = points.length;
-
-    for (var point in points) {
-      sumLat += point.latitude;
-      sumLng += point.longitude;
-    }
-
-    double centerLat = sumLat / count;
-    double centerLng = sumLng / count;
-
-    return LatLng(centerLat, centerLng);
-  }
-
-  void updateMap() {
+  void updateMap(LatLng pointToMove) {
     markers.clear();
     if (addressApiFrom != null) {
       markers.add(
@@ -637,8 +634,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
           ),
         ),
       );
-      mapController.move(
-          LatLng(addressApiFrom!.latitude!, addressApiFrom!.longitude!), 17);
     }
 
     if (addressApiToList.isNotEmpty) {
@@ -662,10 +657,8 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       for (var i = 0; i < markers.length; i++) {
         points.add(markers[i].point);
       }
-
-      LatLng centerPoint = findCenter(points);
-      mapController.move(centerPoint, 17);
     }
+    mapController.move(pointToMove, 17);
   }
 
   void makeOrder() {
