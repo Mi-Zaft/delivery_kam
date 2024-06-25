@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OrderActiveActionButton extends StatelessWidget {
   String imagePath;
   String label;
-  OrderActiveActionButton({
-    super.key,
-    required this.imagePath,
-    required this.label,
-  });
+  bool? isSkeletonizer;
+  OrderActiveActionButton(
+      {super.key,
+      required this.imagePath,
+      required this.label,
+      this.isSkeletonizer});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class OrderActiveActionButton extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(label),
+          Skeletonizer(enabled: isSkeletonizer ?? false, child: Text(label)),
           const Padding(
             padding: EdgeInsets.only(top: 10),
           ),

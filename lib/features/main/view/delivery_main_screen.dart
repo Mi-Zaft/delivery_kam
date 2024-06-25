@@ -11,6 +11,7 @@ import 'package:delivery_kam/features/main/widgets/delivery_main_unicorn_outline
 import 'package:delivery_kam/models/address_api.dart';
 import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -45,6 +46,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   final double maxChildSize = 0.9;
   final double minChildSize = .39;
   final List<Marker> markers = [];
+  List<LatLng> polylineCoordinates = [];
 
   AddressApi fromWhereObject = AddressApi(street: '', city: '');
   AddressApi toWhereObjext = AddressApi(street: '', city: '');
@@ -80,530 +82,555 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      key: _scaffoldKey,
-      drawer: const DeliveryMainDrawer(),
-      bottomNavigationBar: DeliveryMainBottomNavbar(
-        addressPostAllList: addressPostAllList,
-        deliveryMainBloc: deliveryMainBloc,
-        makeOrder: makeOrder,
-        order: mainOrder,
-      ),
-      body: Stack(children: [
-        DeliveryMainMapScreen(
-          openDrawer: openDrawer,
-          markers: markers,
-          mapController: mapController,
-        ),
-        SizedBox.expand(
-          child: NotificationListener<DraggableScrollableNotification>(
-            onNotification: (notification) {
-              FocusScope.of(context).unfocus();
-              return true;
-            },
-            child: DraggableScrollableSheet(
-              controller: _draggableBottomSheetController,
-              initialChildSize: minChildSize,
-              minChildSize: minChildSize,
-              maxChildSize: maxChildSize,
-              snap: true,
-              snapSizes: [minChildSize, maxChildSize],
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return Container(
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      ),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          spreadRadius: 5,
-                          blurRadius: 5,
-                        )
-                      ]),
-                  child: SingleChildScrollView(
-                    physics: const ClampingScrollPhysics(),
-                    controller: scrollController,
-                    child: GestureDetector(
-                      onTap: () =>
-                          {FocusScope.of(context).requestFocus(FocusNode())},
-                      child: Container(
-                        decoration: const BoxDecoration(
+    return BlocBuilder<DeliveryMainBloc, DeliveryMainState>(
+      bloc: deliveryMainBloc,
+      builder: (context, state) {
+        if (state is DeliveryMainOrderPriceSuccess) {
+          polylineCoordinates = state.polylineCoordinates;
+        }
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          key: _scaffoldKey,
+          drawer: const DeliveryMainDrawer(),
+          bottomNavigationBar: DeliveryMainBottomNavbar(
+            addressPostAllList: addressPostAllList,
+            deliveryMainBloc: deliveryMainBloc,
+            makeOrder: makeOrder,
+            order: mainOrder,
+          ),
+          body: Stack(children: [
+            DeliveryMainMapScreen(
+              openDrawer: openDrawer,
+              markers: markers,
+              mapController: mapController,
+              polylineCoordinates: polylineCoordinates,
+            ),
+            SizedBox.expand(
+              child: NotificationListener<DraggableScrollableNotification>(
+                onNotification: (notification) {
+                  FocusScope.of(context).unfocus();
+                  return true;
+                },
+                child: DraggableScrollableSheet(
+                  controller: _draggableBottomSheetController,
+                  initialChildSize: minChildSize,
+                  minChildSize: minChildSize,
+                  maxChildSize: maxChildSize,
+                  snap: true,
+                  snapSizes: [minChildSize, maxChildSize],
+                  builder: (BuildContext context,
+                      ScrollController scrollController) {
+                    return Container(
+                      decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(25),
                             topRight: Radius.circular(25),
                           ),
                           color: Colors.white,
-                        ),
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              width: 50,
-                              child: Divider(
-                                thickness: 5,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.25),
+                              spreadRadius: 5,
+                              blurRadius: 5,
+                            )
+                          ]),
+                      child: SingleChildScrollView(
+                        physics: const ClampingScrollPhysics(),
+                        controller: scrollController,
+                        child: GestureDetector(
+                          onTap: () => {
+                            FocusScope.of(context).requestFocus(FocusNode())
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25),
                               ),
+                              color: Colors.white,
                             ),
-                            DeliveryMainAddressFromTappedRow(
-                              labelText: addressPostFrom != null
-                                  ? addressPostFrom!.addressRow
-                                  : 'Откуда забрать',
-                              prefixText: 'А',
-                              onAddressReady: (addressFromRow) {
-                                addressApiFrom = addressFromRow;
-                                setState(() {
-                                  addressPostFrom = AddressPost(
-                                      fiasId: addressFromRow.fiasId!,
-                                      priority: 0,
-                                      addressRow:
-                                          '${addressFromRow.street} ${addressFromRow.house}');
-                                });
-                                makeOrder();
-                                if (addressApiFrom!.latitude != null &&
-                                    addressApiFrom!.longitude != null) {
-                                  updateMap(LatLng(addressApiFrom!.latitude!,
-                                      addressApiFrom!.longitude!));
-                                }
-                              },
-                            ),
-                            DeliveryMainAddressToTappedRow(
-                              addressList: addressApiToList,
-                              labelText: getRowWhere(),
-                              prefixText: 'Б',
-                              onAddressReady: (List<AddressApi> addressList) {
-                                addressApiToList = addressList;
-                                setState(() {
-                                  addressPostToList.clear();
-                                  for (var i = 0; i < addressList.length; i++) {
-                                    addressPostToList.add(
-                                      AddressPost(
-                                        fiasId: addressList[i].fiasId!,
-                                        priority: i + 1,
-                                        addressRow:
-                                            '${addressList[i].street} ${addressList[i].house}',
-                                      ),
-                                    );
-                                  }
-                                });
-                                makeOrder();
-                                if (addressList.last.latitude != null &&
-                                    addressList.last.longitude != null) {
-                                  updateMap(LatLng(addressList.last.latitude!,
-                                      addressList.last.longitude!));
-                                }
-                              },
-                              callBack:
-                                  (List<AddressApi> reorderedAddressToList) {
-                                addressApiToList = reorderedAddressToList;
-                                addressPostToList.clear();
-                                for (var i = 0;
-                                    i < addressApiToList.length;
-                                    i++) {
-                                  addressPostToList.add(AddressPost(
-                                      fiasId: addressApiToList[i].fiasId!,
-                                      priority: i + 1,
-                                      addressRow:
-                                          '${addressApiToList[i].street} ${addressApiToList[i].house}'));
-                                }
-                                makeOrder();
-                              },
-                            ),
-                            if (addressPostToList.isNotEmpty &&
-                                addressPostToList.length < 5)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          isScrollControlled: true,
-                                          elevation: 0,
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AddressModalBottomSheet(
-                                              addressFromTextFieldController:
-                                                  TextEditingController(),
-                                              deliveryMainBloc:
-                                                  deliveryMainBloc,
-                                              onAddressReady:
-                                                  (AddressApi address) {
-                                                setState(() {
-                                                  addressApiToList.add(address);
-                                                  addressPostToList.add(
-                                                    AddressPost(
-                                                        fiasId: address.fiasId!,
-                                                        priority:
-                                                            addressPostToList
-                                                                    .length +
-                                                                1,
-                                                        addressRow:
-                                                            '${address.street} ${address.house}'),
-                                                  );
-                                                });
-                                                makeOrder();
-                                                if (address.latitude != null &&
-                                                    address.longitude != null) {
-                                                  updateMap(LatLng(
-                                                      address.latitude!,
-                                                      address.longitude!));
-                                                }
-                                                Navigator.pop(context);
-                                              },
-                                              labelText: 'Дополнительный адрес',
-                                              prefixText: '',
-                                            );
-                                          });
-                                    },
-                                    child: Icon(
-                                      Icons.add_outlined,
-                                      color: _activeGradientColor[1],
-                                    )),
-                              ),
-                            // IconButton(
-                            //     onPressed: () {
-                            //       List<String> items = List.generate(
-                            //           5, (index) => "Item ${index + 1}");
-                            //       showModalBottomSheet(
-                            //           // isScrollControlled: true,
-                            //           elevation: 0,
-                            //           backgroundColor: Colors.white,
-                            //           context: context,
-                            //           builder: (BuildContext context) {
-                            //             return ReorderableListView(
-                            //               physics:
-                            //                   const NeverScrollableScrollPhysics(),
-                            //               children: items
-                            //                   .map((item) => ListTile(
-                            //                         key: Key(item),
-                            //                         title: Text(item),
-                            //                       ))
-                            //                   .toList(),
-                            //               onReorder: (oldIndex, newIndex) {
-                            //                 setState(() {
-                            //                   if (newIndex > oldIndex) {
-                            //                     newIndex -= 1;
-                            //                   }
-                            //                   final String item =
-                            //                       items.removeAt(oldIndex);
-                            //                   items.insert(newIndex, item);
-                            //                 });
-                            //               },
-                            //             );
-                            //           });
-                            //     },
-                            //     icon: Icon(Icons.abc_outlined)),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                      horizontal: columnHorizontalPadding)
-                                  .copyWith(top: 10),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: _byCar
-                                            ? _inactiveGradientColor
-                                            : _activeGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            const Text('Пеший курьер'),
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 10),
-                                            ),
-                                            Image.asset(
-                                                "assets/images/main/iconcourier.png"),
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        order?.byCar = false;
-                                        setState(() {
-                                          _byCar = false;
-                                          if (_isBulkyCargo == true) {
-                                            _isBulkyCargo = false;
-                                          }
-                                        });
-                                        FocusScope.of(context).unfocus();
-                                        makeOrder();
-                                      },
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 15),
-                                  ),
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: !_byCar
-                                            ? _inactiveGradientColor
-                                            : _activeGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            const Text('Курьер на авто'),
-                                            const Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 10),
-                                            ),
-                                            Image.asset(
-                                                "assets/images/main/iconCar.png"),
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        order?.byCar = true;
-                                        setState(() {
-                                          _byCar = true;
-                                        });
-                                        FocusScope.of(context).unfocus();
-                                        makeOrder();
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Как доставить',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(93, 105, 114, 1),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w300,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  width: 50,
+                                  child: Divider(
+                                    thickness: 5,
                                   ),
                                 ),
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: _toDoor
-                                            ? _inactiveGradientColor
-                                            : _activeGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            Text('Выйти к машине'),
-                                            Text(
-                                              'При отправке и получении',
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w100),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        order?.toDoor = false;
-                                        setState(() {
-                                          _toDoor = false;
-                                        });
-                                        FocusScope.of(context).unfocus();
-                                        makeOrder();
-                                      },
-                                    ),
-                                  ),
-                                  const Padding(
-                                    padding: EdgeInsets.only(right: 15),
-                                  ),
-                                  Expanded(
-                                    child: UnicornOutlineButton(
-                                      strokeWidth: 4,
-                                      radius: 16,
-                                      gradient: LinearGradient(
-                                        colors: !_toDoor
-                                            ? _inactiveGradientColor
-                                            : _activeGradientColor,
-                                        begin: Alignment.topRight,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: SizedBox(
-                                          height: 35,
-                                          child: Center(
-                                            child: Text('От двери до двери',
-                                                textAlign: TextAlign.center),
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        order?.toDoor = true;
-                                        setState(() {
-                                          _toDoor = true;
-                                        });
-                                        FocusScope.of(context).unfocus();
-                                        makeOrder();
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 20),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Детали отправки',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Предмет доставки',
-                              controller: cargoItemTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.text,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconbox.png",
-                              ),
-                            ),
-                            DeliveryMainTextfieldCustom(
-                              labelText: 'Комментарий курьеру',
-                              controller: commentTextFieldController,
-                              prefixStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black),
-                              keyboardType: TextInputType.text,
-                              prefixIcon: Image.asset(
-                                "assets/images/main/iconEnvelope.png",
-                              ),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 25),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: columnHorizontalPadding),
-                              child: const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Дополнительно',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ),
-                            ),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isFragileCargo,
-                                label: 'Хрупкий груз',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isFragileCargo = newValue!;
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  makeOrder();
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isThermalBag,
-                                label: 'Наличие термосумки',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isThermalBag = newValue!;
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  makeOrder();
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isBulkyCargo,
-                                label: 'Крупногабаритный груз 120 - 210 см',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isBulkyCargo = newValue!;
-                                    if (_isBulkyCargo == true &&
-                                        _byCar == false) {
-                                      _byCar = true;
+                                DeliveryMainAddressFromTappedRow(
+                                  labelText: addressPostFrom != null
+                                      ? addressPostFrom!.addressRow
+                                      : 'Откуда забрать',
+                                  prefixText: 'А',
+                                  onAddressReady: (addressFromRow) {
+                                    addressApiFrom = addressFromRow;
+                                    setState(() {
+                                      addressPostFrom = AddressPost(
+                                          fiasId: addressFromRow.fiasId!,
+                                          priority: 0,
+                                          addressRow:
+                                              '${addressFromRow.street} ${addressFromRow.house}');
+                                    });
+                                    makeOrder();
+                                    if (addressApiFrom!.latitude != null &&
+                                        addressApiFrom!.longitude != null) {
+                                      updateMap(LatLng(
+                                          addressApiFrom!.latitude!,
+                                          addressApiFrom!.longitude!));
                                     }
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  makeOrder();
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isRegistrationInTransportCompany,
-                                label:
-                                    'Оформление отправления в транспортной компании',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isRegistrationInTransportCompany =
-                                        newValue!;
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  makeOrder();
-                                }),
-                            DeliveryMainCustomCheckboxListTile(
-                                isChecked: _isCorrespondenceInRussianPostOffice,
-                                label:
-                                    'Отправка/получение корреспонденции в отделениях Почты России',
-                                onChanged: (bool? newValue) {
-                                  setState(() {
-                                    _isCorrespondenceInRussianPostOffice =
-                                        newValue!;
-                                  });
-                                  FocusScope.of(context).unfocus();
-                                  makeOrder();
-                                }),
-                          ],
+                                  },
+                                ),
+                                DeliveryMainAddressToTappedRow(
+                                  addressList: addressApiToList,
+                                  labelText: getRowWhere(),
+                                  prefixText: 'Б',
+                                  onAddressReady:
+                                      (List<AddressApi> addressList) {
+                                    addressApiToList = addressList;
+                                    setState(() {
+                                      addressPostToList.clear();
+                                      for (var i = 0;
+                                          i < addressList.length;
+                                          i++) {
+                                        addressPostToList.add(
+                                          AddressPost(
+                                            fiasId: addressList[i].fiasId!,
+                                            priority: i + 1,
+                                            addressRow:
+                                                '${addressList[i].street} ${addressList[i].house}',
+                                          ),
+                                        );
+                                      }
+                                    });
+                                    makeOrder();
+                                    if (addressList.last.latitude != null &&
+                                        addressList.last.longitude != null) {
+                                      updateMap(LatLng(
+                                          addressList.last.latitude!,
+                                          addressList.last.longitude!));
+                                    }
+                                  },
+                                  callBack: (List<AddressApi>
+                                      reorderedAddressToList) {
+                                    addressApiToList = reorderedAddressToList;
+                                    addressPostToList.clear();
+                                    for (var i = 0;
+                                        i < addressApiToList.length;
+                                        i++) {
+                                      addressPostToList.add(AddressPost(
+                                          fiasId: addressApiToList[i].fiasId!,
+                                          priority: i + 1,
+                                          addressRow:
+                                              '${addressApiToList[i].street} ${addressApiToList[i].house}'));
+                                    }
+                                    makeOrder();
+                                  },
+                                ),
+                                if (addressPostToList.isNotEmpty &&
+                                    addressPostToList.length < 5)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              elevation: 0,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AddressModalBottomSheet(
+                                                  addressFromTextFieldController:
+                                                      TextEditingController(),
+                                                  deliveryMainBloc:
+                                                      deliveryMainBloc,
+                                                  onAddressReady:
+                                                      (AddressApi address) {
+                                                    setState(() {
+                                                      addressApiToList
+                                                          .add(address);
+                                                      addressPostToList.add(
+                                                        AddressPost(
+                                                            fiasId:
+                                                                address.fiasId!,
+                                                            priority:
+                                                                addressPostToList
+                                                                        .length +
+                                                                    1,
+                                                            addressRow:
+                                                                '${address.street} ${address.house}'),
+                                                      );
+                                                    });
+                                                    makeOrder();
+                                                    if (address.latitude !=
+                                                            null &&
+                                                        address.longitude !=
+                                                            null) {
+                                                      updateMap(LatLng(
+                                                          address.latitude!,
+                                                          address.longitude!));
+                                                    }
+                                                    Navigator.pop(context);
+                                                  },
+                                                  labelText:
+                                                      'Дополнительный адрес',
+                                                  prefixText: '',
+                                                );
+                                              });
+                                        },
+                                        child: Icon(
+                                          Icons.add_outlined,
+                                          color: _activeGradientColor[1],
+                                        )),
+                                  ),
+                                // IconButton(
+                                //     onPressed: () {
+                                //       List<String> items = List.generate(
+                                //           5, (index) => "Item ${index + 1}");
+                                //       showModalBottomSheet(
+                                //           // isScrollControlled: true,
+                                //           elevation: 0,
+                                //           backgroundColor: Colors.white,
+                                //           context: context,
+                                //           builder: (BuildContext context) {
+                                //             return ReorderableListView(
+                                //               physics:
+                                //                   const NeverScrollableScrollPhysics(),
+                                //               children: items
+                                //                   .map((item) => ListTile(
+                                //                         key: Key(item),
+                                //                         title: Text(item),
+                                //                       ))
+                                //                   .toList(),
+                                //               onReorder: (oldIndex, newIndex) {
+                                //                 setState(() {
+                                //                   if (newIndex > oldIndex) {
+                                //                     newIndex -= 1;
+                                //                   }
+                                //                   final String item =
+                                //                       items.removeAt(oldIndex);
+                                //                   items.insert(newIndex, item);
+                                //                 });
+                                //               },
+                                //             );
+                                //           });
+                                //     },
+                                //     icon: Icon(Icons.abc_outlined)),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                          horizontal: columnHorizontalPadding)
+                                      .copyWith(top: 10),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: UnicornOutlineButton(
+                                          strokeWidth: 4,
+                                          radius: 16,
+                                          gradient: LinearGradient(
+                                            colors: _byCar
+                                                ? _inactiveGradientColor
+                                                : _activeGradientColor,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              children: [
+                                                const Text('Пеший курьер'),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                ),
+                                                Image.asset(
+                                                    "assets/images/main/iconcourier.png"),
+                                              ],
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            order?.byCar = false;
+                                            setState(() {
+                                              _byCar = false;
+                                              if (_isBulkyCargo == true) {
+                                                _isBulkyCargo = false;
+                                              }
+                                            });
+                                            FocusScope.of(context).unfocus();
+                                            makeOrder();
+                                          },
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                      ),
+                                      Expanded(
+                                        child: UnicornOutlineButton(
+                                          strokeWidth: 4,
+                                          radius: 16,
+                                          gradient: LinearGradient(
+                                            colors: !_byCar
+                                                ? _inactiveGradientColor
+                                                : _activeGradientColor,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              children: [
+                                                const Text('Курьер на авто'),
+                                                const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                ),
+                                                Image.asset(
+                                                    "assets/images/main/iconCar.png"),
+                                              ],
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            order?.byCar = true;
+                                            setState(() {
+                                              _byCar = true;
+                                            });
+                                            FocusScope.of(context).unfocus();
+                                            makeOrder();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 20),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: columnHorizontalPadding),
+                                  child: const Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Как доставить',
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(93, 105, 114, 1),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: columnHorizontalPadding),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: UnicornOutlineButton(
+                                          strokeWidth: 4,
+                                          radius: 16,
+                                          gradient: LinearGradient(
+                                            colors: _toDoor
+                                                ? _inactiveGradientColor
+                                                : _activeGradientColor,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Column(
+                                              children: [
+                                                Text('Выйти к машине'),
+                                                Text(
+                                                  'При отправке и получении',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w100),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            order?.toDoor = false;
+                                            setState(() {
+                                              _toDoor = false;
+                                            });
+                                            FocusScope.of(context).unfocus();
+                                            makeOrder();
+                                          },
+                                        ),
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 15),
+                                      ),
+                                      Expanded(
+                                        child: UnicornOutlineButton(
+                                          strokeWidth: 4,
+                                          radius: 16,
+                                          gradient: LinearGradient(
+                                            colors: !_toDoor
+                                                ? _inactiveGradientColor
+                                                : _activeGradientColor,
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomCenter,
+                                          ),
+                                          child: const Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: SizedBox(
+                                              height: 35,
+                                              child: Center(
+                                                child: Text('От двери до двери',
+                                                    textAlign:
+                                                        TextAlign.center),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            order?.toDoor = true;
+                                            setState(() {
+                                              _toDoor = true;
+                                            });
+                                            FocusScope.of(context).unfocus();
+                                            makeOrder();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 20),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: columnHorizontalPadding),
+                                  child: const Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Детали отправки',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                  ),
+                                ),
+                                DeliveryMainTextfieldCustom(
+                                  labelText: 'Предмет доставки',
+                                  controller: cargoItemTextFieldController,
+                                  prefixStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                                  keyboardType: TextInputType.text,
+                                  prefixIcon: Image.asset(
+                                    "assets/images/main/iconbox.png",
+                                  ),
+                                ),
+                                DeliveryMainTextfieldCustom(
+                                  labelText: 'Комментарий курьеру',
+                                  controller: commentTextFieldController,
+                                  prefixStyle: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                                  keyboardType: TextInputType.text,
+                                  prefixIcon: Image.asset(
+                                    "assets/images/main/iconEnvelope.png",
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 25),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: columnHorizontalPadding),
+                                  child: const Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Дополнительно',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                  ),
+                                ),
+                                DeliveryMainCustomCheckboxListTile(
+                                    isChecked: _isFragileCargo,
+                                    label: 'Хрупкий груз',
+                                    onChanged: (bool? newValue) {
+                                      setState(() {
+                                        _isFragileCargo = newValue!;
+                                      });
+                                      FocusScope.of(context).unfocus();
+                                      makeOrder();
+                                    }),
+                                DeliveryMainCustomCheckboxListTile(
+                                    isChecked: _isThermalBag,
+                                    label: 'Наличие термосумки',
+                                    onChanged: (bool? newValue) {
+                                      setState(() {
+                                        _isThermalBag = newValue!;
+                                      });
+                                      FocusScope.of(context).unfocus();
+                                      makeOrder();
+                                    }),
+                                DeliveryMainCustomCheckboxListTile(
+                                    isChecked: _isBulkyCargo,
+                                    label: 'Крупногабаритный груз 120 - 210 см',
+                                    onChanged: (bool? newValue) {
+                                      setState(() {
+                                        _isBulkyCargo = newValue!;
+                                        if (_isBulkyCargo == true &&
+                                            _byCar == false) {
+                                          _byCar = true;
+                                        }
+                                      });
+                                      FocusScope.of(context).unfocus();
+                                      makeOrder();
+                                    }),
+                                DeliveryMainCustomCheckboxListTile(
+                                    isChecked:
+                                        _isRegistrationInTransportCompany,
+                                    label:
+                                        'Оформление отправления в транспортной компании',
+                                    onChanged: (bool? newValue) {
+                                      setState(() {
+                                        _isRegistrationInTransportCompany =
+                                            newValue!;
+                                      });
+                                      FocusScope.of(context).unfocus();
+                                      makeOrder();
+                                    }),
+                                DeliveryMainCustomCheckboxListTile(
+                                    isChecked:
+                                        _isCorrespondenceInRussianPostOffice,
+                                    label:
+                                        'Отправка/получение корреспонденции в отделениях Почты России',
+                                    onChanged: (bool? newValue) {
+                                      setState(() {
+                                        _isCorrespondenceInRussianPostOffice =
+                                            newValue!;
+                                      });
+                                      FocusScope.of(context).unfocus();
+                                      makeOrder();
+                                    }),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
-      ]),
+          ]),
+        );
+      },
     );
   }
 
@@ -621,6 +648,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
 
   void updateMap(LatLng pointToMove) {
     markers.clear();
+    polylineCoordinates.clear();
     if (addressApiFrom != null) {
       markers.add(
         Marker(
@@ -658,6 +686,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         points.add(markers[i].point);
       }
     }
+
     mapController.move(pointToMove, 17);
   }
 
@@ -698,6 +727,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         mainOrder = order;
       });
       if (order != null) {
+        print('makeOrder!!!');
         deliveryMainBloc.add(OrderDataChanged(order!));
       }
     }

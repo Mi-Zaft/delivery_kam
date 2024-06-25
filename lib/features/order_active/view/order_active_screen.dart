@@ -50,6 +50,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
           openDrawer: openDrawer,
           markers: const [],
           mapController: mapController,
+          polylineCoordinates: const [],
         ),
         SizedBox.expand(
           child: NotificationListener<DraggableScrollableNotification>(
@@ -135,9 +136,12 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                             ),
                             const Row(
                               children: [
-                                Text(
-                                  'белый Hyundai Solaris',
-                                  style: TextStyle(fontSize: 16),
+                                Skeletonizer(
+                                  enabled: true,
+                                  child: Text(
+                                    'белый Hyundai Solaris',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
@@ -166,6 +170,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                 OrderActiveActionButton(
                                   imagePath: 'assets/images/main/iconCar.png',
                                   label: 'о172рв 123',
+                                  isSkeletonizer: true,
                                 ),
                                 OrderActiveActionButton(
                                   imagePath:
@@ -182,7 +187,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                               children: [
                                 Spacer(),
                                 Text(
-                                  'Заказ выполняется',
+                                  'Поиск курьера',
                                   style: TextStyle(
                                     fontSize: 20,
                                     color: Color.fromRGBO(80, 80, 80, 1),

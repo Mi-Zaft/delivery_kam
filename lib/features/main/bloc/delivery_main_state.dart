@@ -24,9 +24,13 @@ class DeliveryMainOrderCreateFail extends DeliveryMainState {
 class DeliveryMainLoading extends DeliveryMainState {}
 
 class DeliveryMainOrderPriceSuccess extends DeliveryMainState {
-  DeliveryMainOrderPriceSuccess({required this.orderPrice});
+  DeliveryMainOrderPriceSuccess({
+    required this.orderPrice,
+    required this.polylineCoordinates,
+  });
 
   final OrderPrice orderPrice;
+  final List<LatLng> polylineCoordinates;
 }
 
 class DeliveryMainOrderCreateSuccess extends DeliveryMainState {

@@ -3,7 +3,9 @@ import 'package:delivery_kam/models/order.dart';
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 part 'delivery_main_event.dart';
 part 'delivery_main_state.dart';
@@ -48,12 +50,24 @@ class DeliveryMainBloc extends Bloc<DeliveryMainEvent, DeliveryMainState> {
       if (response.statusCode == 200) {
         if (response.statusCode == 200) {
           OrderPrice data = OrderPrice.fromJson(response.data);
-          emit(DeliveryMainOrderPriceSuccess(orderPrice: data));
+
+          List<LatLng> polylineCoordinates = [];
+          PolylinePoints polylinePoints = PolylinePoints();
+          List<PointLatLng> polylinePointsResult =
+              polylinePoints.decodePolyline(data.routes[0].geometry);
+          for (var element in polylinePointsResult) {
+            polylineCoordinates
+                .add(LatLng(element.latitude, element.longitude));
+          }
+
+          emit(DeliveryMainOrderPriceSuccess(
+            orderPrice: data,
+            polylineCoordinates: polylineCoordinates,
+          ));
         }
       }
     });
     on<OrderCreateLoading>((event, emit) async {
-      print('OrderCreateLoading');
       emit(DeliveryMainLoading());
       Map<String, dynamic> dataToSend = event.order.toJson();
 

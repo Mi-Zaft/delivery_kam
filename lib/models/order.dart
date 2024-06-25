@@ -80,15 +80,13 @@ class Order {
 }
 
 class OrderRoute {
-  final double latitude;
-  final double longitude;
+  final String geometry;
 
-  OrderRoute({required this.latitude, required this.longitude});
+  OrderRoute({required this.geometry});
 
   factory OrderRoute.fromJson(Map<String, dynamic> json) {
     return OrderRoute(
-      latitude: json['latitude'],
-      longitude: json['longitude'],
+      geometry: json['geometry']
     );
   }
 }
@@ -103,7 +101,7 @@ class OrderPrice {
     List<OrderRoute> routes = [];
     if (json['routes'] != null) {
       json['routes'].forEach((orderRouteJson) {
-        // routes.add(OrderRoute.fromJson(orderRouteJson));
+        routes.add(OrderRoute.fromJson(orderRouteJson));
       });
     }
     return OrderPrice(

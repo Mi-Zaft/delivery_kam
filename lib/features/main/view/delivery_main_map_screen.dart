@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+// import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:latlong2/latlong.dart';
 
 class DeliveryMainMapScreen extends StatefulWidget {
   final VoidCallback openDrawer;
   final List<Marker> markers;
   final MapController mapController;
+  final List<LatLng> polylineCoordinates;
   const DeliveryMainMapScreen({
     required this.openDrawer,
     super.key,
     required this.markers,
+    required this.polylineCoordinates,
     required this.mapController,
   });
 
@@ -18,13 +21,23 @@ class DeliveryMainMapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<DeliveryMainMapScreen> {
-  late List<LatLng> polylineCoordinates;
 
   @override
   void initState() {
     super.initState();
-    polylineCoordinates = [];
+    // updateLine();
   }
+
+  // void updateLine() {
+  //   PolylinePoints polylinePoints = PolylinePoints();
+  //   List<PointLatLng> polylinePointsResult = polylinePoints.decodePolyline(
+  //       "}darGuxamFfAEBvBlEQ^AjAEnBKpGYt@OzAE@f@@bAB|@BtADdBDdCJzFBr@BnAF~E?LBfB@h@N?zCOhAGbESTAvAGxWmAn@CTNFZDZ`@dRLlFFbD@l@L|EFdDb@hSD~AHnE@d@@x@ATLWpEQdAOrAc@d@StDuAjLiEfEyAxAk@bA]hAa@vEiBRMDEJSHa@@Q?aAAc@Be@TiCd@qEdARh]zG~@PAJCPQxBEb@IfA[|DQpBk@rHMbBfFlANDrBd@lCl@LDvHpBtHnBnBh@vBj@nHjBfBf@vEpA`HfB~A^vEdAgAhLKbAy@nJaAhKgAxLgAlLkAdKCRbDv@zA^");
+  //   setState(() {
+  //     for (var element in polylinePointsResult) {
+  //       polylineCoordinates.add(LatLng(element.latitude, element.longitude));
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +57,9 @@ class _MapScreenState extends State<DeliveryMainMapScreen> {
             PolylineLayer(
               polylines: [
                 Polyline(
-                    points: polylineCoordinates,
-                    color: Colors.red,
-                    strokeWidth: 5)
+                    points: widget.polylineCoordinates,
+                    color: const Color.fromRGBO(32, 191, 208, 1),
+                    strokeWidth: 7)
               ],
             ),
             MarkerLayer(
