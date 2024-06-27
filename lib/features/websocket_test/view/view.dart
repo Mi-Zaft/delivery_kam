@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:delivery_kam/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -13,7 +14,7 @@ class WebsocketTest extends StatefulWidget {
 
 class _WebsocketTestState extends State<WebsocketTest> {
   var channel = WebSocketChannel.connect(
-    Uri.parse('ws://192.168.0.26:9000/api/v1/order'),
+    Uri.parse('ws://${AppConfig.apiUrl}/api/v1/order'),
   );
 
   Map<String, dynamic> data = {
@@ -47,7 +48,7 @@ class _WebsocketTestState extends State<WebsocketTest> {
             onPressed: () => {
               channel.sink.add(json.encode(data)),
               channel = WebSocketChannel.connect(
-                Uri.parse('ws://192.168.0.26:9000/api/v1/order'),
+                Uri.parse('ws://${AppConfig.apiUrl}/api/v1/order'),
               )
             },
           ),
