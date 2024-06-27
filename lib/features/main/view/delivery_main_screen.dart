@@ -87,6 +87,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       builder: (context, state) {
         if (state is DeliveryMainOrderPriceSuccess) {
           polylineCoordinates = state.polylineCoordinates;
+          updateMap();
         }
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -646,10 +647,14 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
     }
   }
 
-  void updateMap(LatLng pointToMove) {
+  void updateMap([LatLng? pointToMove]) {
     markers.clear();
     polylineCoordinates.clear();
     if (addressApiFrom != null) {
+      if (addressApiToList.isEmpty) {
+        pointToMove ??=
+            LatLng(addressApiFrom!.latitude!, addressApiFrom!.longitude!);
+      }
       markers.add(
         Marker(
           point: LatLng(addressApiFrom!.latitude!, addressApiFrom!.longitude!),
@@ -682,12 +687,17 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       }
       List<LatLng> points = [];
 
+      pointToMove ??= LatLng(
+          addressApiToList.last.latitude!, addressApiToList.last.longitude!);
+
       for (var i = 0; i < markers.length; i++) {
         points.add(markers[i].point);
       }
     }
 
-    mapController.move(pointToMove, 17);
+    if (pointToMove != null) {
+      mapController.move(pointToMove, 17);
+    }
   }
 
   void makeOrder() {

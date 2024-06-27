@@ -14,7 +14,8 @@ void main() async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final fcmToken = prefs.getString('fcmToken');
-  if (fcmToken != null) {
+  final bearerToken = prefs.getString('jwt_token');
+  if (fcmToken != null && bearerToken != null) {
     final Map<String, dynamic> fcmDataToSend = {'token': fcmToken};
     Response fcmResponse = await ApiService()
         .postData('/api/v1/notification/token', fcmDataToSend);
