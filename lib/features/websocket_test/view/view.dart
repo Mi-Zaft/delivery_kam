@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:delivery_kam/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -13,9 +12,7 @@ class WebsocketTest extends StatefulWidget {
 }
 
 class _WebsocketTestState extends State<WebsocketTest> {
-  var channel = WebSocketChannel.connect(
-    Uri.parse('ws://${AppConfig.apiUrl}/api/v1/order'),
-  );
+  late WebSocketChannel channel;
 
   Map<String, dynamic> data = {
     "id": "7422f31a-6343-4b62-84c2-1d720ee4157f",
@@ -25,6 +22,9 @@ class _WebsocketTestState extends State<WebsocketTest> {
   @override
   void initState() {
     super.initState();
+    channel = WebSocketChannel.connect(
+      Uri.parse('ws://echo.websocket.org'),
+    );
 
     channel.stream.listen(
       (message) {
@@ -45,15 +45,23 @@ class _WebsocketTestState extends State<WebsocketTest> {
       body: Container(
         child: Center(
           child: FloatingActionButton(
-            onPressed: () => {
-              channel.sink.add(json.encode(data)),
-              channel = WebSocketChannel.connect(
-                Uri.parse('ws://${AppConfig.apiUrl}/api/v1/order'),
-              )
-            },
+            onPressed: _sendMessage,
+            tooltip: 'Send message',
+            child: Icon(Icons.send),
           ),
         ),
       ),
     );
+  }
+
+  void _sendMessage() {
+    print('Sending message: ${json.encode(data)}');
+    channel.sink.add(json.encode(data));
+  }
+
+  @override
+  void dispose() {
+    channel.sink.close(status.goingAway);
+    super.dispose();
   }
 }
