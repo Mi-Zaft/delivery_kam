@@ -42,7 +42,6 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
             bloc: deliveryMainBloc,
             listener: (context, state) {
               if (state is DeliveryMainOrderCreateSuccess) {
-                print(state.order.id);
                 Navigator.pushNamed(context, '/order-active',
                     arguments: {'orderId': state.order.id});
               }

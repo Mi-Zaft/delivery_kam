@@ -737,7 +737,6 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         mainOrder = order;
       });
       if (order != null) {
-        print('makeOrder!!!');
         deliveryMainBloc.add(OrderDataChanged(order!));
       }
     }

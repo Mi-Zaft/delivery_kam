@@ -11,7 +11,7 @@ class DeliveryAuthRegisterTextfield extends StatefulWidget {
   final Function() onChanged;
 
   const DeliveryAuthRegisterTextfield({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.controller,
     required this.keyboardType,
@@ -19,7 +19,7 @@ class DeliveryAuthRegisterTextfield extends StatefulWidget {
     required this.onChanged,
     this.inputFormatters,
     this.prefixText,
-  }) : super(key: key);
+  });
 
   @override
   DeliveryAuthRegisterTextfieldState createState() =>

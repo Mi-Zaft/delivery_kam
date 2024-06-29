@@ -17,7 +17,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
 
   const DeliveryMainTextfieldAddress({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.controller,
     required this.keyboardType,
@@ -29,7 +29,7 @@ class DeliveryMainTextfieldAddress extends StatefulWidget {
     this.prefixStyle,
     this.maskInputFormatters,
     this.prefixIcon,
-  }) : super(key: key);
+  });
 
   @override
   DeliveryMainTextfieldAddressState createState() =>

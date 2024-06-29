@@ -8,7 +8,7 @@ import 'package:delivery_kam/features/order_active/view/order_active_screen.dart
 import 'package:delivery_kam/features/order_history/view/order_history_list_screen.dart';
 import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_screen.dart';
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';
-import 'package:delivery_kam/features/websocket_test/view/view.dart';
+// import 'package:delivery_kam/features/websocket_test/view/view.dart';
 
 final routes = {
   '/': (context) => const CheckAuthScreen(),

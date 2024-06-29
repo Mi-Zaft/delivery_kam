@@ -26,9 +26,8 @@ class DeliveryAuthConfirmCodeBloc
             await prefs.setString('jwt_token', response.data['accessToken']);
             final fcmToken = prefs.getString('fcmToken');
             final Map<String, dynamic> fcmDataToSend = {'token': fcmToken};
-            Response fcmResponse = await ApiService()
+            await ApiService()
                 .postData('/api/v1/notification/token', fcmDataToSend);
-              print('Set fcm token result: $fcmResponse');
             if (response.data.containsKey('name')) {
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);
@@ -89,9 +88,8 @@ class DeliveryAuthConfirmCodeBloc
             await prefs.setString('jwt_token', response.data['accessToken']);
             final fcmToken = prefs.getString('fcmToken');
             final Map<String, dynamic> fcmDataToSend = {'token': fcmToken};
-            Response fcmResponse = await ApiService()
+            await ApiService()
                 .postData('/api/v1/notification/token', fcmDataToSend);
-            print('Set fcm token result: $fcmResponse');
             if (response.data.containsKey('name')) {
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);

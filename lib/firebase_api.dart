@@ -13,7 +13,5 @@ class FirebaseApi {
     if (fCMToken != null) {
       await prefs.setString('fcmToken', fCMToken);
     }
-
-    print('Token firebase: $fCMToken');
   }
 }

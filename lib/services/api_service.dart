@@ -35,7 +35,7 @@ class ApiService {
   Future<String?> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('jwt_token');
-    print(token);
+    // print(token);
     // Check if token is expired
     return token;
   }
@@ -107,9 +107,6 @@ class ErrorInterceptor extends Interceptor {
           if (navigatorKey.currentState != null) {
             navigatorKey.currentState
                 ?.pushNamedAndRemoveUntil('/', (route) => false);
-            print('Navigating to /login');
-          } else {
-            print('Navigator state is null');
           }
         });
       } else {

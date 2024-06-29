@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryAuthRegisterScreen extends StatefulWidget {
-  const DeliveryAuthRegisterScreen({Key? key}) : super(key: key);
+  const DeliveryAuthRegisterScreen({super.key});
 
   @override
   State<DeliveryAuthRegisterScreen> createState() =>

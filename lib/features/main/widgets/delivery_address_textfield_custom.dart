@@ -11,7 +11,7 @@ class DeliveryAddressTextfieldCustom extends StatelessWidget {
   final List<MaskTextInputFormatter>? maskInputFormatters;
 
   const DeliveryAddressTextfieldCustom({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.controller,
     required this.keyboardType,
@@ -19,7 +19,7 @@ class DeliveryAddressTextfieldCustom extends StatelessWidget {
     this.prefixStyle,
     this.maskInputFormatters,
     this.prefixIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

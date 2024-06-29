@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DeliveryAuthConfirmCodeScreen extends StatefulWidget {
-  const DeliveryAuthConfirmCodeScreen({Key? key}) : super(key: key);
+  const DeliveryAuthConfirmCodeScreen({super.key});
 
   @override
   State<DeliveryAuthConfirmCodeScreen> createState() =>

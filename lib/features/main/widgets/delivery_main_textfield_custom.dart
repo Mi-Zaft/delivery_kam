@@ -13,15 +13,14 @@ class DeliveryMainTextfieldCustom extends StatelessWidget {
   final double columnHorizontalPadding = 24.0; // Отступы по бокам
 
   const DeliveryMainTextfieldCustom(
-      {Key? key,
+      {super.key,
       required this.labelText,
       required this.controller,
       required this.keyboardType,
       this.prefixText,
       this.prefixStyle,
       this.maskInputFormatters,
-      this.prefixIcon})
-      : super(key: key);
+      this.prefixIcon});
 
   @override
   Widget build(BuildContext context) {

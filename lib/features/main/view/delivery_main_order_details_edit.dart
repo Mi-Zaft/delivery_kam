@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class DeliveryMainOrderDetailsEdit extends StatefulWidget {
   const DeliveryMainOrderDetailsEdit({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<DeliveryMainOrderDetailsEdit> createState() =>

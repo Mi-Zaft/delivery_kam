@@ -28,13 +28,13 @@ class _WebsocketTestState extends State<WebsocketTest> {
 
     channel.stream.listen(
       (message) {
-        print('Received: $message');
+        // print('Received: $message');
       },
       onDone: () {
-        print('WebSocket closed');
+        // print('WebSocket closed');
       },
       onError: (error) {
-        print('Error: $error');
+        // print('Error: $error');
       },
     );
   }
@@ -42,20 +42,18 @@ class _WebsocketTestState extends State<WebsocketTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: FloatingActionButton(
-            onPressed: _sendMessage,
-            tooltip: 'Send message',
-            child: Icon(Icons.send),
-          ),
+      body: Center(
+        child: FloatingActionButton(
+          onPressed: _sendMessage,
+          tooltip: 'Send message',
+          child: const Icon(Icons.send),
         ),
       ),
     );
   }
 
   void _sendMessage() {
-    print('Sending message: ${json.encode(data)}');
+    // print('Sending message: ${json.encode(data)}');
     channel.sink.add(json.encode(data));
   }
 
