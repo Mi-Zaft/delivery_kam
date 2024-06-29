@@ -2,6 +2,7 @@ import 'package:delivery_kam/delivery_kam_app.dart';
 import 'package:delivery_kam/firebase_api.dart';
 import 'package:delivery_kam/firebase_options.dart';
 import 'package:delivery_kam/services/api_service.dart';
+import 'package:delivery_kam/services/global_navigator_key.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,5 +23,5 @@ void main() async {
     print('Set fcm token result: $fcmResponse');
   }
 
-  runApp(const DeliveryKamApp());
+  runApp(DeliveryKamApp(navigatorKey: navigatorKey));
 }

@@ -11,8 +11,8 @@ import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_sc
 import 'package:delivery_kam/features/websocket_test/view/view.dart';
 
 final routes = {
-  // '/': (context) => const CheckAuthScreen(),
-  '/': (context) => const WebsocketTest(),
+  '/': (context) => const CheckAuthScreen(),
+  // '/': (context) => const WebsocketTest(),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
   '/login': (context) => const DeliveryAuthLoginScreen(),

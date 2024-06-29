@@ -649,7 +649,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
 
   void updateMap([LatLng? pointToMove]) {
     markers.clear();
-    polylineCoordinates.clear();
+    // polylineCoordinates.clear();
     if (addressApiFrom != null) {
       if (addressApiToList.isEmpty) {
         pointToMove ??=

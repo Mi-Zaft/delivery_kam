@@ -3,7 +3,8 @@ import 'package:delivery_kam/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class DeliveryKamApp extends StatelessWidget {
-  const DeliveryKamApp({super.key});
+  final GlobalKey<NavigatorState> navigatorKey;
+  const DeliveryKamApp({super.key, required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {
@@ -11,6 +12,7 @@ class DeliveryKamApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Delivery Kam',
       theme: classicTheme,
+      navigatorKey: navigatorKey,
       routes: routes,
     );
   }

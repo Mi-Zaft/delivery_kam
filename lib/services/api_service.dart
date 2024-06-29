@@ -1,5 +1,7 @@
 import 'package:delivery_kam/constants.dart';
+import 'package:delivery_kam/services/global_navigator_key.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
@@ -98,11 +100,25 @@ class ErrorInterceptor extends Interceptor {
     final status = response.statusCode;
     final isValid = status != null && status >= 200 && status < 300;
     if (!isValid) {
-      throw DioException.badResponse(
-        statusCode: status!,
-        requestOptions: response.requestOptions,
-        response: response,
-      );
+      if (status == 401) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.remove('jwt_token');
+          if (navigatorKey.currentState != null) {
+            navigatorKey.currentState
+                ?.pushNamedAndRemoveUntil('/', (route) => false);
+            print('Navigating to /login');
+          } else {
+            print('Navigator state is null');
+          }
+        });
+      } else {
+        throw DioException.badResponse(
+          statusCode: status!,
+          requestOptions: response.requestOptions,
+          response: response,
+        );
+      }
     }
     super.onResponse(response, handler);
   }
