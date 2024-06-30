@@ -64,7 +64,7 @@ class AddressPost {
 
   factory AddressPost.fromJson(Map<String, dynamic> json) {
     return AddressPost(
-      fiasId: json['fiasId'],
+      fiasId: json['fias_id'],
       priority: json['priority'],
       addressRow: json['addressRow'] ?? 'Строка адреса',
     );

@@ -65,17 +65,17 @@ class Order {
     return Order(
         id: json['id'],
         address: addressess,
-        byCar: json['byCar'],
-        toDoor: json['toDoor'],
-        cargoItem: json['cargoItem'],
-        cargoValue: json['cargoValue'] ?? 0,
-        cargoMass: json['cargoMass'] ?? 0,
+        byCar: json['by_car'],
+        toDoor: json['to_door'],
+        cargoItem: json['cargo_item'],
+        cargoValue: json['cargo_value'] ?? 0,
+        cargoMass: json['cargo_mass'] ?? 0,
         comment: json['comment'],
-        fragileCargo: json['fragileCargo'],
-        thermalBag: json['thermalBag'],
-        bulkyCargo: json['bulkyCargo'],
-        transportDepartureRegistration: json['transportDepartureRegistration'],
-        postOfficeCorrespondence: json['postOfficeCorrespondence']);
+        fragileCargo: json['fragile_cargo'],
+        thermalBag: json['thermal_bag'],
+        bulkyCargo: json['bulky_cargo'],
+        transportDepartureRegistration: json['transport_departure_registration'],
+        postOfficeCorrespondence: json['post_office_correspondence']);
   }
 }
 

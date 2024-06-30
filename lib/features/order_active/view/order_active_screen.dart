@@ -7,9 +7,11 @@ import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderActiveScreen extends StatefulWidget {
-  const OrderActiveScreen({super.key});
+  final Order? order;
+  const OrderActiveScreen({super.key, this.order});
 
   @override
   State<OrderActiveScreen> createState() => _OrderActiveScreenState();
@@ -26,6 +28,17 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
     _scaffoldKey.currentState!.openDrawer();
   }
 
+  void _launchCaller() async {
+    // if (widget.order != null) {
+    //@TODO: добавить проверку на наличие номера курьера и подставлять номер курьера
+    print('НОМЕР КУРЬЕРА');
+    final Uri url = Uri(scheme: 'tel', path: '+79996309216');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+      // }
+    }
+  }
+
   double getTheRightSize(double screenHeight) {
     final maxHeight = 0.73 * screenHeight;
     final calculatedHeight = _size?.height ?? maxHeight;
@@ -35,12 +48,21 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final String? orderId = args['orderId'];
-    final Order? order = args['order'];
-    final height = MediaQuery.of(context).size.height;
+    late Order order;
+    if (widget.order == null) {
+      final Map<String, dynamic> args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+      order = args['order'];
+    } else if (widget.order != null) {
+      order = widget.order!;
+    }
+    // final height = MediaQuery.of(context).size.height;
     final MapController mapController = MapController();
     return Scaffold(
       key: _scaffoldKey,
@@ -58,7 +80,8 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
               return true;
             },
             child: DraggableScrollableSheet(
-              initialChildSize: getTheRightSize(height),
+              // initialChildSize: getTheRightSize(height),
+              initialChildSize: minChildSize,
               minChildSize: minChildSize,
               maxChildSize: maxChildSize,
               builder:
@@ -164,18 +187,22 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 OrderActiveActionButton(
+                                  onTap: _launchCaller,
                                   imagePath: 'assets/images/main/iconPhone.png',
                                   label: 'Позвонить',
+                                  isEnable: false,
                                 ),
                                 OrderActiveActionButton(
                                   imagePath: 'assets/images/main/iconCar.png',
                                   label: 'о172рв 123',
+                                  isEnable: true,
                                   isSkeletonizer: true,
                                 ),
                                 OrderActiveActionButton(
                                   imagePath:
                                       'assets/images/main/iconMessage.png',
                                   label: 'Написать',
+                                  isEnable: false,
                                 ),
                               ],
                             ),
@@ -227,17 +254,15 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        if (orderId is String ||
-                                            order is Order) {
-                                          showModalBottomSheet(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return OrderActiveModalCancel(
-                                                  bloc: orderActiveBloc,
-                                                  orderId: orderId ?? order!.id,
-                                                );
-                                              });
-                                        }
+                                        print(order.id);
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return OrderActiveModalCancel(
+                                                bloc: orderActiveBloc,
+                                                orderId: order.id,
+                                              );
+                                            });
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(

@@ -8,14 +8,12 @@ import 'package:delivery_kam/features/order_active/view/order_active_screen.dart
 import 'package:delivery_kam/features/order_history/view/order_history_list_screen.dart';
 import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_screen.dart';
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';
-
-import '../features/courier_chat/view/view.dart';
-// import 'package:delivery_kam/features/websocket_test/view/view.dart';
+// import '../features/courier_chat/view/view.dart';
 
 final routes = {
-  // '/': (context) => const CheckAuthScreen(),
+  '/': (context) => const CheckAuthScreen(),
   // '/': (context) => const WebsocketTest(),
-  '/': (context) => const CourierChatScreen(),
+  // '/': (context) => const CourierChatScreen(),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
   '/login': (context) => const DeliveryAuthLoginScreen(),

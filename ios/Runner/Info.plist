@@ -35,6 +35,10 @@
 		</array>
 		<key>FirebaseAppDelegateProxyEnabled</key>
 		<false />
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>tel</string>
+		</array>
 		<key>NSAppTransportSecurity</key>
 		<dict>
 			<key>NSAllowsArbitraryLoads</key>

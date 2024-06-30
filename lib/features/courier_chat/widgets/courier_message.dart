@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class CourierMessage extends StatelessWidget {
   final String text;
-  const CourierMessage({super.key, required this.text});
+  final String timeText;
+  const CourierMessage({
+    super.key,
+    required this.text,
+    required this.timeText,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,9 @@ class CourierMessage extends StatelessWidget {
             width: 16,
           ),
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(horizontal: 10)
+                .copyWith(top: 10)
+                .copyWith(bottom: 5),
             width: screenWidth * 0.7,
             decoration: const BoxDecoration(
               color: Color.fromRGBO(196, 209, 212, 100),
@@ -23,9 +30,25 @@ class CourierMessage extends StatelessWidget {
                 Radius.circular(15),
               ),
             ),
-            child: Text(
-              text,
-              maxLines: 3,
+            child: Column(
+              children: [
+                Text(
+                  text,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    Text(
+                      timeText,
+                      style: const TextStyle(
+                        color: Color.fromRGBO(112, 112, 112, 1),
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
           const Spacer(),

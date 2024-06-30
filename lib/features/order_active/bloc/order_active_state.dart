@@ -4,6 +4,12 @@ class OrderActiveState {}
 
 class OrderActiveInitial extends OrderActiveState {}
 
+class OrderAcitveLoadSuccess extends OrderActiveState {
+  final Order order;
+
+  OrderAcitveLoadSuccess({required this.order});
+}
+
 class OrderActiveCancelLoading extends OrderActiveState {}
 
 class OrderActiveCancelSuccess extends OrderActiveState {}
