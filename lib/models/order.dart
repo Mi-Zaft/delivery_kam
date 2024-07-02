@@ -41,17 +41,17 @@ class Order {
     return {
       'id': id,
       'address': address,
-      'byCar': byCar,
-      'toDoor': toDoor,
-      'cargoItem': cargoItem,
-      'cargoValue': cargoValue,
-      'cargoMass': cargoMass,
+      'by_car': byCar,
+      'to_door': toDoor,
+      'cargo_item': cargoItem,
+      'cargo_value': cargoValue,
+      'cargo_mass': cargoMass,
       'comment': comment,
-      'fragileCargo': fragileCargo,
-      'thermalBag': thermalBag,
-      'bulkyCargo': bulkyCargo,
-      'transportDepartureRegistration': transportDepartureRegistration,
-      'postOfficeCorrespondence': postOfficeCorrespondence,
+      'fragile_cargo': fragileCargo,
+      'thermal_bag': thermalBag,
+      'bulky_cargo': bulkyCargo,
+      'transport_departure_registration': transportDepartureRegistration,
+      'post_office_correspondence': postOfficeCorrespondence,
     };
   }
 
@@ -74,7 +74,8 @@ class Order {
         fragileCargo: json['fragile_cargo'],
         thermalBag: json['thermal_bag'],
         bulkyCargo: json['bulky_cargo'],
-        transportDepartureRegistration: json['transport_departure_registration'],
+        transportDepartureRegistration:
+            json['transport_departure_registration'],
         postOfficeCorrespondence: json['post_office_correspondence']);
   }
 }
@@ -85,9 +86,7 @@ class OrderRoute {
   OrderRoute({required this.geometry});
 
   factory OrderRoute.fromJson(Map<String, dynamic> json) {
-    return OrderRoute(
-      geometry: json['geometry']
-    );
+    return OrderRoute(geometry: json['geometry']);
   }
 }
 
@@ -129,5 +128,22 @@ class OrderHistoryItem {
       id: json['id'],
       date: json['created_at'],
     );
+  }
+}
+
+enum OrderCancelReason { deliveryTime, changePlans, byCourier, expensive }
+
+extension OrderCancelReasonExtension on OrderCancelReason {
+  String get value {
+    switch (this) {
+      case OrderCancelReason.deliveryTime:
+        return 'delivery_time';
+      case OrderCancelReason.changePlans:
+        return 'change_plans';
+      case OrderCancelReason.byCourier:
+        return 'by_courier';
+      case OrderCancelReason.expensive:
+        return 'expensive';
+    }
   }
 }

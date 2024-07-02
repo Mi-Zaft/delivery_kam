@@ -22,8 +22,8 @@ class AddressApi {
         city: json['city'],
         street: json['street'],
         house: json['house'],
-        fiasLevel: json['fiasLevel'],
-        fiasId: json['fiasId'],
+        fiasLevel: json['fias_level'],
+        fiasId: json['fias_id'],
         latitude: json['latitude'],
         longitude: json['longitude']);
   }
@@ -49,13 +49,13 @@ class AddressPost {
 
   Map<String, dynamic> toJson() {
     return {
-      'fiasId': fiasId,
+      'fias_id': fiasId,
       'priority': priority,
-      'addressRow': addressRow,
+      'address_row': addressRow,
       'entrance': entrance,
       'floor': floor,
       'name': name,
-      'flatOrOffice': flatOrOffice,
+      'flat_or_office': flatOrOffice,
       'comment': comment,
       'phone': phone,
       'intercom': intercom,
@@ -66,7 +66,7 @@ class AddressPost {
     return AddressPost(
       fiasId: json['fias_id'],
       priority: json['priority'],
-      addressRow: json['addressRow'] ?? 'Строка адреса',
+      addressRow: json['address_row'] ?? 'Строка адреса',
     );
   }
 }

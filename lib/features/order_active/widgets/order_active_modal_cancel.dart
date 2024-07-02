@@ -118,7 +118,9 @@ class OrderActiveModalCancel extends StatelessWidget {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                        bloc.add(OrderActiveCancel(orderId: orderId));
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/order-cancel-reason', (route) => false,
+                            arguments: {'orderId': orderId});
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors

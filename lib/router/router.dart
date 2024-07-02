@@ -5,6 +5,7 @@ import 'package:delivery_kam/features/main/delivery_main_screen.dart';
 import 'package:delivery_kam/features/main/view/check_auth_screen.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_order_details_edit.dart';
 import 'package:delivery_kam/features/order_active/view/order_active_screen.dart';
+import 'package:delivery_kam/features/order_active/view/order_cancel_reason_screen.dart';
 import 'package:delivery_kam/features/order_history/view/order_history_list_screen.dart';
 import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_screen.dart';
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';
@@ -23,5 +24,6 @@ final routes = {
   '/order-history-list': (context) => const OrderHistoryListScreen(),
   '/order-adress-details-edit': (context) =>
       const DeliveryMainOrderDetailsEdit(),
-  '/order-active': (context) => const OrderActiveScreen()
+  '/order-active': (context) => const OrderActiveScreen(),
+  '/order-cancel-reason': (context) => const OrderCancelReasonScreen()
 };

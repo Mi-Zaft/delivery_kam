@@ -10,6 +10,7 @@ class OrderActiveLoad extends OrderActiveEvent {
 
 class OrderActiveCancel extends OrderActiveEvent {
   final String orderId;
+  final String reason;
 
-  OrderActiveCancel({required this.orderId});
+  OrderActiveCancel({required this.reason, required this.orderId});
 }

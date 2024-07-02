@@ -1,7 +1,7 @@
-import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
-import 'package:delivery_kam/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:delivery_kam/features/main/bloc/delivery_main_bloc.dart';
+import 'package:delivery_kam/models/order.dart';
 
 class OrderDetailsBottomNavbar extends StatefulWidget {
   final int price;
@@ -18,12 +18,20 @@ class OrderDetailsBottomNavbar extends StatefulWidget {
 
 class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
   final deliveryMainBloc = DeliveryMainBloc();
+
   @override
   Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+
     return Container(
       color: Colors.white,
-      padding:
-          const EdgeInsets.only(bottom: 25.0, top: 10, left: 16, right: 16),
+      margin: bottomInset > 20 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+      padding: EdgeInsets.only(
+        bottom: bottomInset > 20 ? bottomInset : 25.0, // Изменяем отступ в зависимости от высоты клавиатуры
+        top: 10,
+        left: 16,
+        right: 16,
+      ),
       child: SizedBox(
         width: double.infinity,
         child: Container(
@@ -43,7 +51,7 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
             listener: (context, state) {
               if (state is DeliveryMainOrderCreateSuccess) {
                 Navigator.pushNamed(context, '/order-active',
-                    arguments: {'orderId': state.order.id});
+                    arguments: {'orderId': state.order});
               }
             },
             child: BlocBuilder<DeliveryMainBloc, DeliveryMainState>(

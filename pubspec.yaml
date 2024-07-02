@@ -94,6 +94,11 @@ flutter:
     - assets/images/main/iconChat.png
     - assets/images/main/iconPoint.png
     - assets/images/main/iconOrderHistory.png
+    - assets/images/order/byCourier.png
+    - assets/images/order/changePlans.png
+    - assets/images/order/deliveryTime.png
+    - assets/images/order/expensive.png
+    - assets/images/order/comment.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
