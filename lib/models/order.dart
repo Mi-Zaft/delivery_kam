@@ -1,4 +1,5 @@
 import 'package:delivery_kam/models/address_api.dart';
+import 'package:delivery_kam/models/courier.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -16,6 +17,8 @@ class Order {
   bool bulkyCargo;
   bool transportDepartureRegistration;
   bool postOfficeCorrespondence;
+  Courier? courier;
+  int? price;
 
   Order({
     this.id = '',
@@ -31,6 +34,8 @@ class Order {
     this.bulkyCargo = false,
     this.transportDepartureRegistration = false,
     this.postOfficeCorrespondence = false,
+    this.courier,
+    this.price
   });
 
   Map<String, dynamic> toJson() {
@@ -63,20 +68,24 @@ class Order {
     }
 
     return Order(
-        id: json['id'],
-        address: addressess,
-        byCar: json['by_car'],
-        toDoor: json['to_door'],
-        cargoItem: json['cargo_item'],
-        cargoValue: json['cargo_value'] ?? 0,
-        cargoMass: json['cargo_mass'] ?? 0,
-        comment: json['comment'],
-        fragileCargo: json['fragile_cargo'],
-        thermalBag: json['thermal_bag'],
-        bulkyCargo: json['bulky_cargo'],
-        transportDepartureRegistration:
-            json['transport_departure_registration'],
-        postOfficeCorrespondence: json['post_office_correspondence']);
+      id: json['id'],
+      address: addressess,
+      byCar: json['by_car'],
+      toDoor: json['to_door'],
+      cargoItem: json['cargo_item'],
+      cargoValue: json['cargo_value'] ?? 0,
+      cargoMass: json['cargo_mass'] ?? 0,
+      comment: json['comment'],
+      fragileCargo: json['fragile_cargo'],
+      thermalBag: json['thermal_bag'],
+      bulkyCargo: json['bulky_cargo'],
+      transportDepartureRegistration: json['transport_departure_registration'],
+      postOfficeCorrespondence: json['post_office_correspondence'],
+      price: json['price'],
+      courier: Courier.fromJson(
+        json['courier'],
+      ),
+    );
   }
 }
 
@@ -137,13 +146,13 @@ extension OrderCancelReasonExtension on OrderCancelReason {
   String get value {
     switch (this) {
       case OrderCancelReason.deliveryTime:
-        return 'delivery_time';
+        return 'слишком долго ждать';
       case OrderCancelReason.changePlans:
-        return 'change_plans';
+        return 'изменились планы';
       case OrderCancelReason.byCourier:
-        return 'by_courier';
+        return 'курьер попросил отменить';
       case OrderCancelReason.expensive:
-        return 'expensive';
+        return 'не устроила цена доставки';
     }
   }
 }

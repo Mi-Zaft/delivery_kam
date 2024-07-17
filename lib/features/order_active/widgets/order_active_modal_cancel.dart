@@ -19,7 +19,8 @@ class OrderActiveModalCancel extends StatelessWidget {
         if (state is OrderActiveCancelSuccess) {
           Navigator.pop(context);
           Navigator.pushNamedAndRemoveUntil(
-              context, '/main-screen', (route) => false);
+              context, '/order-cancel-reason', (route) => false,
+              arguments: {'orderId': orderId});
         }
       },
       child: Container(
@@ -118,9 +119,11 @@ class OrderActiveModalCancel extends StatelessWidget {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/order-cancel-reason', (route) => false,
-                            arguments: {'orderId': orderId});
+                        bloc.add(
+                          OrderActiveCancel(
+                            orderId: orderId,
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors

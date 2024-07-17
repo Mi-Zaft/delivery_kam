@@ -4,6 +4,7 @@ import 'package:delivery_kam/features/order_active/bloc/order_active_bloc.dart';
 import 'package:delivery_kam/features/order_active/widgets/order_active_action_button.dart';
 import 'package:delivery_kam/features/order_active/widgets/order_active_modal_cancel.dart';
 import 'package:delivery_kam/models/order.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -28,14 +29,12 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
     _scaffoldKey.currentState!.openDrawer();
   }
 
-  void _launchCaller() async {
-    // if (widget.order != null) {
-    //@TODO: добавить проверку на наличие номера курьера и подставлять номер курьера
-    print('НОМЕР КУРЬЕРА');
-    final Uri url = Uri(scheme: 'tel', path: '+79996309216');
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-      // }
+  void _launchCaller(String? number) async {
+    if (number != null) {
+      final Uri url = Uri(scheme: 'tel', path: number);
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url);
+      }
     }
   }
 
@@ -50,6 +49,11 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.data['type'] == 'courier_assigned') {
+        print('Message is: ${message.data}');
+      }
+    });
   }
 
   @override
@@ -62,6 +66,7 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
     } else if (widget.order != null) {
       order = widget.order!;
     }
+
     // final height = MediaQuery.of(context).size.height;
     final MapController mapController = MapController();
     return Scaffold(
@@ -145,11 +150,11 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 5),
                                 ),
-                                const Skeletonizer(
-                                  enabled: true,
+                                Skeletonizer(
+                                  enabled: order.courier?.name == null,
                                   child: Text(
-                                    'Александра',
-                                    style: TextStyle(fontSize: 16),
+                                    order.courier?.name ?? '',
+                                    style: const TextStyle(fontSize: 16),
                                   ),
                                 )
                               ],
@@ -157,25 +162,26 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                             const Padding(
                               padding: EdgeInsets.only(top: 15),
                             ),
-                            const Row(
-                              children: [
-                                Skeletonizer(
-                                  enabled: true,
-                                  child: Text(
-                                    'белый Hyundai Solaris',
-                                    style: TextStyle(fontSize: 16),
+                            if (order.courier?.carModel != null)
+                              Row(
+                                children: [
+                                  Skeletonizer(
+                                    enabled: order.courier?.carModel == null,
+                                    child: Text(
+                                      order.courier?.carModel ?? '',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             const Padding(
                               padding: EdgeInsets.only(top: 15),
                             ),
-                            const Row(
+                            Row(
                               children: [
                                 Text(
-                                  'цена: 240₽',
-                                  style: TextStyle(fontSize: 16),
+                                  'цена: ${order.price ?? '?'}₽',
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               ],
                             ),
@@ -187,17 +193,27 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 OrderActiveActionButton(
-                                  onTap: _launchCaller,
+                                  onTap: () =>
+                                      _launchCaller(order.courier?.phone),
                                   imagePath: 'assets/images/main/iconPhone.png',
                                   label: 'Позвонить',
-                                  isEnable: false,
+                                  isEnable: order.courier?.phone != null,
                                 ),
-                                OrderActiveActionButton(
-                                  imagePath: 'assets/images/main/iconCar.png',
-                                  label: 'о172рв 123',
-                                  isEnable: true,
-                                  isSkeletonizer: true,
-                                ),
+                                if (order.courier?.carModel != null)
+                                  OrderActiveActionButton(
+                                    imagePath: 'assets/images/main/iconCar.png',
+                                    label:
+                                        order.courier?.carLicensePlate ?? ' ',
+                                    isEnable: true,
+                                    isSkeletonizer:
+                                        order.courier?.carLicensePlate == null,
+                                  ),
+                                if (order.courier?.carColor == null)
+                                  OrderActiveActionButton(
+                                      imagePath:
+                                          'assets/images/main/iconcourier.png',
+                                      label: 'Пеший\nкурьер',
+                                      isEnable: true),
                                 OrderActiveActionButton(
                                   imagePath:
                                       'assets/images/main/iconMessage.png',
@@ -254,7 +270,6 @@ class _OrderActiveScreenState extends State<OrderActiveScreen> {
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        print(order.id);
                                         showModalBottomSheet(
                                             context: context,
                                             builder: (BuildContext context) {

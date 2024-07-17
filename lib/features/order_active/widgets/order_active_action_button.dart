@@ -21,9 +21,11 @@ class OrderActiveActionButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        height: 120,
+        width: 105,
         margin: const EdgeInsets.symmetric(vertical: 20),
         padding: const EdgeInsets.symmetric(horizontal: 14)
-            .copyWith(top: 15)
+            // .copyWith(top: 15)
             .copyWith(bottom: 15),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -33,8 +35,13 @@ class OrderActiveActionButton extends StatelessWidget {
           ),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Skeletonizer(enabled: isSkeletonizer ?? false, child: Text(label)),
+            Skeletonizer(
+                enabled: isSkeletonizer ?? false,
+                child: Text(
+                  label,
+                )),
             const Padding(
               padding: EdgeInsets.only(top: 10),
             ),

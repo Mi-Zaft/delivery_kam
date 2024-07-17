@@ -1,6 +1,7 @@
 import 'package:delivery_kam/features/auth/confirm_code/view/delivery_auth_confirm_code_screen.dart';
 import 'package:delivery_kam/features/auth/login/view/delivery_auth_login_screen.dart';
 import 'package:delivery_kam/features/auth/register/delivery_auth_register.dart';
+import 'package:delivery_kam/features/be_courier/view/be_courier_screen.dart';
 import 'package:delivery_kam/features/main/delivery_main_screen.dart';
 import 'package:delivery_kam/features/main/view/check_auth_screen.dart';
 import 'package:delivery_kam/features/main/view/delivery_main_order_details_edit.dart';
@@ -13,8 +14,7 @@ import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_sc
 
 final routes = {
   '/': (context) => const CheckAuthScreen(),
-  // '/': (context) => const WebsocketTest(),
-  // '/': (context) => const CourierChatScreen(),
+  '/be-courier': (context) => const BeCourierScreen(),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
   '/login': (context) => const DeliveryAuthLoginScreen(),

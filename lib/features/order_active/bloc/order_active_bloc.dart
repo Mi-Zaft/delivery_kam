@@ -27,5 +27,20 @@ class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
         emit(OrderActiveCancelSuccess());
       }
     });
+    on<OrderCancelResonLoad>((event, emit) async {
+      emit(OrderCancelReasonLoading());
+
+      Map<String, dynamic> dataToSend = {
+        'id': event.orderId,
+        'reason': event.reason,
+        'comment': event.comment
+      };
+
+      Response response = await ApiService().postData('/api/v1/order/cancel/reason', dataToSend);
+      print(response.statusCode ?? 'statusCode ???');
+      if (response.statusCode == 200) {
+        emit(OrderCancelReasonSuccess());
+      }
+    });
   }
 }

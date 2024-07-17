@@ -13,3 +13,7 @@ class OrderAcitveLoadSuccess extends OrderActiveState {
 class OrderActiveCancelLoading extends OrderActiveState {}
 
 class OrderActiveCancelSuccess extends OrderActiveState {}
+
+class OrderCancelReasonLoading extends OrderActiveState {}
+
+class OrderCancelReasonSuccess extends OrderActiveState {}

@@ -26,6 +26,42 @@ class _OrderCancelReasonScreenState extends State<OrderCancelReasonScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 40).copyWith(top: 20),
+              height: 230,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text(
+                          'Ваш заказ отменен',
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Image.asset('assets/images/order/iconOkey.png')
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
+    });
+  }
+
+  @override
   void dispose() {
     _focusNode.dispose();
     _commentTextEditingController.dispose();
@@ -55,7 +91,7 @@ class _OrderCancelReasonScreenState extends State<OrderCancelReasonScreen> {
         child: BlocListener<OrderActiveBloc, OrderActiveState>(
           bloc: _orderActiveBloc,
           listener: (context, state) {
-            if (state is OrderActiveCancelSuccess) {
+            if (state is OrderCancelReasonSuccess) {
               Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
             }
           },
@@ -63,9 +99,10 @@ class _OrderCancelReasonScreenState extends State<OrderCancelReasonScreen> {
               onPressed: () {
                 if (_reason != null) {
                   _orderActiveBloc.add(
-                    OrderActiveCancel(
+                    OrderCancelResonLoad(
                       orderId: orderId,
                       reason: _reason!.value,
+                      comment: _commentTextEditingController.text
                     ),
                   );
                 }

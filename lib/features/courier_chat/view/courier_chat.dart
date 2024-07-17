@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:delivery_kam/constants.dart';
+import 'package:delivery_kam/models/chat.dart';
 import 'package:flutter/material.dart';
 import 'package:delivery_kam/features/courier_chat/widgets/courier_message.dart';
 import 'package:delivery_kam/features/courier_chat/widgets/user_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 class CourierChatScreen extends StatefulWidget {
-  const CourierChatScreen({super.key});
+  final String orderId;
+  const CourierChatScreen({super.key, required this.orderId});
 
   @override
   State<CourierChatScreen> createState() => _CourierChatScreenState();
@@ -16,31 +20,23 @@ class CourierChatScreen extends StatefulWidget {
 class _CourierChatScreenState extends State<CourierChatScreen> {
   bool isConnected = false;
   late WebSocketChannel channel;
+  late String apiToken;
   final TextEditingController messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, String>> messages = [
-    {
-      'text':
-          'Здравствуйте, я жду вас у второй двери третьего этажа. Вы уже близко?',
-      'senderId': 'user',
-      'time': '12:00'
-    },
-    {
-      'text': 'Добрый день, через 5 минут буду у вас.',
-      'senderId': 'courier',
-      'time': '12:05'
-    },
-  ];
+  List<Message> messages = [];
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
     connectWebSocket();
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final apiToken = prefs.getString('jwt_token');
   }
 
   void connectWebSocket() {
     channel = WebSocketChannel.connect(
-      Uri.parse('ws://echo.websocket.org'),
+      Uri.parse(AppConfig.chatUrl),
     );
 
     channel.stream.listen(
@@ -49,7 +45,15 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
         isConnected = true;
         if (!message.contains('Request served by')) {
           setState(() {
-            messages.add({'text': message, 'senderId': 'courier'});
+            messages.add(
+              Message(
+                token: apiToken,
+                role: 'courier',
+                message: message,
+                time: '',
+                orderId: widget.orderId,
+              ),
+            );
           });
           _scrollToBottom();
         }
@@ -75,7 +79,15 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
   void sendMessage(String text) {
     if (text.isNotEmpty) {
       setState(() {
-        messages.add({'text': text, 'senderId': 'user'});
+        messages.add(
+          Message(
+            token: apiToken,
+            role: 'user',
+            message: text,
+            time: '',
+            orderId: widget.orderId,
+          ),
+        );
       });
       _scrollToBottom();
       messageController.clear();
@@ -108,15 +120,15 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 var message = messages[index];
-                if (message['senderId'] == 'courier') {
+                if (message.role == 'courier') {
                   return CourierMessage(
-                    text: message['text'] ?? '',
-                    timeText: message['time'] ?? '',
+                    text: message.message ?? '',
+                    timeText: message.time ?? '',
                   );
                 } else {
                   return UserMessage(
-                    text: message['text'] ?? '',
-                    timeText: message['time'] ?? '',
+                    text: message.message ?? '',
+                    timeText: message.time ?? '',
                   );
                 }
               },
@@ -133,7 +145,7 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
           ),
           const SizedBox(height: 10),
           Container(
-            height: 80,
+            height: 90,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: const BoxDecoration(
               color: Color.fromRGBO(195, 195, 195, 1),

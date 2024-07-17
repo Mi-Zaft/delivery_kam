@@ -10,7 +10,18 @@ class OrderActiveLoad extends OrderActiveEvent {
 
 class OrderActiveCancel extends OrderActiveEvent {
   final String orderId;
-  final String reason;
 
-  OrderActiveCancel({required this.reason, required this.orderId});
+  OrderActiveCancel({required this.orderId});
+}
+
+class OrderCancelResonLoad extends OrderActiveEvent {
+  final String orderId;
+  final String reason;
+  final String? comment;
+
+  OrderCancelResonLoad({
+    required this.orderId,
+    required this.reason,
+    this.comment,
+  });
 }

@@ -54,7 +54,7 @@ class DeliveryMainDrawer extends StatelessWidget {
           ),
           GestureDetector(
             child: ListTile(
-              onTap: () => {},
+              onTap: () => {Navigator.of(context).pushNamed('/be-courier')},
               leading: Image.asset(
                 'assets/images/main/becomeCourier.png',
               ),
