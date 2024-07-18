@@ -12,6 +12,7 @@ class OrderHistoryListScreen extends StatefulWidget {
 
 class _OrderHistoryListScreenState extends State<OrderHistoryListScreen> {
   final OrderHistoryBloc _orderHistoryBloc = OrderHistoryBloc();
+
   @override
   void initState() {
     super.initState();
@@ -25,30 +26,39 @@ class _OrderHistoryListScreenState extends State<OrderHistoryListScreen> {
         title: const Text('История заказов'),
       ),
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(color: Colors.white),
         child: BlocBuilder<OrderHistoryBloc, OrderHistoryState>(
           bloc: _orderHistoryBloc,
           builder: (context, state) {
             if (state is OrderHistoryListLoadSuccess) {
-              return Column(
-                children: [
-                  ListView.builder(
-                    padding: const EdgeInsets.only(
-                        top: 10, left: 24, right: 24, bottom: 25),
-                    itemCount: state.orders.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext listContext, int index) {
-                      return OrderItem(
-                          id: state.orders[index].id,
-                          date: state.orders[index].formattedDate);
-                    },
-                  ),
-                  const Spacer()
-                ],
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 10.0),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 25),
+                        itemCount: state.orders.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext listContext, int index) {
+                          return OrderItem(
+                            id: state.orders[index].id,
+                            date: state.orders[index].formattedDate,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else {
-              return const SizedBox.shrink();
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
           },
         ),

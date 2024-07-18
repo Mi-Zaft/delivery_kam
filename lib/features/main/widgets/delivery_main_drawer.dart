@@ -66,7 +66,7 @@ class DeliveryMainDrawer extends StatelessWidget {
           ),
           GestureDetector(
             child: ListTile(
-              onTap: () => {},
+              onTap: () => {Navigator.of(context).pushNamed('/support')},
               leading: Image.asset(
                 'assets/images/main/chat.png',
               ),
