@@ -20,10 +20,10 @@ class DeliveryAuthConfirmCodeBloc
           .postData('/api/v1/registration/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
-          if (response.data.containsKey('accessToken')) {
+          if (response.data.containsKey('access_token')) {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
-            await prefs.setString('jwt_token', response.data['accessToken']);
+            await prefs.setString('jwt_token', response.data['access_token']);
             final fcmToken = prefs.getString('fcmToken');
             final Map<String, dynamic> fcmDataToSend = {'token': fcmToken};
             await ApiService()
@@ -82,10 +82,10 @@ class DeliveryAuthConfirmCodeBloc
           .postData('/api/v1/authorization/verify-code', dataToSend);
       if (response.statusCode == 200) {
         if (response.data['status'] == true) {
-          if (response.data.containsKey('accessToken')) {
+          if (response.data.containsKey('access_token')) {
             final SharedPreferences prefs =
                 await SharedPreferences.getInstance();
-            await prefs.setString('jwt_token', response.data['accessToken']);
+            await prefs.setString('jwt_token', response.data['access_token']);
             final fcmToken = prefs.getString('fcmToken');
             final Map<String, dynamic> fcmDataToSend = {'token': fcmToken};
             await ApiService()
@@ -96,7 +96,7 @@ class DeliveryAuthConfirmCodeBloc
             }
             emit(DeliveryAuthConfirmCodeSuccess());
           } else {
-            emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз'));
+            emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз.'));
           }
         }
       } else {

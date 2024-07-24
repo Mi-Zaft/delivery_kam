@@ -13,6 +13,7 @@ class SupportScreen extends StatelessWidget {
     final FocusNode textFieldFocus = FocusNode();
     final SupportBloc supportBloc = SupportBloc();
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16)
               .copyWith(bottom: 25)
@@ -109,6 +110,10 @@ class SupportScreen extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     child: TextField(
+                      textInputAction: TextInputAction.done,
+                      onEditingComplete: () => {
+                        textFieldFocus.unfocus()
+                      },
                       focusNode: textFieldFocus,
                       controller: supportMessageController,
                       maxLines: null,

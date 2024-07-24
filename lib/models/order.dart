@@ -67,24 +67,27 @@ class Order {
           {addressess.add(AddressPost.fromJson(addressPostJson))});
     }
 
+    Courier? courier;
+    if (json['courier'] != null) {
+      courier = Courier.fromJson(json['courier']);
+    }
+
     return Order(
       id: json['id'],
       address: addressess,
       byCar: json['by_car'],
       toDoor: json['to_door'],
-      cargoItem: json['cargo_item'],
+      // cargoItem: json['cargo_item'],
       cargoValue: json['cargo_value'] ?? 0,
       cargoMass: json['cargo_mass'] ?? 0,
-      comment: json['comment'],
+      // comment: json['comment'],
       fragileCargo: json['fragile_cargo'],
       thermalBag: json['thermal_bag'],
       bulkyCargo: json['bulky_cargo'],
       transportDepartureRegistration: json['transport_departure_registration'],
       postOfficeCorrespondence: json['post_office_correspondence'],
       price: json['price'],
-      courier: Courier.fromJson(
-        json['courier'],
-      ),
+      courier: courier,
     );
   }
 }

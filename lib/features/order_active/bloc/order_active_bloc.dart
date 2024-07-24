@@ -9,7 +9,6 @@ part 'order_active_state.dart';
 class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
   OrderActiveBloc() : super(OrderActiveInitial()) {
     on<OrderActiveLoad>((event, emit) async {
-      print('load');
       Response response =
           await ApiService().fetchData('/api/v1/order/${event.orderId}');
       if (response.statusCode == 200) {

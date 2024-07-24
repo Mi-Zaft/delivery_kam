@@ -8,13 +8,15 @@ import 'package:delivery_kam/features/main/view/delivery_main_order_details_edit
 import 'package:delivery_kam/features/order_active/view/order_active_screen.dart';
 import 'package:delivery_kam/features/order_active/view/order_cancel_reason_screen.dart';
 import 'package:delivery_kam/features/order_history/view/order_history_list_screen.dart';
+import 'package:delivery_kam/features/order_success/view/order_success_screen.dart';
 import 'package:delivery_kam/features/payment_add/view/delivery_payment_add_screen.dart';
 import 'package:delivery_kam/features/payment_list/view/delivery_payment_list_screen.dart';
 import 'package:delivery_kam/features/support/view/support_screen.dart';
 // import '../features/courier_chat/view/view.dart';
 
 final routes = {
-  '/': (context) => const CheckAuthScreen(),
+  '/': (context) => OrderSuccessScreen(),
+  // '/': (context) => const CheckAuthScreen(),
   '/be-courier': (context) => const BeCourierScreen(),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
@@ -25,7 +27,7 @@ final routes = {
   '/order-history-list': (context) => const OrderHistoryListScreen(),
   '/order-adress-details-edit': (context) =>
       const DeliveryMainOrderDetailsEdit(),
-  '/order-active': (context) => const OrderActiveScreen(),
+  '/order-active': (context) => OrderActiveScreen(),
   '/order-cancel-reason': (context) => const OrderCancelReasonScreen(),
   '/support': (context) => const SupportScreen()
 };
