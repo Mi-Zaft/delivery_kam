@@ -16,6 +16,7 @@ class OrderSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       drawer: const DeliveryMainDrawer(),
       body: Stack(children: [
         DeliveryMainMapScreen(
