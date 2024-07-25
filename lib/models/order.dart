@@ -19,6 +19,7 @@ class Order {
   bool postOfficeCorrespondence;
   Courier? courier;
   int? price;
+  int? createdAt;
 
   Order({
     this.id = '',
@@ -35,7 +36,8 @@ class Order {
     this.transportDepartureRegistration = false,
     this.postOfficeCorrespondence = false,
     this.courier,
-    this.price
+    this.price,
+    this.createdAt
   });
 
   Map<String, dynamic> toJson() {
@@ -88,6 +90,7 @@ class Order {
       postOfficeCorrespondence: json['post_office_correspondence'],
       price: json['price'],
       courier: courier,
+      createdAt: json['created_at']
     );
   }
 }
