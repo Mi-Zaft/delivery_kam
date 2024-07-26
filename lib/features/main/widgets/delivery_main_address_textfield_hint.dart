@@ -90,21 +90,20 @@ class _DeliveryMainAddressTextfieldHintState
                         widget.textfieldController.text =
                             "${address.city} ${address.street} ${address.house ?? ''}";
                         fromWhereObject = address;
-                        if (address.fiasLevel != null) {
-                          if (address.fiasLevel! >= 8) {
-                            setState(() {
-                              // isShowSuggest = false;
-                            });
-                            widget.onAddressReady(address);
-                            FocusScope.of(context).unfocus();
-                            if (fromWhereObject.fiasId != null &&
-                                toWhereObjext.fiasId != null) {
-                              // order = Order(
-                              //     fromFiasId: fromWhereObject.fiasId!,
-                              //     whereFiasId: toWhereObjext.fiasId!,
-                              //     byCar: _byCar);
-                              // makeOrder();
-                            }
+                        if (address.fiasLevel != null &&
+                            address.house != null) {
+                          setState(() {
+                            // isShowSuggest = false;
+                          });
+                          widget.onAddressReady(address);
+                          FocusScope.of(context).unfocus();
+                          if (fromWhereObject.fiasId != null &&
+                              toWhereObjext.fiasId != null) {
+                            // order = Order(
+                            //     fromFiasId: fromWhereObject.fiasId!,
+                            //     whereFiasId: toWhereObjext.fiasId!,
+                            //     byCar: _byCar);
+                            // makeOrder();
                           }
                         }
                       },
