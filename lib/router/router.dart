@@ -15,8 +15,7 @@ import 'package:delivery_kam/features/support/view/support_screen.dart';
 // import '../features/courier_chat/view/view.dart';
 
 final routes = {
-  '/': (context) => OrderSuccessScreen(),
-  // '/': (context) => const CheckAuthScreen(),
+  '/': (context) => const CheckAuthScreen(),
   '/be-courier': (context) => const BeCourierScreen(),
   '/register': (context) => const DeliveryAuthRegisterScreen(),
   '/register-confirm': (context) => const DeliveryAuthConfirmCodeScreen(),
@@ -29,5 +28,6 @@ final routes = {
       const DeliveryMainOrderDetailsEdit(),
   '/order-active': (context) => OrderActiveScreen(),
   '/order-cancel-reason': (context) => const OrderCancelReasonScreen(),
-  '/support': (context) => const SupportScreen()
+  '/support': (context) => const SupportScreen(),
+  '/order-success': (context) => OrderSuccessScreen(),
 };

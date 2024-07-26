@@ -21,7 +21,7 @@ class OrderSuccessInfoCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 120,
-        // width: 105,
+        width: MediaQuery.of(context).size.width / 2.7,
         margin: const EdgeInsets.symmetric(vertical: 20),
         padding: const EdgeInsets.symmetric(horizontal: 14)
             // .copyWith(top: 15)

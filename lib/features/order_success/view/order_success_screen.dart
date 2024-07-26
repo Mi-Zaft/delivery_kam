@@ -25,15 +25,7 @@ class OrderSuccessScreen extends StatelessWidget {
           mapController: mapController,
           polylineCoordinates: const [],
         ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Container(
-            color: Colors.transparent,
-            child: const OrderSuccessDetail()
-          ),
-        )
+        const OrderSuccessDetail()
       ]),
     );
   }

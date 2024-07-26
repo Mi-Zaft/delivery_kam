@@ -8,3 +8,10 @@ class OrderSuccessLoaded extends OrderSuccessState {
   Order order;
   OrderSuccessLoaded({required this.order});
 }
+
+class OrderSuccessCommentLoad extends OrderSuccessState {}
+
+class OrderSuccessCommentSuccess extends OrderSuccessState {
+  String comment;
+  OrderSuccessCommentSuccess({required this.comment});
+}
