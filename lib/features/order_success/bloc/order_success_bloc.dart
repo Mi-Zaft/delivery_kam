@@ -26,7 +26,7 @@ class OrderSuccessBloc extends Bloc<OrderSuccessEvent, OrderSuccessState> {
         'comment': event.comment,
       };
       Response response =
-          await ApiService().postData('/avi/v1/order/comment', dataToSend);
+          await ApiService().postData('/api/v1/order/comment', dataToSend);
 
       if (response.statusCode == 200) {
         if (response.data.runtimeType == String) {

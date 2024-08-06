@@ -135,15 +135,15 @@ class _OrderActiveModalBottomSheetState extends State<OrderActiveModalBottomShee
                           label: 'Позвонить',
                           isEnable: widget.order?.courier?.phone != null,
                         ),
-                        if (widget.order?.courier?.carModel != null)
+                        if (widget.order?.byCar == true)
                           OrderActiveActionButton(
                             imagePath: 'assets/images/main/iconCar.png',
-                            label: widget.order?.courier?.carLicensePlate ?? ' ',
+                            label: widget.order?.courier?.carLicensePlate ?? 'Номер',
                             isEnable: true,
                             isSkeletonizer:
                                 widget.order?.courier?.carLicensePlate == null,
                           ),
-                        if (widget.order?.courier?.carColor == null)
+                        if (widget.order?.byCar == false)
                           OrderActiveActionButton(
                               imagePath: 'assets/images/main/iconcourier.png',
                               label: 'Пеший\nкурьер',
