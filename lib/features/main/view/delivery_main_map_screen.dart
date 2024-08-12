@@ -20,7 +20,6 @@ class DeliveryMainMapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<DeliveryMainMapScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -33,8 +32,8 @@ class _MapScreenState extends State<DeliveryMainMapScreen> {
         FlutterMap(
           mapController: widget.mapController,
           options: const MapOptions(
-            initialCenter: LatLng(45.066760, 39.010371),
-            initialZoom: 17,
+            initialCenter: LatLng(53.0188434, 158.6486179),
+            initialZoom: 15,
           ),
           children: [
             TileLayer(

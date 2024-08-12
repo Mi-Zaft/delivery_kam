@@ -36,7 +36,6 @@ class OrderActiveBloc extends Bloc<OrderActiveEvent, OrderActiveState> {
       };
 
       Response response = await ApiService().postData('/api/v1/order/cancel/reason', dataToSend);
-      print(response.statusCode ?? 'statusCode ???');
       if (response.statusCode == 200) {
         emit(OrderCancelReasonSuccess());
       }

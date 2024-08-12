@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+// ignore: must_be_immutable
 class OrderSuccessInfoCard extends StatelessWidget {
   String imagePath;
   String label;

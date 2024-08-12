@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+// ignore: must_be_immutable
 class OrderActiveModalBottomSheet extends StatefulWidget {
   Order? order;
   Function onCall;

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore: must_be_immutable
 class OrderActiveScreen extends StatefulWidget {
   Order? order;
   OrderActiveScreen({super.key, this.order});

@@ -25,9 +25,13 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
 
     return Container(
       color: Colors.white,
-      margin: bottomInset > 20 ? const EdgeInsets.only(bottom: 10) : EdgeInsets.zero,
+      margin: bottomInset > 20
+          ? const EdgeInsets.only(bottom: 10)
+          : EdgeInsets.zero,
       padding: EdgeInsets.only(
-        bottom: bottomInset > 20 ? bottomInset : 25.0, // Изменяем отступ в зависимости от высоты клавиатуры
+        bottom: bottomInset > 20
+            ? bottomInset
+            : 25.0, // Изменяем отступ в зависимости от высоты клавиатуры
         top: 10,
         left: 16,
         right: 16,
@@ -50,7 +54,8 @@ class _OrderDetailsBottomNavbarState extends State<OrderDetailsBottomNavbar> {
             bloc: deliveryMainBloc,
             listener: (context, state) {
               if (state is DeliveryMainOrderCreateSuccess) {
-                Navigator.pushNamed(context, '/order-active',
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/order-active', (route) => false,
                     arguments: {'order': state.order});
               }
             },

@@ -8,6 +8,8 @@ class DeliveryAuthLoginSuccess extends DeliveryAuthLoginState {}
 
 class DeliveryAuthLoginNumberIsCorrect extends DeliveryAuthLoginState {}
 
+class DeliveryAuthLoading extends DeliveryAuthLoginState {}
+
 class DeliveryAuthLoginFail extends DeliveryAuthLoginState {
   DeliveryAuthLoginFail({required this.errorText});
 

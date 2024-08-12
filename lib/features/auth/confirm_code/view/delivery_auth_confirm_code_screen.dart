@@ -72,6 +72,10 @@ class _DeliveryAuthConfirmCodeScreenState
               if (state is DeliveryAuthConfirmCodeSuccess) {
                 Navigator.pushNamedAndRemoveUntil(
                     context, '/main-screen', (route) => false);
+              } else if (state is HasActiveOrder) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/order-active', (route) => false,
+                    arguments: {'order': state.order});
               }
             },
             child: Padding(

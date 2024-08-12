@@ -9,7 +9,7 @@ part 'order_success_state.dart';
 class OrderSuccessBloc extends Bloc<OrderSuccessEvent, OrderSuccessState> {
   OrderSuccessBloc() : super(OrderSuccessInitial()) {
     on<OrderSuccessEvent>((event, emit) {
-      // TODO: implement event handler
+      
     });
     on<OrderLoadById>((event, emit) async {
       Response response =

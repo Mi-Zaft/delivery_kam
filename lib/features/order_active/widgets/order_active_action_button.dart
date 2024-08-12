@@ -1,7 +1,7 @@
-import 'package:delivery_kam/features/order_active/bloc/order_active_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+// ignore: must_be_immutable
 class OrderActiveActionButton extends StatelessWidget {
   String imagePath;
   String label;

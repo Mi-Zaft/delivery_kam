@@ -197,7 +197,7 @@ class _OrderSuccessDetailState extends State<OrderSuccessDetail> {
                         children: [
                           const Text(
                             'цена: ',
-                            style: const TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16),
                           ),
                           Skeletonizer(
                             enabled: order?.price == null,

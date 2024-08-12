@@ -14,6 +14,11 @@ class DeliveryAuthConfirmCodeFail extends DeliveryAuthConfirmCodeState {
   final String errorText;
 }
 
+class HasActiveOrder extends DeliveryAuthConfirmCodeState {
+  HasActiveOrder({required this.order});
+  final Order order;
+}
+
 class DeliveryAuthConfirmCodeResendSuccess
     extends DeliveryAuthConfirmCodeState {}
 

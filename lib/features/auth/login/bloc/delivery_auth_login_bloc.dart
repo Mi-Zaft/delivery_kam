@@ -11,6 +11,7 @@ class DeliveryAuthLoginBloc
     // Loading login request
     on<LoadingLoginRequest>(
       (event, emit) async {
+        emit(DeliveryAuthLoading());
         Map<String, dynamic> dataToSend = {
           'phone': '+7${event.phone}',
         };

@@ -1,3 +1,4 @@
+import 'package:delivery_kam/models/order.dart';
 import 'package:delivery_kam/models/user.dart';
 import 'package:delivery_kam/services/api_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ class DeliveryAuthConfirmCodeBloc
   DeliveryAuthConfirmCodeBloc() : super(DeliveryAuthConfirmCodeInitial()) {
     // Loading confirm code request
     on<LoadingConfirmCodeRequest>((event, emit) async {
+      emit(DeliveryAuthConfirmCodeInitial());
       Map<String, dynamic> dataToSend = {
         'code': event.code,
         'phone': '+7${event.phone}',
@@ -74,6 +76,7 @@ class DeliveryAuthConfirmCodeBloc
     });
     // Loading auth confirm code request
     on<LoadingAuthConfirmCodeRequest>((event, emit) async {
+      emit(DeliveryAuthConfirmCodeInitial());
       Map<String, dynamic> dataToSend = {
         'code': event.code,
         'phone': '+7${event.phone}',
@@ -94,6 +97,17 @@ class DeliveryAuthConfirmCodeBloc
               User().name = response.data['name'];
               await prefs.setString('name', response.data['name']);
             }
+
+            Response responseOrders =
+                await ApiService().fetchData('/api/v1/order/active');
+            if (responseOrders.statusCode == 200) {
+              if (response.data != null) {
+                Order order = Order.fromJson(responseOrders.data);
+                emit(HasActiveOrder(order: order));
+                return;
+              }
+            }
+
             emit(DeliveryAuthConfirmCodeSuccess());
           } else {
             emit(DeliveryAuthConfirmCodeFail(errorText: 'Попробуйте еще раз.'));

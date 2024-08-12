@@ -52,7 +52,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
   AddressApi toWhereObjext = AddressApi(street: '', city: '');
   String toWhere = '';
   bool _byCar = false;
-  bool _toDoor = false;
+  // bool _toDoor = false;
   bool _isFragileCargo = false;
   bool _isThermalBag = false;
   bool _isBulkyCargo = false;
@@ -712,7 +712,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
       if (order != null) {
         order!.address = finalAddressList;
         order!.byCar = _byCar;
-        order!.toDoor = _toDoor;
+        // order!.toDoor = _toDoor;
         order!.cargoItem = cargoItemTextFieldController.text;
         order!.comment = commentTextFieldController.text;
         order!.fragileCargo = _isFragileCargo;
@@ -725,7 +725,7 @@ class _DeliveryMainScreenState extends State<DeliveryMainScreen> {
         order = Order(
           address: finalAddressList,
           byCar: _byCar,
-          toDoor: _toDoor,
+          toDoor: false,
           fragileCargo: _isFragileCargo,
           thermalBag: _isThermalBag,
           bulkyCargo: _isBulkyCargo,

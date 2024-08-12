@@ -41,7 +41,6 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
 
     channel.stream.listen(
       (message) {
-        print('Received: $message');
         isConnected = true;
         if (!message.contains('Request served by')) {
           setState(() {
@@ -60,12 +59,10 @@ class _CourierChatScreenState extends State<CourierChatScreen> {
       },
       onDone: () {
         isConnected = false;
-        print('WebSocket closed');
         connectWebSocket();
       },
       onError: (error) {
         isConnected = false;
-        print('Error: $error');
       },
     );
   }
